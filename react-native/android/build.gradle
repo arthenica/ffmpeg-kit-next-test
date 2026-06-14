@@ -1,0 +1,39 @@
+buildscript {
+    ext {
+        buildToolsVersion = "36.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 36
+        targetSdkVersion = 36
+        ndkVersion = "28.2.13676358"
+        kotlinVersion = "2.1.20"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+apply plugin: "com.facebook.react.rootproject"
+
+// The ffmpeg-kit-next-react-native plugin resolves its native AAR from a local
+// Maven repository bundled inside the plugin (android/libs-maven), declared via a
+// maven repository in the plugin's own build.gradle. Gradle does not propagate a
+// dependency's repositories to consuming projects, so the app's runtime classpath
+// cannot resolve the transitive com.arthenica:ffmpeg-kit-next artifact on its own.
+// Re-declare that Maven repository here, deriving its path from the autolinked
+// plugin project so nothing is hardcoded into the plugin's source tree.
+allprojects {
+    repositories {
+        def ffmpegKitProject = rootProject.findProject(":ffmpeg-kit-next-react-native")
+        if (ffmpegKitProject != null) {
+            maven {
+                url "${ffmpegKitProject.projectDir}/libs-maven"
+            }
+        }
+    }
+}

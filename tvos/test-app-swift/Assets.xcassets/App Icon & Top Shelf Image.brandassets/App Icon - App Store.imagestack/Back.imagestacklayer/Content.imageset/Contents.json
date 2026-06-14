@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ffmpeg-kit-next-icon-v1-1280x768.png",
+      "idiom" : "tv"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

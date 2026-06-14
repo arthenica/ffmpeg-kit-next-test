@@ -1,0 +1,95 @@
+platform :osx, '10.15'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'ephemeral', 'Flutter-Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure \"flutter pub get\" is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Flutter-Generated.xcconfig, then run \"flutter pub get\""
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_macos_podfile_setup
+
+def append_build_setting(build_settings, name, value)
+  current = build_settings[name]
+  values =
+    if current.nil? || current.to_s.empty?
+      ['$(inherited)']
+    elsif current.is_a?(Array)
+      current
+    else
+      current.to_s.split(/\s+/)
+    end
+  build_settings[name] = (values + [value]).uniq
+end
+
+def append_xcconfig_setting(path, name, value)
+  lines = File.exist?(path) ? File.readlines(path, chomp: true) : []
+  setting_index = lines.index { |line| line.start_with?("#{name} = ") }
+
+  if setting_index
+    return if lines[setting_index].include?(value)
+
+    lines[setting_index] = "#{lines[setting_index]} #{value}"
+  else
+    lines << "#{name} = $(inherited) #{value}"
+  end
+
+  File.write(path, "#{lines.join("\n")}\n")
+end
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_macos_pods File.dirname(File.realpath(__FILE__))
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_macos_build_settings(target)
+
+    next unless target.name == 'video_player_avfoundation'
+
+    modulemap_path = '${PODS_ROOT}/Target Support Files/video_player_avfoundation/video_player_avfoundation_objc.modulemap'
+    target.build_configurations.each do |config|
+      append_build_setting(config.build_settings, 'OTHER_SWIFT_FLAGS', '-Xcc')
+      append_build_setting(config.build_settings, 'OTHER_SWIFT_FLAGS', %Q(-fmodule-map-file="#{modulemap_path}"))
+    end
+  end
+
+  modulemap_file = File.join(
+    installer.sandbox.root,
+    'Target Support Files',
+    'video_player_avfoundation',
+    'video_player_avfoundation_objc.modulemap'
+  )
+  File.write(modulemap_file, <<~MODULEMAP)
+    module video_player_avfoundation_objc {
+      header "video_player_avfoundation-umbrella.h"
+      export *
+    }
+  MODULEMAP
+
+  Dir[File.join(installer.sandbox.root, 'Target Support Files', 'Pods-Runner', '*.xcconfig')].each do |xcconfig|
+    modulemap_path = '${PODS_ROOT}/Target Support Files/video_player_avfoundation/video_player_avfoundation_objc.modulemap'
+    append_xcconfig_setting(xcconfig, 'OTHER_CFLAGS', %Q(-fmodule-map-file="#{modulemap_path}"))
+    append_xcconfig_setting(xcconfig, 'OTHER_SWIFT_FLAGS', %Q(-Xcc -fmodule-map-file="#{modulemap_path}"))
+  end
+end

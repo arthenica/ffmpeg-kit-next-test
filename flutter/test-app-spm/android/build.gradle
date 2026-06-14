@@ -1,0 +1,24 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        def ffmpegKitProject = rootProject.findProject(":ffmpeg_kit_next_flutter")
+        if (ffmpegKitProject != null) {
+            maven {
+                url "${ffmpegKitProject.projectDir}/libs-maven"
+            }
+        }
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

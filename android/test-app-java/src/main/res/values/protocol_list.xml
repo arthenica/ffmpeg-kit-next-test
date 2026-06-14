@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="protocol_list">
+        <item>ffkitmem</item>
+        <item>ffkitsaf</item>
+    </string-array>
+</resources>

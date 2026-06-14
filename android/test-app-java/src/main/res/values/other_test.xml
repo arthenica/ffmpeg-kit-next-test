@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="other_test">
+        <item>chromaprint</item>
+        <item>dav1d</item>
+        <item>webp</item>
+        <item>zscale</item>
+    </string-array>
+</resources>

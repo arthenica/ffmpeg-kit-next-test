@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "${settingsDir}/../../ffmpeg-kit-next/prebuilt/bundle-android-aar-24-maven"
+        }
+    }
+}
+
+rootProject.name='ffmpeg-kit-next-test-android'
+include ':test-app-java'
+include ':test-app-kotlin'
