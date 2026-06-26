@@ -23,6 +23,7 @@ Test applications are tagged with `ffmpeg-kit-next` release they depend on.
 |  Platform | FFmpegKit Version |                                        Tag                                        |
 | :----: |:-----------------:|:---------------------------------------------------------------------------------:|
 |   Android<br>Flutter<br>iOS<br>Linux<br>macOS<br>React Native<br>tvOS    |       6.1.0       |  [6.1.0](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v6.1.0)   |
+|   Android<br>Flutter<br>iOS<br>Linux<br>macOS<br>React Native<br>tvOS    |       6.1.1       |  [6.1.1](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v6.1.1)   |
 
 ### License
 

@@ -83,8 +83,8 @@ ffmpegkittest::Application::Application() {
     tabs.append_page(vidStabTab, "Vid.Stab");
     tabs.append_page(pipeTab, "Pipe");
     tabs.append_page(concurrentExecutionTab, "Concurrent Execution");
-    tabs.append_page(ffkitProtocolsTab, "FFKit Protocols");
     tabs.append_page(otherTab, "Other");
+    tabs.append_page(ffkitProtocolsTab, "FFKit Protocols");
     tabs.signal_switch_page().connect(sigc::mem_fun(*this, &Application::onTabSelected));
 
     add(tabs);
@@ -137,10 +137,10 @@ void ffmpegkittest::Application::onTabSelected(const Widget* page, const guint p
         concurrentExecutionTab.setActive();
         break;
     case 8:
-        ffkitProtocolsTab.setActive();
+        otherTab.setActive();
         break;
     case 9:
-        otherTab.setActive();
+        ffkitProtocolsTab.setActive();
         break;
     default:
         commandTab.setActive();

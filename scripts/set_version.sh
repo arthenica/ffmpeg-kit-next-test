@@ -145,23 +145,23 @@ update_linux_cmake_file() {
     file="$1"
     version="$2"
 
-    old_project="$(awk 'match($0, /project\(ffmpeg-kit-linux-test VERSION [^)]+\)/) { line=$0; sub(/^.*VERSION /, "", line); sub(/\).*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
-    old_pkg="$(awk 'match($0, /ffmpeg-kit=[^)[:space:]]+/) { line=$0; sub(/^.*ffmpeg-kit=/, "", line); sub(/[)[:space:]].*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
+    old_project="$(awk 'match($0, /project\(ffmpeg-kit-next-linux-test VERSION [^)]+\)/) { line=$0; sub(/^.*VERSION /, "", line); sub(/\).*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
+    old_pkg="$(awk 'match($0, /ffmpeg-kit-next=[^)[:space:]]+/) { line=$0; sub(/^.*ffmpeg-kit-next=/, "", line); sub(/[)[:space:]].*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
 
     [ -n "$old_project" ] || die "could not find project VERSION in $file"
-    [ -n "$old_pkg" ] || die "could not find ffmpeg-kit pkg version in $file"
+    [ -n "$old_pkg" ] || die "could not find ffmpeg-kit-next pkg version in $file"
 
     print_change "linux" "$file" "project VERSION" "$old_project" "$version"
-    print_change "linux" "$file" "ffmpeg-kit pkg version" "$old_pkg" "$version"
+    print_change "linux" "$file" "ffmpeg-kit-next pkg version" "$old_pkg" "$version"
 
     if [ "$DRY_RUN" = "0" ]; then
         awk -v version="$version" '
-            /project\(ffmpeg-kit-linux-test VERSION [^)]+\)/ && !done_project {
-                sub(/project\(ffmpeg-kit-linux-test VERSION [^)]+\)/, "project(ffmpeg-kit-linux-test VERSION " version ")")
+            /project\(ffmpeg-kit-next-linux-test VERSION [^)]+\)/ && !done_project {
+                sub(/project\(ffmpeg-kit-next-linux-test VERSION [^)]+\)/, "project(ffmpeg-kit-next-linux-test VERSION " version ")")
                 done_project=1
             }
-            /ffmpeg-kit=[^)[:space:]]+/ && !done_pkg {
-                sub(/ffmpeg-kit=[^)[:space:]]+/, "ffmpeg-kit=" version)
+            /ffmpeg-kit-next=[^)[:space:]]+/ && !done_pkg {
+                sub(/ffmpeg-kit-next=[^)[:space:]]+/, "ffmpeg-kit-next=" version)
                 done_pkg=1
             }
             { print }
