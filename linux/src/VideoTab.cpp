@@ -147,14 +147,18 @@ void ffmpegkittest::VideoTab::initVideoCodecData() {
 
     row = *(videoCodecModel->append());
     row[videoCodecModelColumn.columnId] = "9";
-    row[videoCodecModelColumn.columnName] = "kvazaar";
+    row[videoCodecModelColumn.columnName] = "svt-av1";
 
     row = *(videoCodecModel->append());
     row[videoCodecModelColumn.columnId] = "10";
-    row[videoCodecModelColumn.columnName] = "theora";
+    row[videoCodecModelColumn.columnName] = "kvazaar";
 
     row = *(videoCodecModel->append());
     row[videoCodecModelColumn.columnId] = "11";
+    row[videoCodecModelColumn.columnName] = "theora";
+
+    row = *(videoCodecModel->append());
+    row[videoCodecModelColumn.columnId] = "12";
     row[videoCodecModelColumn.columnName] = "hap";
 
     videoCodec.pack_start(videoCodecModelColumn.columnName);
@@ -181,9 +185,10 @@ std::string ffmpegkittest::VideoTab::getSelectedVideoCodec() {
         case 5: return "vp8";
         case 6: return "vp9";
         case 7: return "libaom-av1";
-        case 8: return "libkvazaar";
-        case 9: return "theora";
-        case 10: return "hap";
+        case 8: return "libsvtav1";
+        case 9: return "libkvazaar";
+        case 10: return "theora";
+        case 11: return "hap";
         default: return "";
     }
 }
@@ -248,8 +253,6 @@ std::string ffmpegkittest::VideoTab::getVideoFile() {
     std::string extension;
     if (videoCodec.compare("vp8") == 0 || videoCodec.compare("vp9") == 0) {
         extension = "webm";
-    } else if (videoCodec.compare("libaom-av1") == 0) {
-        extension = "mkv";
     } else if (videoCodec.compare("theora") == 0) {
         extension = "ogv";
     } else if (videoCodec.compare("hap") == 0) {
@@ -274,6 +277,8 @@ std::string ffmpegkittest::VideoTab::getCustomOptions() {
         return "-b:v 2M ";
     } else if (videoCodec.compare("libaom-av1") == 0) {
         return "-crf 30 -strict experimental ";
+    } else if (videoCodec.compare("libsvtav1") == 0) {
+        return "-preset 8 -crf 35 ";
     } else if (videoCodec.compare("theora") == 0) {
         return "-qscale:v 7 ";
     } else if (videoCodec.compare("hap") == 0) {

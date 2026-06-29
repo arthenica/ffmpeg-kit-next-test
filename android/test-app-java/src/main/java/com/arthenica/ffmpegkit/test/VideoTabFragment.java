@@ -268,6 +268,9 @@ public class VideoTabFragment extends Fragment implements AdapterView.OnItemSele
             case "aom":
                 videoCodec = "libaom-av1";
                 break;
+            case "svt-av1":
+                videoCodec = "libsvtav1";
+                break;
             case "kvazaar":
                 videoCodec = "libkvazaar";
                 break;
@@ -287,9 +290,6 @@ public class VideoTabFragment extends Fragment implements AdapterView.OnItemSele
             case "vp8":
             case "vp9":
                 extension = "webm";
-                break;
-            case "aom":
-                extension = "mkv";
                 break;
             case "theora":
                 extension = "ogv";
@@ -320,6 +320,8 @@ public class VideoTabFragment extends Fragment implements AdapterView.OnItemSele
                 return "-b:v 2M ";
             case "aom":
                 return "-crf 30 -strict experimental ";
+            case "svt-av1":
+                return "-preset 8 -crf 35 ";
             case "theora":
                 return "-qscale:v 7 ";
             case "hap":

@@ -46,7 +46,7 @@
     [super viewDidLoad];
 
     // AUDIO CODEC PICKER INIT
-    codecData = @[@"aac (audiotoolbox)", @"mp2 (twolame)", @"mp3 (liblame)", @"mp3 (libshine)", @"vorbis", @"opus", @"amr-nb", @"amr-wb", @"ilbc", @"soxr", @"speex", @"wavpack"];
+    codecData = @[@"aac (audiotoolbox)", @"mp2 (twolame)", @"mp3 (liblame)", @"mp3 (libshine)", @"vorbis", @"opus", @"amr-nb", @"amr-wb", @"ilbc", @"soxr", @"speex", @"wavpack", @"lc3"];
     selectedCodec = 0;
 
     [self.audioCodecComboBox setUsesDataSource:YES];
@@ -192,6 +192,8 @@
         extension = @"spx";
     } else if ([audioCodec isEqualToString:@"wavpack"]) {
         extension = @"wv";
+    } else if ([audioCodec isEqualToString:@"lc3"]) {
+        extension = @"lc3";
     } else {
         
         // soxr
@@ -253,11 +255,13 @@
     } else if ([audioCodec isEqualToString:@"amr-wb"]) {
         return [NSString stringWithFormat:@"-hide_banner -y -i %@ -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental %@", audioSampleFile, audioOutputFile];
     } else if ([audioCodec isEqualToString:@"ilbc"]) {
-        return [NSString stringWithFormat:@"-hide_banner -y -i %@ -c:a ilbc -ar 8000 -b:a 15200 %@", audioSampleFile, audioOutputFile];
+        return [NSString stringWithFormat:@"-hide_banner -y -i %@ -c:a libilbc -ar 8000 -b:a 15200 %@", audioSampleFile, audioOutputFile];
     } else if ([audioCodec isEqualToString:@"speex"]) {
         return [NSString stringWithFormat:@"-hide_banner -y -i %@ -c:a libspeex -ar 16000 %@", audioSampleFile, audioOutputFile];
     } else if ([audioCodec isEqualToString:@"wavpack"]) {
         return [NSString stringWithFormat:@"-hide_banner -y -i %@ -c:a wavpack -b:a 64k %@", audioSampleFile, audioOutputFile];
+    } else if ([audioCodec isEqualToString:@"lc3"]) {
+        return [NSString stringWithFormat:@"-hide_banner -y -i %@ -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 %@", audioSampleFile, audioOutputFile];
     } else {
 
         // soxr

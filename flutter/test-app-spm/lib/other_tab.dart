@@ -89,8 +89,14 @@ class OtherTab {
       case "webp":
         this.testWebp();
         break;
+      case "libjxl":
+        this.testLibjxl();
+        break;
       case "zscale":
         this.testZscale();
+        break;
+      case "vvenc":
+        this.testVvenc();
         break;
     }
   }
@@ -109,13 +115,15 @@ class OtherTab {
         ffprint("Creating audio sample with '${ffmpegCommand}'.");
 
         FFmpegKit.executeAsync(ffmpegCommand, (session) async {
-          final state =
-              FFmpegKitConfig.sessionStateToString(await session.getState());
+          final state = FFmpegKitConfig.sessionStateToString(
+            await session.getState(),
+          );
           final returnCode = await session.getReturnCode();
           final failStackTrace = await session.getFailStackTrace();
 
           ffprint(
-              "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}");
+            "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+          );
 
           if (ReturnCode.isSuccess(returnCode)) {
             ffprint("AUDIO sample created");
@@ -127,24 +135,28 @@ class OtherTab {
 
             FFmpegKit.executeAsync(chromaprintCommand, (secondSession) async {
               final secondState = FFmpegKitConfig.sessionStateToString(
-                  await secondSession.getState());
+                await secondSession.getState(),
+              );
               final secondReturnCode = await secondSession.getReturnCode();
-              final secondFailStackTrace =
-                  await secondSession.getFailStackTrace();
+              final secondFailStackTrace = await secondSession
+                  .getFailStackTrace();
 
               ffprint(
-                  "FFmpeg process exited with state ${secondState} and rc ${secondReturnCode}.${notNull(secondFailStackTrace, "\\n")}");
+                "FFmpeg process exited with state ${secondState} and rc ${secondReturnCode}.${notNull(secondFailStackTrace, "\\n")}",
+              );
 
               if (ReturnCode.isSuccess(secondReturnCode)) {
                 showPopup("Testing chromaprint completed successfully.");
               } else {
                 showPopup(
-                    "Testing chromaprint failed. Please check logs for the details.");
+                  "Testing chromaprint failed. Please check logs for the details.",
+                );
               }
             }, (log) => this.appendOutput(log.getMessage()));
           } else {
             showPopup(
-                "Creating AUDIO sample failed. Please check logs for the details.");
+              "Creating AUDIO sample failed. Please check logs for the details.",
+            );
           }
         });
       });
@@ -156,18 +168,20 @@ class OtherTab {
 
     this.getDav1dOutputFile().then((outputFile) {
       final ffmpegCommand =
-          "-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} ${outputFile.path}";
+          "-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} -c:v mpeg4 ${outputFile.path}";
 
       ffprint("FFmpeg process started with arguments:'${ffmpegCommand}'.");
 
       FFmpegKit.executeAsync(ffmpegCommand, (session) async {
-        final state =
-            FFmpegKitConfig.sessionStateToString(await session.getState());
+        final state = FFmpegKitConfig.sessionStateToString(
+          await session.getState(),
+        );
         final returnCode = await session.getReturnCode();
         final failStackTrace = await session.getFailStackTrace();
 
         ffprint(
-            "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}");
+          "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+        );
       }, (log) => this.appendOutput(log.getMessage()));
     });
   }
@@ -183,13 +197,15 @@ class OtherTab {
         ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
 
         FFmpegKit.executeAsync(ffmpegCommand, (session) async {
-          final state =
-              FFmpegKitConfig.sessionStateToString(await session.getState());
+          final state = FFmpegKitConfig.sessionStateToString(
+            await session.getState(),
+          );
           final returnCode = await session.getReturnCode();
           final failStackTrace = await session.getFailStackTrace();
 
           ffprint(
-              "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}");
+            "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+          );
 
           if (ReturnCode.isSuccess(returnCode)) {
             showPopup("Encode webp completed successfully.");
@@ -206,21 +222,26 @@ class OtherTab {
       getZscaledVideoFile().then((zscaledVideoFile) {
         this.getWebpOutputFile().then((outputPath) {
           ffprint(
-              "Testing 'zscale' filter with video file created on the Video tab");
+            "Testing 'zscale' filter with video file created on the Video tab",
+          );
 
           final ffmpegCommand = VideoUtil.generateZscaleVideoScript(
-              videoFile.path, zscaledVideoFile.path);
+            videoFile.path,
+            zscaledVideoFile.path,
+          );
 
           ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
 
           FFmpegKit.executeAsync(ffmpegCommand, (session) async {
-            final state =
-                FFmpegKitConfig.sessionStateToString(await session.getState());
+            final state = FFmpegKitConfig.sessionStateToString(
+              await session.getState(),
+            );
             final returnCode = await session.getReturnCode();
             final failStackTrace = await session.getFailStackTrace();
 
             ffprint(
-                "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}");
+              "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+            );
 
             if (ReturnCode.isSuccess(returnCode)) {
               showPopup("zscale completed successfully.");
@@ -231,6 +252,89 @@ class OtherTab {
         });
       });
     });
+  }
+
+  testLibjxl() async {
+    final imagePath = await VideoUtil.assetPath(VideoUtil.ASSET_1);
+    final jxlOutputFile = await getLibjxlOutputFile();
+    final decodedOutputFile = await getLibjxlDecodedOutputFile();
+
+    deleteFile(jxlOutputFile);
+    deleteFile(decodedOutputFile);
+
+    ffprint("Testing 'libjxl' codec");
+
+    final ffmpegCommand =
+        "-hide_banner -y -i $imagePath -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 ${jxlOutputFile.path}";
+
+    ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
+
+    FFmpegKit.executeAsync(ffmpegCommand, (session) async {
+      final state = FFmpegKitConfig.sessionStateToString(
+        await session.getState(),
+      );
+      final returnCode = await session.getReturnCode();
+      final failStackTrace = await session.getFailStackTrace();
+
+      ffprint(
+        "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+      );
+
+      if (ReturnCode.isSuccess(returnCode)) {
+        final decodeCommand =
+            "-hide_banner -y -i ${jxlOutputFile.path} -frames:v 1 -c:v png -update 1 ${decodedOutputFile.path}";
+
+        ffprint("FFmpeg process started with arguments '${decodeCommand}'.");
+
+        FFmpegKit.executeAsync(decodeCommand, (decodeSession) async {
+          final decodeState = FFmpegKitConfig.sessionStateToString(
+            await decodeSession.getState(),
+          );
+          final decodeReturnCode = await decodeSession.getReturnCode();
+          final decodeFailStackTrace = await decodeSession.getFailStackTrace();
+
+          ffprint(
+            "FFmpeg process exited with state ${decodeState} and rc ${decodeReturnCode}.${notNull(decodeFailStackTrace, "\\n")}",
+          );
+        }, (log) => this.appendOutput(log.getMessage()));
+      }
+    }, (log) => this.appendOutput(log.getMessage()));
+  }
+
+  testVvenc() async {
+    final image1Path = await VideoUtil.assetPath(VideoUtil.ASSET_1);
+    final image2Path = await VideoUtil.assetPath(VideoUtil.ASSET_2);
+    final image3Path = await VideoUtil.assetPath(VideoUtil.ASSET_3);
+    final outputFile = await getVvencOutputFile();
+
+    deleteFile(outputFile);
+
+    ffprint("Testing 'vvenc' codec");
+
+    final ffmpegCommand =
+        VideoUtil.generateEncodeVideoScriptWithCustomPixelFormat(
+          image1Path,
+          image2Path,
+          image3Path,
+          outputFile.path,
+          "libvvenc",
+          "yuv420p10le",
+          "-preset faster -qp 32 ",
+        );
+
+    ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
+
+    FFmpegKit.executeAsync(ffmpegCommand, (session) async {
+      final state = FFmpegKitConfig.sessionStateToString(
+        await session.getState(),
+      );
+      final returnCode = await session.getReturnCode();
+      final failStackTrace = await session.getFailStackTrace();
+
+      ffprint(
+        "FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+      );
+    }, (log) => this.appendOutput(log.getMessage()));
   }
 
   Future<File> getChromaprintSampleFile() async {
@@ -263,22 +367,63 @@ class OtherTab {
     return new File("${documentsDirectory.path}/video.zscaled.mp4");
   }
 
+  Future<File> getLibjxlOutputFile() async {
+    Directory documentsDirectory = await VideoUtil.documentsDirectory;
+    return new File("${documentsDirectory.path}/image.jxl");
+  }
+
+  Future<File> getLibjxlDecodedOutputFile() async {
+    Directory documentsDirectory = await VideoUtil.documentsDirectory;
+    return new File("${documentsDirectory.path}/image.jxl.png");
+  }
+
+  Future<File> getVvencOutputFile() async {
+    Directory documentsDirectory = await VideoUtil.documentsDirectory;
+    return new File("${documentsDirectory.path}/video.266");
+  }
+
   List<DropdownMenuItem<String>> getTestList() {
     List<DropdownMenuItem<String>> list = List.empty(growable: true);
 
-    list.add(new DropdownMenuItem(
+    list.add(
+      new DropdownMenuItem(
         value: "chromaprint",
         child: SizedBox(
-            width: 100, child: Center(child: new Text("chromaprint")))));
-    list.add(new DropdownMenuItem(
+          width: 100,
+          child: Center(child: new Text("chromaprint")),
+        ),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "dav1d",
-        child: SizedBox(width: 100, child: Center(child: new Text("dav1d")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("dav1d"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "webp",
-        child: SizedBox(width: 100, child: Center(child: new Text("webp")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("webp"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
+        value: "libjxl",
+        child: SizedBox(width: 100, child: Center(child: new Text("libjxl"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "zscale",
-        child: SizedBox(width: 100, child: Center(child: new Text("zscale")))));
+        child: SizedBox(width: 100, child: Center(child: new Text("zscale"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
+        value: "vvenc",
+        child: SizedBox(width: 100, child: Center(child: new Text("vvenc"))),
+      ),
+    );
 
     return list;
   }

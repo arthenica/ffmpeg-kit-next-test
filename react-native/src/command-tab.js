@@ -34,7 +34,7 @@ export default class CommandTab extends React.Component {
     }
 
     appendOutput(logMessage) {
-        this.setState({outputText: this.state.outputText + logMessage});
+        this.setState((state) => ({outputText: state.outputText + logMessage}));
     };
 
     clearOutput() {

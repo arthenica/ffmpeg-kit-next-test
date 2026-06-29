@@ -46,7 +46,7 @@
     [super viewDidLoad];
 
     // OTHER TEST PICKER INIT
-    testData = @[@"chromaprint", @"dav1d", @"webp", @"zscale"];
+    testData = @[@"chromaprint", @"dav1d", @"webp", @"libjxl", @"zscale", @"vvenc"];
     selectedTest = 0;
 
     [self.otherTestComboBox setUsesDataSource:YES];
@@ -103,7 +103,13 @@
             [self testWebp];
         break;
         case 3:
+            [self testLibjxl];
+        break;
+        case 4:
             [self testZscale];
+        break;
+        case 5:
+            [self testVvenc];
         break;
     }
 }
@@ -146,7 +152,7 @@
 -(void)testDav1d {
     NSLog(@"Testing decoding 'av1' codec\n");
 
-    NSString *ffmpegCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ %@", DAV1D_TEST_DEFAULT_URL, [self getDav1dOutputPath]];
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -c:v mpeg4 %@", DAV1D_TEST_DEFAULT_URL, [self getDav1dOutputPath]];
 
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
 
@@ -182,6 +188,47 @@
     } withStatisticsCallback:nil];
 }
 
+-(void)testLibjxl {
+    NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
+    NSString *imageFile = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
+    NSString *jxlOutputFile = [self getLibjxlOutputPath];
+    NSString *decodedOutputFile = [self getLibjxlDecodedOutputPath];
+
+    [[NSFileManager defaultManager] removeItemAtPath:jxlOutputFile error:NULL];
+    [[NSFileManager defaultManager] removeItemAtPath:decodedOutputFile error:NULL];
+
+    NSLog(@"Testing 'libjxl' codec\n");
+
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 %@", imageFile, jxlOutputFile];
+
+    NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
+
+    [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
+
+        NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], [session getReturnCode], notNull([session getFailStackTrace], @"\n"));
+
+        if ([ReturnCode isSuccess:[session getReturnCode]]) {
+            NSString *decodeCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -frames:v 1 -c:v png -update 1 %@", jxlOutputFile, decodedOutputFile];
+
+            NSLog(@"FFmpeg process started with arguments '%@'.\n", decodeCommand);
+
+            [FFmpegKit executeAsync:decodeCommand withCompleteCallback:^(FFmpegSession* session) {
+
+                NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], [session getReturnCode], notNull([session getFailStackTrace], @"\n"));
+
+            } withLogCallback:^(Log *log) {
+                addUIAction(^{
+                    [self appendOutput: [log getMessage]];
+                });
+            } withStatisticsCallback:nil];
+        }
+    } withLogCallback:^(Log *log) {
+        addUIAction(^{
+            [self appendOutput: [log getMessage]];
+        });
+    } withStatisticsCallback:nil];
+}
+
 -(void)testZscale {
     NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *videoFile = [docFolder stringByAppendingPathComponent: @"video.mp4"];
@@ -190,6 +237,32 @@
     NSLog(@"Testing 'zscale' filter with video file created on the Video tab\n");
 
     NSString *ffmpegCommand = [Video generateZscaleVideoScript:videoFile:zscaledVideoFile];
+
+    NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
+
+    [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
+
+        NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], [session getReturnCode], notNull([session getFailStackTrace], @"\n"));
+
+    } withLogCallback:^(Log *log) {
+        addUIAction(^{
+            [self appendOutput: [log getMessage]];
+        });
+    } withStatisticsCallback:nil];
+}
+
+-(void)testVvenc {
+    NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *outputFile = [self getVvencOutputPath];
+
+    [[NSFileManager defaultManager] removeItemAtPath:outputFile error:NULL];
+
+    NSLog(@"Testing 'vvenc' codec\n");
+
+    NSString *ffmpegCommand = [Video generateVideoEncodeScriptWithCustomPixelFormat:image1:image2:image3:outputFile:@"libvvenc":@"yuv420p10le":@"-preset faster -qp 32 "];
 
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
 
@@ -217,6 +290,21 @@
 - (NSString*)getChromaprintOutputPath {
     NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     return [docFolder stringByAppendingPathComponent: @"chromaprint.txt"];
+}
+
+- (NSString*)getLibjxlOutputPath {
+    NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [docFolder stringByAppendingPathComponent: @"image.jxl"];
+}
+
+- (NSString*)getLibjxlDecodedOutputPath {
+    NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [docFolder stringByAppendingPathComponent: @"image.jxl.png"];
+}
+
+- (NSString*)getVvencOutputPath {
+    NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [docFolder stringByAppendingPathComponent: @"video.266"];
 }
 
 - (void)setActive {

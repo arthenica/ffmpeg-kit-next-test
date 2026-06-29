@@ -168,6 +168,10 @@ void ffmpegkittest::AudioTab::initAudioCodecData() {
     row[audioCodecModelColumn.columnId] = "11";
     row[audioCodecModelColumn.columnName] = "wavpack";
 
+    row = *(audioCodecModel->append());
+    row[audioCodecModelColumn.columnId] = "12";
+    row[audioCodecModelColumn.columnName] = "lc3";
+
     audioCodec.pack_start(audioCodecModelColumn.columnName);
     audioCodec.set_entry_text_column(audioCodecModelColumn.columnId);
     audioCodec.set_active(0);
@@ -195,6 +199,7 @@ std::string ffmpegkittest::AudioTab::getSelectedAudioCodec() {
         case 8: return "soxr";
         case 9: return "speex";
         case 10: return "wavpack";
+        case 11: return "lc3";
         default: return "";
     }
 }
@@ -251,6 +256,8 @@ std::string ffmpegkittest::AudioTab::getAudioOutputFile() {
         extension = "spx";
     } else if (audioCodec.compare("wavpack") == 0) {
         extension = "wv";
+    } else if (audioCodec.compare("lc3") == 0) {
+        extension = "lc3";
     } else {
 
         // soxr
@@ -292,11 +299,13 @@ std::string ffmpegkittest::AudioTab::generateAudioEncodeScript() {
     } else if (audioCodec.compare("amr-wb") == 0) {
         return "-hide_banner -y -i " + audioSampleFile + " -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental " + audioOutputFile;
     } else if (audioCodec.compare("ilbc") == 0) {
-        return "-hide_banner -y -i " + audioSampleFile + " -c:a ilbc -ar 8000 -b:a 15200 " + audioOutputFile;
+        return "-hide_banner -y -i " + audioSampleFile + " -c:a libilbc -ar 8000 -b:a 15200 " + audioOutputFile;
     } else if (audioCodec.compare("speex") == 0) {
         return "-hide_banner -y -i " + audioSampleFile + " -c:a libspeex -ar 16000 " + audioOutputFile;
     } else if (audioCodec.compare("wavpack") == 0) {
         return "-hide_banner -y -i " + audioSampleFile + " -c:a wavpack -b:a 64k " + audioOutputFile;
+    } else if (audioCodec.compare("lc3") == 0) {
+        return "-hide_banner -y -i " + audioSampleFile + " -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 " + audioOutputFile;
     } else {
 
         // soxr

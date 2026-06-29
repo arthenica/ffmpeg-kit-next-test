@@ -198,6 +198,8 @@
         videoCodec = @"libvpx-vp9";
     } else if ([videoCodec isEqualToString:@"aom"]) {
         videoCodec = @"libaom-av1";
+    } else if ([videoCodec isEqualToString:@"svt-av1"]) {
+        videoCodec = @"libsvtav1";
     } else if ([videoCodec isEqualToString:@"kvazaar"]) {
         videoCodec = @"libkvazaar";
     } else if ([videoCodec isEqualToString:@"theora"]) {
@@ -213,8 +215,6 @@
     NSString *extension;
     if ([videoCodec isEqualToString:@"vp8"] || [videoCodec isEqualToString:@"vp9"]) {
         extension = @"webm";
-    } else if ([videoCodec isEqualToString:@"aom"]) {
-        extension = @"mkv";
     } else if ([videoCodec isEqualToString:@"theora"]) {
         extension = @"ogv";
     } else if ([videoCodec isEqualToString:@"hap"]) {
@@ -240,6 +240,8 @@
         return @"-b:v 2M ";
     } else if ([videoCodec isEqualToString:@"aom"]) {
         return @"-crf 30 -strict experimental ";
+    } else if ([videoCodec isEqualToString:@"svt-av1"]) {
+        return @"-preset 8 -crf 35 ";
     } else if ([videoCodec isEqualToString:@"theora"]) {
         return @"-qscale:v 7 ";
     } else if ([videoCodec isEqualToString:@"hap"]) {

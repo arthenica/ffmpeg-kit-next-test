@@ -111,8 +111,14 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
             case "webp":
                 testWebp();
                 break;
+            case "libjxl":
+                testLibjxl();
+                break;
             case "zscale":
                 testZscale();
+                break;
+            case "vvenc":
+                testVvenc();
                 break;
         }
     }
@@ -158,7 +164,7 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
     protected void testDav1d() {
         Log.d(TAG, "Testing decoding 'av1' codec");
 
-        final String ffmpegCommand = String.format("-hide_banner -y -i %s %s", DAV1D_TEST_DEFAULT_URL, getDav1dOutputFile().getAbsolutePath());
+        final String ffmpegCommand = String.format("-hide_banner -y -i %s -c:v mpeg4 %s", DAV1D_TEST_DEFAULT_URL, getDav1dOutputFile().getAbsolutePath());
 
         Log.d(TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand));
 
@@ -225,6 +231,78 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
         }), null);
     }
 
+    protected void testLibjxl() {
+        final File imageFile = new File(requireContext().getCacheDir(), "machupicchu.jpg");
+        final File jxlOutputFile = getLibjxlOutputFile();
+        final File decodedOutputFile = getLibjxlDecodedOutputFile();
+
+        if (jxlOutputFile.exists()) {
+            jxlOutputFile.delete();
+        }
+        if (decodedOutputFile.exists()) {
+            decodedOutputFile.delete();
+        }
+
+        try {
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.machupicchu, imageFile);
+
+            Log.d(TAG, "Testing 'libjxl' codec");
+
+            final String ffmpegCommand = String.format("-hide_banner -y -i %s -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 %s", imageFile.getAbsolutePath(), jxlOutputFile.getAbsolutePath());
+
+            Log.d(TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand));
+
+            FFmpegKit.executeAsync(ffmpegCommand, session -> {
+                Log.d(TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", session.getState(), session.getReturnCode(), notNull(session.getFailStackTrace(), "\n")));
+
+                if (ReturnCode.isSuccess(session.getReturnCode())) {
+                    final String decodeCommand = String.format("-hide_banner -y -i %s -frames:v 1 -c:v png -update 1 %s", jxlOutputFile.getAbsolutePath(), decodedOutputFile.getAbsolutePath());
+
+                    Log.d(TAG, String.format("FFmpeg process started with arguments: '%s'.", decodeCommand));
+
+                    FFmpegKit.executeAsync(decodeCommand, session1 -> Log.d(TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", session1.getState(), session1.getReturnCode(), notNull(session1.getFailStackTrace(), "\n"))), log -> MainActivity.addUIAction(() -> {
+                        appendOutput(log.getMessage());
+                    }), null);
+                }
+            }, log -> MainActivity.addUIAction(() -> {
+                appendOutput(log.getMessage());
+            }), null);
+        } catch (IOException e) {
+            Log.e(TAG, String.format("Encode libjxl failed %s.", Exceptions.getStackTraceString(e)));
+            Popup.show(requireContext(), "Encode libjxl failed");
+        }
+    }
+
+    protected void testVvenc() {
+        final File image1File = new File(requireContext().getCacheDir(), "machupicchu.jpg");
+        final File image2File = new File(requireContext().getCacheDir(), "pyramid.jpg");
+        final File image3File = new File(requireContext().getCacheDir(), "stonehenge.jpg");
+        final File outputFile = getVvencOutputFile();
+
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
+
+        try {
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.machupicchu, image1File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.pyramid, image2File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.stonehenge, image3File);
+
+            Log.d(TAG, "Testing 'vvenc' codec");
+
+            final String ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.getAbsolutePath(), image2File.getAbsolutePath(), image3File.getAbsolutePath(), outputFile.getAbsolutePath(), "libvvenc", "yuv420p10le", "-preset faster -qp 32 ");
+
+            Log.d(TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand));
+
+            FFmpegKit.executeAsync(ffmpegCommand, session -> Log.d(TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", session.getState(), session.getReturnCode(), notNull(session.getFailStackTrace(), "\n"))), log -> MainActivity.addUIAction(() -> {
+                appendOutput(log.getMessage());
+            }), null);
+        } catch (IOException e) {
+            Log.e(TAG, String.format("Encode vvenc failed %s.", Exceptions.getStackTraceString(e)));
+            Popup.show(requireContext(), "Encode vvenc failed");
+        }
+    }
+
     public File getChromaprintSampleFile() {
         return new File(requireContext().getFilesDir(), "audio-sample.wav");
     }
@@ -235,6 +313,18 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
 
     public File getChromaprintOutputFile() {
         return new File(requireContext().getFilesDir(), "chromaprint.txt");
+    }
+
+    public File getLibjxlOutputFile() {
+        return new File(requireContext().getFilesDir(), "image.jxl");
+    }
+
+    public File getLibjxlDecodedOutputFile() {
+        return new File(requireContext().getFilesDir(), "image.jxl.png");
+    }
+
+    public File getVvencOutputFile() {
+        return new File(requireContext().getFilesDir(), "video.266");
     }
 
     public void setActive() {

@@ -123,6 +123,8 @@ class AudioViewController: UIViewController, ActivatableTab {
             ext = "spx"
         } else if audioCodec == "wavpack" {
             ext = "wv"
+        } else if audioCodec == "lc3" {
+            ext = "lc3"
         } else {
             ext = "wav"
         }
@@ -198,11 +200,13 @@ class AudioViewController: UIViewController, ActivatableTab {
         } else if audioCodec.contains("amr-wb") {
             return "-hide_banner -y -i \(audioSampleFile) -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental \(audioOutputFile)"
         } else if audioCodec.contains("ilbc") {
-            return "-hide_banner -y -i \(audioSampleFile) -c:a ilbc -ar 8000 -b:a 15200 \(audioOutputFile)"
+            return "-hide_banner -y -i \(audioSampleFile) -c:a libilbc -ar 8000 -b:a 15200 \(audioOutputFile)"
         } else if audioCodec.contains("speex") {
             return "-hide_banner -y -i \(audioSampleFile) -c:a libspeex -ar 16000 \(audioOutputFile)"
         } else if audioCodec.contains("wavpack") {
             return "-hide_banner -y -i \(audioSampleFile) -c:a wavpack -b:a 64k \(audioOutputFile)"
+        } else if audioCodec.contains("lc3") {
+            return "-hide_banner -y -i \(audioSampleFile) -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 \(audioOutputFile)"
         } else {
             return "-hide_banner -y -i \(audioSampleFile) -af aresample=resampler=soxr -ar 44100 \(audioOutputFile)"
         }

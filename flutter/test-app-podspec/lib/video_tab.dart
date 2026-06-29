@@ -81,46 +81,53 @@ class VideoTab implements PlayerTab {
 
             final ffmpegCommand =
                 VideoUtil.generateEncodeVideoScriptWithCustomPixelFormat(
-                    image1Path,
-                    image2Path,
-                    image3Path,
-                    videoFile.path,
-                    videoCodec,
-                    this.getPixelFormat(),
-                    this.getCustomOptions());
+                  image1Path,
+                  image2Path,
+                  image3Path,
+                  videoFile.path,
+                  videoCodec,
+                  this.getPixelFormat(),
+                  this.getCustomOptions(),
+                );
 
             ffprint(
-                "FFmpeg process started with arguments: \'${ffmpegCommand}\'.");
+              "FFmpeg process started with arguments: \'${ffmpegCommand}\'.",
+            );
 
             FFmpegKit.executeAsync(
-                    ffmpegCommand,
-                    (session) async {
-                      final state = FFmpegKitConfig.sessionStateToString(
-                          await session.getState());
-                      final returnCode = await session.getReturnCode();
-                      final failStackTrace = await session.getFailStackTrace();
-                      final duration = await session.getDuration();
+              ffmpegCommand,
+              (session) async {
+                final state = FFmpegKitConfig.sessionStateToString(
+                  await session.getState(),
+                );
+                final returnCode = await session.getReturnCode();
+                final failStackTrace = await session.getFailStackTrace();
+                final duration = await session.getDuration();
 
-                      this.hideProgressDialog();
+                this.hideProgressDialog();
 
-                      if (ReturnCode.isSuccess(returnCode)) {
-                        ffprint(
-                            "Encode completed successfully in ${duration} milliseconds; playing video.");
-                        this.playVideo();
-                      } else {
-                        showPopup(
-                            "Encode failed. Please check log for the details.");
-                        ffprint(
-                            "Encode failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}");
-                      }
-                    },
-                    (log) => ffprint(log.getMessage()),
-                    (statistics) {
-                      this._statistics = statistics;
-                      this.updateProgressDialog();
-                    })
-                .then((session) => ffprint(
-                    "Async FFmpeg process started with sessionId ${session.getSessionId()}."));
+                if (ReturnCode.isSuccess(returnCode)) {
+                  ffprint(
+                    "Encode completed successfully in ${duration} milliseconds; playing video.",
+                  );
+                  this.playVideo();
+                } else {
+                  showPopup("Encode failed. Please check log for the details.");
+                  ffprint(
+                    "Encode failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}",
+                  );
+                }
+              },
+              (log) => ffprint(log.getMessage()),
+              (statistics) {
+                this._statistics = statistics;
+                this.updateProgressDialog();
+              },
+            ).then(
+              (session) => ffprint(
+                "Async FFmpeg process started with sessionId ${session.getSessionId()}.",
+              ),
+            );
           });
         });
       });
@@ -192,6 +199,9 @@ class VideoTab implements PlayerTab {
       case "aom":
         videoCodec = "libaom-av1";
         break;
+      case "svt-av1":
+        videoCodec = "libsvtav1";
+        break;
       case "kvazaar":
         videoCodec = "libkvazaar";
         break;
@@ -211,9 +221,6 @@ class VideoTab implements PlayerTab {
       case "vp8":
       case "vp9":
         extension = "webm";
-        break;
-      case "aom":
-        extension = "mkv";
         break;
       case "theora":
         extension = "ogv";
@@ -244,6 +251,8 @@ class VideoTab implements PlayerTab {
         return "-b:v 2M ";
       case "aom":
         return "-crf 30 -strict experimental ";
+      case "svt-av1":
+        return "-preset 8 -crf 35 ";
       case "theora":
         return "-qscale:v 7 ";
       case "hap":
@@ -257,47 +266,98 @@ class VideoTab implements PlayerTab {
   List<DropdownMenuItem<String>> getVideoCodecList() {
     List<DropdownMenuItem<String>> list = List.empty(growable: true);
 
-    list.add(new DropdownMenuItem(
+    list.add(
+      new DropdownMenuItem(
         value: "mpeg4",
-        child: SizedBox(width: 130, child: Center(child: new Text("mpeg4")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("mpeg4"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "x264",
-        child: SizedBox(width: 130, child: Center(child: new Text("x264")))));
-    list.add(new DropdownMenuItem(
-        value: "h264_mediacodec",
-        child: SizedBox(width: 130, child: Center(child: new Text("h264_mediacodec")))));
-    list.add(new DropdownMenuItem(
-        value: "hevc_mediacodec",
-        child: SizedBox(width: 130, child: Center(child: new Text("hevc_mediacodec")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("x264"))),
+      ),
+    );
+    if (Platform.isAndroid) {
+      list.add(
+        new DropdownMenuItem(
+          value: "h264_mediacodec",
+          child: SizedBox(
+            width: 130,
+            child: Center(child: new Text("h264_mediacodec")),
+          ),
+        ),
+      );
+      list.add(
+        new DropdownMenuItem(
+          value: "hevc_mediacodec",
+          child: SizedBox(
+            width: 130,
+            child: Center(child: new Text("hevc_mediacodec")),
+          ),
+        ),
+      );
+    }
+    list.add(
+      new DropdownMenuItem(
         value: "openh264",
-        child:
-            SizedBox(width: 130, child: Center(child: new Text("openh264")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("openh264"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "x265",
-        child: SizedBox(width: 130, child: Center(child: new Text("x265")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("x265"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "xvid",
-        child: SizedBox(width: 130, child: Center(child: new Text("xvid")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("xvid"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "vp8",
-        child: SizedBox(width: 130, child: Center(child: new Text("vp8")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("vp8"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "vp9",
-        child: SizedBox(width: 130, child: Center(child: new Text("vp9")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("vp9"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "aom",
-        child: SizedBox(width: 130, child: Center(child: new Text("aom")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("aom"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
+        value: "svt-av1",
+        child: SizedBox(width: 130, child: Center(child: new Text("svt-av1"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "kvazaar",
-        child:
-            SizedBox(width: 130, child: Center(child: new Text("kvazaar")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("kvazaar"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "theora",
-        child: SizedBox(width: 130, child: Center(child: new Text("theora")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 130, child: Center(child: new Text("theora"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "hap",
-        child: SizedBox(width: 130, child: Center(child: new Text("hap")))));
+        child: SizedBox(width: 130, child: Center(child: new Text("hap"))),
+      ),
+    );
 
     return list;
   }
@@ -319,8 +379,9 @@ class VideoTab implements PlayerTab {
 
     int completePercentage = (timeInMilliseconds * 100) ~/ totalVideoDuration;
 
-    _refreshablePlayerDialogFactory
-        .dialogUpdate("Encoding video % $completePercentage");
+    _refreshablePlayerDialogFactory.dialogUpdate(
+      "Encoding video % $completePercentage",
+    );
     _refreshablePlayerDialogFactory.refresh();
   }
 

@@ -47,10 +47,15 @@ namespace ffmpegkittest {
             void testChromaprint();
             void testDav1d();
             void testWebp();
+            void testLibjxl();
             void testZscale();
+            void testVvenc();
             std::string getChromaprintSampleFile();
             std::string getDav1dOutputFile();
             std::string getChromaprintOutputFile();
+            std::string getLibjxlOutputFile();
+            std::string getLibjxlDecodedOutputFile();
+            std::string getVvencOutputFile();
 
             Glib::RefPtr<Gtk::ListStore> testModel;
             ComboBoxModelColumn testModelColumn;

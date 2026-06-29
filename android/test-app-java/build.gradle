@@ -19,8 +19,8 @@ android {
         applicationId "com.arthenica.ffmpegkit.test"
         minSdk 24
         targetSdk 35
-        versionCode 240611
-        versionName "6.1.1"
+        versionCode 240710
+        versionName "7.1.0"
     }
     buildTypes {
         debug {
@@ -59,7 +59,7 @@ androidComponents {
 
 dependencies {
     implementation platform('org.jetbrains.kotlin:kotlin-bom:2.2.21')
-    implementation 'com.arthenica:ffmpeg-kit-next:6.1.1'
+    implementation 'com.arthenica:ffmpeg-kit-next:7.1.0'
     implementation 'com.arthenica:smart-exception-java:0.2.1'
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'

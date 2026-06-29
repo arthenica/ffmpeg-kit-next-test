@@ -32,7 +32,7 @@ class VideoViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
     @IBOutlet var encodeButton: UIButton!
     @IBOutlet var videoPlayerFrame: UILabel!
 
-    private let codecData = ["mpeg4", "h264 (x264)", "h264 (openh264)", "h264 (videotoolbox)", "x265", "xvid", "vp8", "vp9", "aom", "kvazaar", "theora", "hap"]
+    private let codecData = ["mpeg4", "h264 (x264)", "h264 (openh264)", "h264 (videotoolbox)", "x265", "xvid", "vp8", "vp9", "aom", "svt-av1", "kvazaar", "theora", "hap"]
     private var selectedCodec = 0
     private var player: AVQueuePlayer!
     private var playerLayer: AVPlayerLayer!
@@ -140,6 +140,7 @@ class VideoViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
         case "vp8": return "libvpx"
         case "vp9": return "libvpx-vp9"
         case "aom": return "libaom-av1"
+        case "svt-av1": return "libsvtav1"
         case "kvazaar": return "libkvazaar"
         case "theora": return "libtheora"
         default: return videoCodec
@@ -151,8 +152,6 @@ class VideoViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
         let ext: String
         if videoCodec == "vp8" || videoCodec == "vp9" {
             ext = "webm"
-        } else if videoCodec == "aom" {
-            ext = "mkv"
         } else if videoCodec == "theora" {
             ext = "ogv"
         } else if videoCodec == "hap" {
@@ -169,6 +168,7 @@ class VideoViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
         case "vp8": return "-b:v 1M -crf 10 "
         case "vp9": return "-b:v 2M "
         case "aom": return "-crf 30 -strict experimental "
+        case "svt-av1": return "-preset 8 -crf 35 "
         case "theora": return "-qscale:v 7 "
         case "hap": return "-format hap_q "
         default: return ""

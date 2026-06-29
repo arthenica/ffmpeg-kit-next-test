@@ -4,6 +4,8 @@
         <item>chromaprint</item>
         <item>dav1d</item>
         <item>webp</item>
+        <item>libjxl</item>
         <item>zscale</item>
+        <item>vvenc</item>
     </string-array>
 </resources>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-project(ffmpeg-kit-next-linux-test VERSION 6.1.1)
+project(ffmpeg-kit-next-linux-test VERSION 7.1.0)
 
 include(CTest)
 enable_testing()
@@ -17,7 +17,7 @@ else()
 endif()
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=6.1.1)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=7.1.0)
 pkg_check_modules(GTKMM REQUIRED IMPORTED_TARGET gtkmm-3.0>=3.0)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/data/ffmpeg-kit-next-linux-test-app.sh.in ${CMAKE_CURRENT_BINARY_DIR}/bin/ffmpeg-kit-next-linux-test-app.sh @ONLY)

@@ -12,5 +12,6 @@
         <item>soxr</item>
         <item>speex</item>
         <item>wavpack</item>
+        <item>lc3</item>
     </string-array>
 </resources>

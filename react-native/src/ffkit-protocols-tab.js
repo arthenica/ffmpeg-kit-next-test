@@ -316,7 +316,7 @@ export default class FFKitProtocolsTab extends React.Component {
     // region output helpers
 
     appendOutput(logMessage) {
-        this.setState({outputText: this.state.outputText + logMessage});
+        this.setState((state) => ({outputText: state.outputText + logMessage}));
     }
 
     clearOutput() {

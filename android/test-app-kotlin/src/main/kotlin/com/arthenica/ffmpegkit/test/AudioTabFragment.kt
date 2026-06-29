@@ -162,6 +162,7 @@ class AudioTabFragment : Fragment(R.layout.fragment_audio_tab), AdapterView.OnIt
             "ilbc" -> "lbc"
             "speex" -> "spx"
             "wavpack" -> "wv"
+            "lc3" -> "lc3"
             else -> "wav"
         }
 
@@ -210,9 +211,10 @@ class AudioTabFragment : Fragment(R.layout.fragment_audio_tab), AdapterView.OnIt
             "opus" -> String.format("-hide_banner -y -i %s -c:a libopus -b:a 64k -vbr on -compression_level 10 %s", audioSampleFile, audioOutputFile)
             "amr-nb" -> String.format("-hide_banner -y -i %s -ar 8000 -ab 12.2k -c:a libopencore_amrnb %s", audioSampleFile, audioOutputFile)
             "amr-wb" -> String.format("-hide_banner -y -i %s -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental %s", audioSampleFile, audioOutputFile)
-            "ilbc" -> String.format("-hide_banner -y -i %s -c:a ilbc -ar 8000 -b:a 15200 %s", audioSampleFile, audioOutputFile)
+            "ilbc" -> String.format("-hide_banner -y -i %s -c:a libilbc -ar 8000 -b:a 15200 %s", audioSampleFile, audioOutputFile)
             "speex" -> String.format("-hide_banner -y -i %s -c:a libspeex -ar 16000 %s", audioSampleFile, audioOutputFile)
             "wavpack" -> String.format("-hide_banner -y -i %s -c:a wavpack -b:a 64k %s", audioSampleFile, audioOutputFile)
+            "lc3" -> String.format("-hide_banner -y -i %s -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 %s", audioSampleFile, audioOutputFile)
             else -> String.format("-hide_banner -y -i %s -af aresample=resampler=soxr -ar 44100 %s", audioSampleFile, audioOutputFile)
         }
     }

@@ -40,7 +40,7 @@ export default class OtherTab extends React.Component {
     };
 
     appendOutput(logMessage) {
-        this.setState({outputText: this.state.outputText + logMessage});
+        this.setState((state) => ({outputText: state.outputText + logMessage}));
     };
 
     clearOutput() {
@@ -60,8 +60,14 @@ export default class OtherTab extends React.Component {
             case "webp":
                 this.testWebp();
                 break;
+            case "libjxl":
+                this.testLibjxl();
+                break;
             case "zscale":
                 this.testZscale();
+                break;
+            case "vvenc":
+                this.testVvenc();
                 break;
         }
     }
@@ -113,7 +119,7 @@ export default class OtherTab extends React.Component {
     testDav1d() {
         ffprint("Testing decoding 'av1' codec");
 
-        let ffmpegCommand = `-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} ${this.getDav1dOutputFile()}`;
+        let ffmpegCommand = `-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} -c:v mpeg4 ${this.getDav1dOutputFile()}`;
 
         ffprint(`FFmpeg process started with arguments \'${ffmpegCommand}\'.`);
 
@@ -182,6 +188,72 @@ export default class OtherTab extends React.Component {
         });
     }
 
+    testLibjxl() {
+        let imagePath = VideoUtil.assetPath(VideoUtil.ASSET_1);
+        let jxlOutputFile = this.getLibjxlOutputFile();
+        let decodedOutputFile = this.getLibjxlDecodedOutputFile();
+
+        deleteFile(jxlOutputFile);
+        deleteFile(decodedOutputFile);
+
+        ffprint("Testing 'libjxl' codec");
+
+        let ffmpegCommand = `-hide_banner -y -i ${imagePath} -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 ${jxlOutputFile}`;
+
+        ffprint(`FFmpeg process started with arguments \'${ffmpegCommand}\'.`);
+
+        FFmpegKit.executeAsync(ffmpegCommand, async (session) => {
+            const state = FFmpegKitConfig.sessionStateToString(await session.getState());
+            const returnCode = await session.getReturnCode();
+            const failStackTrace = await session.getFailStackTrace();
+
+            ffprint(`FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}`);
+
+            if (ReturnCode.isSuccess(returnCode)) {
+                let decodeCommand = `-hide_banner -y -i ${jxlOutputFile} -frames:v 1 -c:v png -update 1 ${decodedOutputFile}`;
+
+                ffprint(`FFmpeg process started with arguments \'${decodeCommand}\'.`);
+
+                FFmpegKit.executeAsync(decodeCommand, async (decodeSession) => {
+                    const decodeState = FFmpegKitConfig.sessionStateToString(await decodeSession.getState());
+                    const decodeReturnCode = await decodeSession.getReturnCode();
+                    const decodeFailStackTrace = await decodeSession.getFailStackTrace();
+
+                    ffprint(`FFmpeg process exited with state ${decodeState} and rc ${decodeReturnCode}.${notNull(decodeFailStackTrace, "\\n")}`);
+                }, log => {
+                    this.appendOutput(log.getMessage());
+                });
+            }
+        }, log => {
+            this.appendOutput(log.getMessage());
+        });
+    }
+
+    testVvenc() {
+        let image1Path = VideoUtil.assetPath(VideoUtil.ASSET_1);
+        let image2Path = VideoUtil.assetPath(VideoUtil.ASSET_2);
+        let image3Path = VideoUtil.assetPath(VideoUtil.ASSET_3);
+        let outputFile = this.getVvencOutputFile();
+
+        deleteFile(outputFile);
+
+        ffprint("Testing 'vvenc' codec");
+
+        let ffmpegCommand = VideoUtil.generateEncodeVideoScriptWithCustomPixelFormat(image1Path, image2Path, image3Path, outputFile, "libvvenc", "yuv420p10le", "-preset faster -qp 32 ");
+
+        ffprint(`FFmpeg process started with arguments \'${ffmpegCommand}\'.`);
+
+        FFmpegKit.executeAsync(ffmpegCommand, async (session) => {
+            const state = FFmpegKitConfig.sessionStateToString(await session.getState());
+            const returnCode = await session.getReturnCode();
+            const failStackTrace = await session.getFailStackTrace();
+
+            ffprint(`FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}`);
+        }, log => {
+            this.appendOutput(log.getMessage());
+        });
+    }
+
     getChromaprintSampleFile() {
         return `${RNFS.CachesDirectoryPath}/audio-sample.wav`;
     }
@@ -192,6 +264,18 @@ export default class OtherTab extends React.Component {
 
     getChromaprintOutputFile() {
         return `${RNFS.CachesDirectoryPath}/chromaprint.txt`;
+    }
+
+    getLibjxlOutputFile() {
+        return `${RNFS.CachesDirectoryPath}/image.jxl`;
+    }
+
+    getLibjxlDecodedOutputFile() {
+        return `${RNFS.CachesDirectoryPath}/image.jxl.png`;
+    }
+
+    getVvencOutputFile() {
+        return `${RNFS.CachesDirectoryPath}/video.266`;
     }
 
     render() {
@@ -212,7 +296,9 @@ export default class OtherTab extends React.Component {
                         <Picker.Item label="chromaprint" value="chromaprint"/>
                         <Picker.Item label="dav1d" value="dav1d"/>
                         <Picker.Item label="webp" value="webp"/>
+                        <Picker.Item label="libjxl" value="libjxl"/>
                         <Picker.Item label="zscale" value="zscale"/>
+                        <Picker.Item label="vvenc" value="vvenc"/>
                     </Picker>
                 </View>
                 <View style={styles.buttonViewStyle}>

@@ -39,7 +39,7 @@ export default class AudioTab extends React.Component {
     };
 
     appendOutput(logMessage) {
-        this.setState({outputText: this.state.outputText + logMessage});
+        this.setState((state) => ({outputText: state.outputText + logMessage}));
     };
 
     clearOutput() {
@@ -140,6 +140,9 @@ export default class AudioTab extends React.Component {
             case "wavpack":
                 extension = "wv";
                 break;
+            case "lc3":
+                extension = "lc3";
+                break;
             default:
                 // soxr
                 extension = "wav";
@@ -182,11 +185,13 @@ export default class AudioTab extends React.Component {
             case "amr-wb":
                 return `-hide_banner -y -i ${audioSampleFile} -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental ${audioOutputFile}`;
             case "ilbc":
-                return `-hide_banner -y -i ${audioSampleFile} -c:a ilbc -ar 8000 -b:a 15200 ${audioOutputFile}`;
+                return `-hide_banner -y -i ${audioSampleFile} -c:a libilbc -ar 8000 -b:a 15200 ${audioOutputFile}`;
             case "speex":
                 return `-hide_banner -y -i ${audioSampleFile} -c:a libspeex -ar 16000 ${audioOutputFile}`;
             case "wavpack":
                 return `-hide_banner -y -i ${audioSampleFile} -c:a wavpack -b:a 64k ${audioOutputFile}`;
+            case "lc3":
+                return `-hide_banner -y -i ${audioSampleFile} -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 ${audioOutputFile}`;
             default:
 
                 // soxr
@@ -220,6 +225,7 @@ export default class AudioTab extends React.Component {
                         <Picker.Item label="soxr" value="soxr"/>
                         <Picker.Item label="speex" value="speex"/>
                         <Picker.Item label="wavpack" value="wavpack"/>
+                        <Picker.Item label="lc3" value="lc3"/>
                     </Picker>
                 </View>
                 <View style={styles.buttonViewStyle}>

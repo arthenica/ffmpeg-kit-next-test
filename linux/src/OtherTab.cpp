@@ -114,7 +114,15 @@ void ffmpegkittest::OtherTab::initTestData() {
 
     row = *(testModel->append());
     row[testModelColumn.columnId] = "4";
+    row[testModelColumn.columnName] = "libjxl";
+
+    row = *(testModel->append());
+    row[testModelColumn.columnId] = "5";
     row[testModelColumn.columnName] = "zscale";
+
+    row = *(testModel->append());
+    row[testModelColumn.columnId] = "6";
+    row[testModelColumn.columnName] = "vvenc";
 
     test.pack_start(testModelColumn.columnName);
     test.set_entry_text_column(testModelColumn.columnId);
@@ -135,7 +143,9 @@ std::string ffmpegkittest::OtherTab::getSelectedTest() {
         case 0: return "chromaprint";
         case 1: return "dav1d";
         case 2: return "webp";
-        case 3: return "zscale";
+        case 3: return "libjxl";
+        case 4: return "zscale";
+        case 5: return "vvenc";
         default: return "";
     }
 }
@@ -150,8 +160,12 @@ void ffmpegkittest::OtherTab::runTest() {
         testDav1d();
     } else if (selectedTest.compare("webp") == 0) {
         testWebp();
+    } else if (selectedTest.compare("libjxl") == 0) {
+        testLibjxl();
     } else if (selectedTest.compare("zscale") == 0) {
         testZscale();
+    } else if (selectedTest.compare("vvenc") == 0) {
+        testVvenc();
     }
 }
 
@@ -195,11 +209,11 @@ void ffmpegkittest::OtherTab::testChromaprint() {
 void ffmpegkittest::OtherTab::testDav1d() {
     std::cout << "Testing decoding 'av1' codec." << std::endl;
 
-    std::string ffmpegCommand = std::string("-hide_banner -y -i ") + Dav1dTestDefaultUrl + " " + getDav1dOutputFile();
+    std::string ffmpegCommand = std::string("-hide_banner -y -i ") + Dav1dTestDefaultUrl + " -c:v mpeg4 " + getDav1dOutputFile();
 
     std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
 
-    FFmpegKit::executeAsync(ffmpegCommand, [this](auto session) {
+    FFmpegKit::executeAsync(ffmpegCommand, [](auto session) {
         std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(session->getState()) << " and rc " << session->getReturnCode() << "." << session->getFailStackTrace() << std::endl;
     }, [this](auto log) {
         g_idle_add((GSourceFunc)appendLog, new std::pair<OtherTab*,const std::shared_ptr<Log>>(this, log));
@@ -252,6 +266,60 @@ void ffmpegkittest::OtherTab::testZscale() {
     }, nullptr);
 }
 
+void ffmpegkittest::OtherTab::testLibjxl() {
+    std::string imageFile = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
+    std::string jxlOutputFile = getLibjxlOutputFile();
+    std::string decodedOutputFile = getLibjxlDecodedOutputFile();
+
+    std::remove(jxlOutputFile.c_str());
+    std::remove(decodedOutputFile.c_str());
+
+    std::cout << "Testing 'libjxl' codec." << std::endl;
+
+    std::string ffmpegCommand = "-hide_banner -y -i " + imageFile + " -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 " + jxlOutputFile;
+
+    std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
+
+    FFmpegKit::executeAsync(ffmpegCommand, [this,jxlOutputFile,decodedOutputFile](auto session) {
+        std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(session->getState()) << " and rc " << session->getReturnCode() << "." << session->getFailStackTrace() << std::endl;
+
+        if (ReturnCode::isSuccess(session->getReturnCode())) {
+            std::string decodeCommand = "-hide_banner -y -i " + jxlOutputFile + " -frames:v 1 -c:v png -update 1 " + decodedOutputFile;
+
+            std::cout << "FFmpeg process started with arguments: '" << decodeCommand << "'." << std::endl;
+
+            FFmpegKit::executeAsync(decodeCommand, [](auto secondSession) {
+                std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(secondSession->getState()) << " and rc " << secondSession->getReturnCode() << "." << secondSession->getFailStackTrace() << std::endl;
+            }, [this](auto log) {
+                g_idle_add((GSourceFunc)appendLog, new std::pair<OtherTab*,const std::shared_ptr<Log>>(this, log));
+            }, nullptr);
+        }
+    }, [this](auto log) {
+        g_idle_add((GSourceFunc)appendLog, new std::pair<OtherTab*,const std::shared_ptr<Log>>(this, log));
+    }, nullptr);
+}
+
+void ffmpegkittest::OtherTab::testVvenc() {
+    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
+    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/pyramid.jpg";
+    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/stonehenge.jpg";
+    std::string outputFile = getVvencOutputFile();
+
+    std::remove(outputFile.c_str());
+
+    std::cout << "Testing 'vvenc' codec." << std::endl;
+
+    std::string ffmpegCommand = Video::generateEncodeVideoScript(image1File, image2File, image3File, outputFile, "libvvenc", "yuv420p10le", "-preset faster -qp 32 ");
+
+    std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
+
+    FFmpegKit::executeAsync(ffmpegCommand, [this](auto session) {
+        std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(session->getState()) << " and rc " << session->getReturnCode() << "." << session->getFailStackTrace() << std::endl;
+    }, [this](auto log) {
+        g_idle_add((GSourceFunc)appendLog, new std::pair<OtherTab*,const std::shared_ptr<Log>>(this, log));
+    }, nullptr);
+}
+
 std::string ffmpegkittest::OtherTab::getChromaprintSampleFile() {
     return Application::getApplicationCacheDirectory() + "/audio-sample.wav";
 }
@@ -262,4 +330,16 @@ std::string ffmpegkittest::OtherTab::getDav1dOutputFile() {
 
 std::string ffmpegkittest::OtherTab::getChromaprintOutputFile() {
     return Application::getApplicationCacheDirectory() + "/chromaprint.txt";
+}
+
+std::string ffmpegkittest::OtherTab::getLibjxlOutputFile() {
+    return Application::getApplicationCacheDirectory() + "/image.jxl";
+}
+
+std::string ffmpegkittest::OtherTab::getLibjxlDecodedOutputFile() {
+    return Application::getApplicationCacheDirectory() + "/image.jxl.png";
+}
+
+std::string ffmpegkittest::OtherTab::getVvencOutputFile() {
+    return Application::getApplicationCacheDirectory() + "/video.266";
 }

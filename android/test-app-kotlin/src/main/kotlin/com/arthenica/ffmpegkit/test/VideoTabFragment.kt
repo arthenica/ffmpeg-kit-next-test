@@ -165,6 +165,7 @@ class VideoTabFragment : Fragment(R.layout.fragment_video_tab), AdapterView.OnIt
             "vp8" -> "libvpx"
             "vp9" -> "libvpx-vp9"
             "aom" -> "libaom-av1"
+            "svt-av1" -> "libsvtav1"
             "kvazaar" -> "libkvazaar"
             "theora" -> "libtheora"
             else -> videoCodec
@@ -176,7 +177,6 @@ class VideoTabFragment : Fragment(R.layout.fragment_video_tab), AdapterView.OnIt
     fun getVideoFile(): File {
         val extension = when (selectedCodec) {
             "vp8", "vp9" -> "webm"
-            "aom" -> "mkv"
             "theora" -> "ogv"
             "hap" -> "mov"
             else -> "mp4"
@@ -192,6 +192,7 @@ class VideoTabFragment : Fragment(R.layout.fragment_video_tab), AdapterView.OnIt
             "vp8" -> "-b:v 1M -crf 10 "
             "vp9" -> "-b:v 2M "
             "aom" -> "-crf 30 -strict experimental "
+            "svt-av1" -> "-preset 8 -crf 35 "
             "theora" -> "-qscale:v 7 "
             "hap" -> "-format hap_q "
             else -> ""

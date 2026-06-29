@@ -85,7 +85,9 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
             "chromaprint" -> testChromaprint()
             "dav1d" -> testDav1d()
             "webp" -> testWebp()
+            "libjxl" -> testLibjxl()
             "zscale" -> testZscale()
+            "vvenc" -> testVvenc()
         }
     }
 
@@ -131,7 +133,7 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
     fun testDav1d() {
         Log.d(MainActivity.TAG, "Testing decoding 'av1' codec")
 
-        val ffmpegCommand = String.format("-hide_banner -y -i %s %s", DAV1D_TEST_DEFAULT_URL, getDav1dOutputFile().absolutePath)
+        val ffmpegCommand = String.format("-hide_banner -y -i %s -c:v mpeg4 %s", DAV1D_TEST_DEFAULT_URL, getDav1dOutputFile().absolutePath)
 
         Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand))
 
@@ -193,6 +195,76 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
         }, { log -> MainActivity.addUIAction { appendOutput(log.message) } }, null)
     }
 
+    fun testLibjxl() {
+        val imageFile = cacheFile("machupicchu.jpg")
+        val jxlOutputFile = getLibjxlOutputFile()
+        val decodedOutputFile = getLibjxlDecodedOutputFile()
+
+        if (jxlOutputFile.exists()) {
+            jxlOutputFile.delete()
+        }
+        if (decodedOutputFile.exists()) {
+            decodedOutputFile.delete()
+        }
+
+        try {
+            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, imageFile)
+
+            Log.d(MainActivity.TAG, "Testing 'libjxl' codec")
+
+            val ffmpegCommand = String.format("-hide_banner -y -i %s -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 %s", imageFile.absolutePath, jxlOutputFile.absolutePath)
+
+            Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand))
+
+            FFmpegKit.executeAsync(ffmpegCommand, { session ->
+                Log.d(MainActivity.TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", session.getState(), session.getReturnCode(), MainActivity.notNull(session.getFailStackTrace(), "\n")))
+
+                if (ReturnCode.isSuccess(session.getReturnCode())) {
+                    val decodeCommand = String.format("-hide_banner -y -i %s -frames:v 1 -c:v png -update 1 %s", jxlOutputFile.absolutePath, decodedOutputFile.absolutePath)
+
+                    Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", decodeCommand))
+
+                    FFmpegKit.executeAsync(decodeCommand, { session1 ->
+                        Log.d(MainActivity.TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", session1.getState(), session1.getReturnCode(), MainActivity.notNull(session1.getFailStackTrace(), "\n")))
+                    }, { log -> MainActivity.addUIAction { appendOutput(log.message) } }, null)
+                }
+            }, { log -> MainActivity.addUIAction { appendOutput(log.message) } }, null)
+        } catch (e: IOException) {
+            Log.e(MainActivity.TAG, String.format("Encode libjxl failed %s.", Exceptions.getStackTraceString(e)))
+            Popup.show(requireContext(), "Encode libjxl failed")
+        }
+    }
+
+    fun testVvenc() {
+        val image1File = cacheFile("machupicchu.jpg")
+        val image2File = cacheFile("pyramid.jpg")
+        val image3File = cacheFile("stonehenge.jpg")
+        val outputFile = getVvencOutputFile()
+
+        if (outputFile.exists()) {
+            outputFile.delete()
+        }
+
+        try {
+            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, image1File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.pyramid, image2File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.stonehenge, image3File)
+
+            Log.d(MainActivity.TAG, "Testing 'vvenc' codec")
+
+            val ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.absolutePath, image2File.absolutePath, image3File.absolutePath, outputFile.absolutePath, "libvvenc", "yuv420p10le", "-preset faster -qp 32 ")
+
+            Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand))
+
+            FFmpegKit.executeAsync(ffmpegCommand, { session ->
+                Log.d(MainActivity.TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", session.getState(), session.getReturnCode(), MainActivity.notNull(session.getFailStackTrace(), "\n")))
+            }, { log -> MainActivity.addUIAction { appendOutput(log.message) } }, null)
+        } catch (e: IOException) {
+            Log.e(MainActivity.TAG, String.format("Encode vvenc failed %s.", Exceptions.getStackTraceString(e)))
+            Popup.show(requireContext(), "Encode vvenc failed")
+        }
+    }
+
     fun getChromaprintSampleFile(): File {
         return filesFile("audio-sample.wav")
     }
@@ -203,6 +275,18 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
 
     fun getChromaprintOutputFile(): File {
         return filesFile("chromaprint.txt")
+    }
+
+    fun getLibjxlOutputFile(): File {
+        return filesFile("image.jxl")
+    }
+
+    fun getLibjxlDecodedOutputFile(): File {
+        return filesFile("image.jxl.png")
+    }
+
+    fun getVvencOutputFile(): File {
+        return filesFile("video.266")
     }
 
     fun setActive() {

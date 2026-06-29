@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Platform, Text, TouchableOpacity, View} from 'react-native';
 import RNFS from 'react-native-fs';
 import VideoUtil from './video-util';
 import {FFmpegKit, FFmpegKitConfig, ReturnCode} from 'ffmpeg-kit-next-react-native';
@@ -136,6 +136,9 @@ export default class VideoTab extends React.Component {
             case "aom":
                 videoCodec = "libaom-av1";
                 break;
+            case "svt-av1":
+                videoCodec = "libsvtav1";
+                break;
             case "kvazaar":
                 videoCodec = "libkvazaar";
                 break;
@@ -155,9 +158,6 @@ export default class VideoTab extends React.Component {
             case "vp8":
             case "vp9":
                 extension = "webm";
-                break;
-            case "aom":
-                extension = "mkv";
                 break;
             case "theora":
                 extension = "ogv";
@@ -186,6 +186,8 @@ export default class VideoTab extends React.Component {
                 return "-b:v 2M ";
             case "aom":
                 return "-crf 30 -strict experimental ";
+            case "svt-av1":
+                return "-preset 8 -crf 35 ";
             case "theora":
                 return "-qscale:v 7 ";
             case "hap":
@@ -237,14 +239,17 @@ export default class VideoTab extends React.Component {
                     onValueChange={(itemValue, itemIndex) => this.setState({selectedCodec: itemValue})}>
                     <Picker.Item label="mpeg4" value="mpeg4"/>
                     <Picker.Item label="x264" value="x264"/>
-                    <Picker.Item label="h264_mediacodec" value="h264_mediacodec"/>
-                    <Picker.Item label="hevc_mediacodec" value="hevc_mediacodec"/>
+                    {Platform.OS === 'android' &&
+                        <Picker.Item label="h264_mediacodec" value="h264_mediacodec"/>}
+                    {Platform.OS === 'android' &&
+                        <Picker.Item label="hevc_mediacodec" value="hevc_mediacodec"/>}
                     <Picker.Item label="openh264" value="openh264"/>
                     <Picker.Item label="x265" value="x265"/>
                     <Picker.Item label="xvid" value="xvid"/>
                     <Picker.Item label="vp8" value="vp8"/>
                     <Picker.Item label="vp9" value="vp9"/>
                     <Picker.Item label="aom" value="aom"/>
+                    <Picker.Item label="svt-av1" value="svt-av1"/>
                     <Picker.Item label="kvazaar" value="kvazaar"/>
                     <Picker.Item label="theora" value="theora"/>
                     <Picker.Item label="hap" value="hap"/>

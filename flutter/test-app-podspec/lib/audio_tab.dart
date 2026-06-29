@@ -92,8 +92,9 @@ class AudioTab {
         ffprint("FFmpeg process started with arguments: '${ffmpegCommand}'.");
 
         FFmpegKit.execute(ffmpegCommand).then((session) async {
-          final state =
-              FFmpegKitConfig.sessionStateToString(await session.getState());
+          final state = FFmpegKitConfig.sessionStateToString(
+            await session.getState(),
+          );
           final returnCode = await session.getReturnCode();
           final failStackTrace = await session.getFailStackTrace();
 
@@ -106,7 +107,8 @@ class AudioTab {
           } else {
             showPopup("Encode failed. Please check log for the details.");
             ffprint(
-                "Encode failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\n")}");
+              "Encode failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\n")}",
+            );
           }
         });
       });
@@ -125,8 +127,9 @@ class AudioTab {
       ffprint("Creating audio sample with '$ffmpegCommand'.");
 
       FFmpegKit.execute(ffmpegCommand).then((session) async {
-        final state =
-            FFmpegKitConfig.sessionStateToString(await session.getState());
+        final state = FFmpegKitConfig.sessionStateToString(
+          await session.getState(),
+        );
         final returnCode = await session.getReturnCode();
         final failStackTrace = await session.getFailStackTrace();
 
@@ -134,9 +137,11 @@ class AudioTab {
           ffprint("AUDIO sample created");
         } else {
           ffprint(
-              "Creating AUDIO sample failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\n")}");
+            "Creating AUDIO sample failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\n")}",
+          );
           showPopup(
-              "Creating AUDIO sample failed. Please check log for the details.");
+            "Creating AUDIO sample failed. Please check log for the details.",
+          );
         }
       });
     });
@@ -174,6 +179,9 @@ class AudioTab {
         break;
       case "wavpack":
         extension = "wv";
+        break;
+      case "lc3":
+        extension = "lc3";
         break;
       default:
         // soxr
@@ -220,11 +228,13 @@ class AudioTab {
       case "amr-wb":
         return "-hide_banner -y -i $audioSampleFile -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental $audioOutputFile";
       case "ilbc":
-        return "-hide_banner -y -i $audioSampleFile -c:a ilbc -ar 8000 -b:a 15200 $audioOutputFile";
+        return "-hide_banner -y -i $audioSampleFile -c:a libilbc -ar 8000 -b:a 15200 $audioOutputFile";
       case "speex":
         return "-hide_banner -y -i $audioSampleFile -c:a libspeex -ar 16000 $audioOutputFile";
       case "wavpack":
         return "-hide_banner -y -i $audioSampleFile -c:a wavpack -b:a 64k $audioOutputFile";
+      case "lc3":
+        return "-hide_banner -y -i $audioSampleFile -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 $audioOutputFile";
       default:
         // soxr
         return "-hide_banner -y -i $audioSampleFile -af aresample=resampler=soxr -ar 44100 $audioOutputFile";
@@ -234,43 +244,87 @@ class AudioTab {
   List<DropdownMenuItem<String>> getAudioCodecList() {
     List<DropdownMenuItem<String>> list = List.empty(growable: true);
 
-    list.add(new DropdownMenuItem(
+    list.add(
+      new DropdownMenuItem(
         value: "mp2 (twolame)",
         child: SizedBox(
-            width: 100, child: Center(child: new Text("mp2 (twolame)")))));
-    list.add(new DropdownMenuItem(
+          width: 100,
+          child: Center(child: new Text("mp2 (twolame)")),
+        ),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "mp3 (liblame)",
         child: SizedBox(
-            width: 100, child: Center(child: new Text("mp3 (liblame)")))));
-    list.add(new DropdownMenuItem(
+          width: 100,
+          child: Center(child: new Text("mp3 (liblame)")),
+        ),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "mp3 (libshine)",
         child: SizedBox(
-            width: 100, child: Center(child: new Text("mp3 (libshine)")))));
-    list.add(new DropdownMenuItem(
+          width: 100,
+          child: Center(child: new Text("mp3 (libshine)")),
+        ),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "vorbis",
-        child: SizedBox(width: 100, child: Center(child: new Text("vorbis")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("vorbis"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "opus",
-        child: SizedBox(width: 100, child: Center(child: new Text("opus")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("opus"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "amr-nb",
-        child: SizedBox(width: 100, child: Center(child: new Text("amr-nb")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("amr-nb"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "amr-wb",
-        child: SizedBox(width: 100, child: Center(child: new Text("amr-wb")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("amr-wb"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "ilbc",
-        child: SizedBox(width: 100, child: Center(child: new Text("ilbc")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("ilbc"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "soxr",
-        child: SizedBox(width: 100, child: Center(child: new Text("soxr")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("soxr"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "speex",
-        child: SizedBox(width: 100, child: Center(child: new Text("speex")))));
-    list.add(new DropdownMenuItem(
+        child: SizedBox(width: 100, child: Center(child: new Text("speex"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
         value: "wavpack",
-        child:
-            SizedBox(width: 100, child: Center(child: new Text("wavpack")))));
+        child: SizedBox(width: 100, child: Center(child: new Text("wavpack"))),
+      ),
+    );
+    list.add(
+      new DropdownMenuItem(
+        value: "lc3",
+        child: SizedBox(width: 100, child: Center(child: new Text("lc3"))),
+      ),
+    );
 
     return list;
   }

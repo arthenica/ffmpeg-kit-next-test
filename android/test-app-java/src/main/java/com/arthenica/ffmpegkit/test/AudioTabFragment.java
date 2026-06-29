@@ -225,6 +225,9 @@ public class AudioTabFragment extends Fragment implements AdapterView.OnItemSele
             case "wavpack":
                 extension = "wv";
                 break;
+            case "lc3":
+                extension = "lc3";
+                break;
             default:
 
                 // soxr
@@ -286,11 +289,13 @@ public class AudioTabFragment extends Fragment implements AdapterView.OnItemSele
             case "amr-wb":
                 return String.format("-hide_banner -y -i %s -ar 8000 -ab 12.2k -c:a libvo_amrwbenc -strict experimental %s", audioSampleFile, audioOutputFile);
             case "ilbc":
-                return String.format("-hide_banner -y -i %s -c:a ilbc -ar 8000 -b:a 15200 %s", audioSampleFile, audioOutputFile);
+                return String.format("-hide_banner -y -i %s -c:a libilbc -ar 8000 -b:a 15200 %s", audioSampleFile, audioOutputFile);
             case "speex":
                 return String.format("-hide_banner -y -i %s -c:a libspeex -ar 16000 %s", audioSampleFile, audioOutputFile);
             case "wavpack":
                 return String.format("-hide_banner -y -i %s -c:a wavpack -b:a 64k %s", audioSampleFile, audioOutputFile);
+            case "lc3":
+                return String.format("-hide_banner -y -i %s -ar 48000 -ac 1 -c:a liblc3 -b:a 96k -frame_duration 10 %s", audioSampleFile, audioOutputFile);
             default:
 
                 // soxr

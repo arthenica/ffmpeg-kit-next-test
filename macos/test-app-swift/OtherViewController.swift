@@ -29,7 +29,7 @@ class OtherViewController: NSViewController, NSComboBoxDataSource, NSComboBoxDel
     @IBOutlet var runButton: NSButton!
     @IBOutlet var outputText: NSTextView!
 
-    private let testData = ["chromaprint", "dav1d", "webp", "zscale"]
+    private let testData = ["chromaprint", "dav1d", "webp", "libjxl", "zscale", "vvenc"]
     private var selectedTest = 0
 
     override func viewDidLoad() {
@@ -66,7 +66,9 @@ class OtherViewController: NSViewController, NSComboBoxDataSource, NSComboBoxDel
         case 0: testChromaprint()
         case 1: testDav1d()
         case 2: testWebp()
-        case 3: testZscale()
+        case 3: testLibjxl()
+        case 4: testZscale()
+        case 5: testVvenc()
         default: break
         }
     }
@@ -98,7 +100,7 @@ class OtherViewController: NSViewController, NSComboBoxDataSource, NSComboBoxDel
 
     func testDav1d() {
         NSLog("Testing decoding 'av1' codec\n")
-        let ffmpegCommand = "-hide_banner -y -i \(DAV1D_TEST_DEFAULT_URL) \(getDav1dOutputPath())"
+        let ffmpegCommand = "-hide_banner -y -i %@ -c:v mpeg4 %@"
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         executeWithOutput(ffmpegCommand)
     }
@@ -112,11 +114,47 @@ class OtherViewController: NSViewController, NSComboBoxDataSource, NSComboBoxDel
         executeWithOutput(ffmpegCommand)
     }
 
+    func testLibjxl() {
+        let imageFile = (Bundle.main.resourcePath ?? "").appendingPathComponent("machupicchu.jpg")
+        let jxlOutputFile = getLibjxlOutputPath()
+        let decodedOutputFile = getLibjxlDecodedOutputPath()
+        try? FileManager.default.removeItem(atPath: jxlOutputFile)
+        try? FileManager.default.removeItem(atPath: decodedOutputFile)
+        NSLog("Testing 'libjxl' codec\n")
+        let ffmpegCommand = "-hide_banner -y -i \(imageFile) -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 \(jxlOutputFile)"
+        NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
+        FFmpegKit.executeAsync(ffmpegCommand, withCompleteCallback: { session in
+            guard let session = session else { return }
+            let anySession: Session = session
+            NSLog("FFmpeg process exited with state %@ and rc %@.%@", FFmpegKitConfig.sessionState(toString: anySession.getState()), String(describing: anySession.getReturnCode()), notNull(anySession.getFailStackTrace(), "\n"))
+            if ReturnCode.isSuccess(anySession.getReturnCode()) {
+                let decodeCommand = "-hide_banner -y -i \(jxlOutputFile) -frames:v 1 -c:v png -update 1 \(decodedOutputFile)"
+                NSLog("FFmpeg process started with arguments '%@'.\n", decodeCommand)
+                self.executeWithOutput(decodeCommand)
+            }
+        }, withLogCallback: { log in
+            addUIAction { self.appendOutput(log?.getMessage() ?? "") }
+        }, withStatisticsCallback: nil)
+    }
+
     func testZscale() {
         let videoFile = documentsDirectory().appendingPathComponent("video.mp4")
         let zscaledVideoFile = documentsDirectory().appendingPathComponent("video.zscaled.mp4")
         NSLog("Testing 'zscale' filter with video file created on the Video tab\n")
         let ffmpegCommand = Video.generateZscaleVideoScript(videoFile, zscaledVideoFile)
+        NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
+        executeWithOutput(ffmpegCommand)
+    }
+
+    func testVvenc() {
+        let resourceFolder = Bundle.main.resourcePath ?? ""
+        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
+        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
+        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let outputFile = getVvencOutputPath()
+        try? FileManager.default.removeItem(atPath: outputFile)
+        NSLog("Testing 'vvenc' codec\n")
+        let ffmpegCommand = Video.generateVideoEncodeScriptWithCustomPixelFormat(image1, image2, image3, outputFile, "libvvenc", "yuv420p10le", "-preset faster -qp 32 ")
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         executeWithOutput(ffmpegCommand)
     }
@@ -141,6 +179,18 @@ class OtherViewController: NSViewController, NSComboBoxDataSource, NSComboBoxDel
 
     func getChromaprintOutputPath() -> String {
         return documentsDirectory().appendingPathComponent("chromaprint.txt")
+    }
+
+    func getLibjxlOutputPath() -> String {
+        return documentsDirectory().appendingPathComponent("image.jxl")
+    }
+
+    func getLibjxlDecodedOutputPath() -> String {
+        return documentsDirectory().appendingPathComponent("image.jxl.png")
+    }
+
+    func getVvencOutputPath() -> String {
+        return documentsDirectory().appendingPathComponent("video.266")
     }
 
     func setActive() {
