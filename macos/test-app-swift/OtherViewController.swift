@@ -100,7 +100,7 @@ class OtherViewController: NSViewController, NSComboBoxDataSource, NSComboBoxDel
 
     func testDav1d() {
         NSLog("Testing decoding 'av1' codec\n")
-        let ffmpegCommand = "-hide_banner -y -i %@ -c:v mpeg4 %@"
+        let ffmpegCommand = "-hide_banner -y -i \(DAV1D_TEST_DEFAULT_URL) -c:v mpeg4 \(getDav1dOutputPath())"
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         executeWithOutput(ffmpegCommand)
     }

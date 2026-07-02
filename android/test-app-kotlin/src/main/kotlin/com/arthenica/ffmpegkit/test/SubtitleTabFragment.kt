@@ -124,7 +124,7 @@ class SubtitleTabFragment : Fragment(R.layout.fragment_subtitle_tab) {
                     MainActivity.addUIAction {
                         Log.d(MainActivity.TAG, "Create completed successfully; burning subtitles.")
 
-                        val burnSubtitlesCommand = String.format("-y -i %s -vf subtitles=%s:force_style='FontName=MyFontName' -c:v mpeg4 %s", videoFile.absolutePath, getSubtitleFile().absolutePath, videoWithSubtitlesFile.absolutePath)
+                        val burnSubtitlesCommand = String.format("-y -i %s -vf subtitles=filename='%s':force_style='FontName=MyFontName' -c:v mpeg4 %s", videoFile.absolutePath, getSubtitleFile().absolutePath, videoWithSubtitlesFile.absolutePath)
 
                         showBurnProgressDialog()
 

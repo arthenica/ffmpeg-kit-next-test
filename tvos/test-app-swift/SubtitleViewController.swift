@@ -99,7 +99,7 @@ class SubtitleViewController: UIViewController, ActivatableTab {
             addUIAction { self.hideProgressDialog() }
             if ReturnCode.isSuccess(anySession.getReturnCode()) {
                 NSLog("Create completed successfully; burning subtitles.\n")
-                let burnSubtitlesCommand = "-hide_banner -y -i \(videoFile) -vf subtitles=\(subtitle):force_style='FontName=MyFontName' \(videoWithSubtitlesFile)"
+                let burnSubtitlesCommand = "-hide_banner -y -i \(videoFile) -vf subtitles=filename='\(subtitle)':force_style='FontName=MyFontName' \(videoWithSubtitlesFile)"
                 addUIAction { self.showProgressDialog("Burning subtitles\n\n") }
                 NSLog("FFmpeg process started with arguments '%@'.\n", burnSubtitlesCommand)
                 self.state = .burning
