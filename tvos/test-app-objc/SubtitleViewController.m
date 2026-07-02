@@ -146,7 +146,7 @@ typedef enum {
         if ([ReturnCode isSuccess:[session getReturnCode]]) {
             NSLog(@"Create completed successfully; burning subtitles.\n");
 
-            NSString *burnSubtitlesCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf subtitles=%@:force_style='FontName=MyFontName' %@", videoFile, subtitle, videoWithSubtitlesFile];
+            NSString *burnSubtitlesCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf subtitles=filename='%@':force_style='FontName=MyFontName' %@", videoFile, subtitle, videoWithSubtitlesFile];
 
             addUIAction(^{
                 [self showProgressDialog:@"Burning subtitles\n\n"];

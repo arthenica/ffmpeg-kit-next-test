@@ -166,7 +166,7 @@ void ffmpegkittest::SubtitleTab::burnSubtitles() {
         if (ReturnCode::isSuccess(session->getReturnCode())) {
             std::cout << "Create completed successfully; burning subtitles." << std::endl;
 
-            std::string burnSubtitlesCommand = "-y -i " + videoFile + " -vf subtitles=" + getSubtitleFile() + ":force_style='FontName=MyFontName' -c:v mpeg4 " + videoWithSubtitlesFile;
+            std::string burnSubtitlesCommand = "-y -i " + videoFile + " -vf subtitles=filename='" + getSubtitleFile() + "':force_style='FontName=MyFontName' -c:v mpeg4 " + videoWithSubtitlesFile;
 
             this->showBurnProgressDialog();
 

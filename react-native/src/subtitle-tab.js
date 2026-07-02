@@ -76,7 +76,7 @@ export default class SubtitleTab extends React.Component {
                 if (ReturnCode.isSuccess(returnCode)) {
                     ffprint("Create completed successfully; burning subtitles.");
 
-                    let burnSubtitlesCommand = `-y -i ${videoFile} -vf subtitles=${subtitlePath}:force_style='FontName=MyFontName' -c:v mpeg4 ${videoWithSubtitlesFile}`;
+                    let burnSubtitlesCommand = `-y -i ${videoFile} -vf subtitles=filename='${subtitlePath}':force_style='FontName=MyFontName' -c:v mpeg4 ${videoWithSubtitlesFile}`;
 
                     this.showBurnProgressDialog();
 
