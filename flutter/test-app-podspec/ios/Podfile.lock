@@ -1,5 +1,5 @@
 PODS:
-  - ffmpeg_kit_next_flutter (6.1.2):
+  - ffmpeg_kit_next_flutter (8.1.0):
     - Flutter
   - Flutter (1.0.0)
   - fluttertoast (0.0.2):
@@ -25,7 +25,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
 
 SPEC CHECKSUMS:
-  ffmpeg_kit_next_flutter: e6b39be435a4cb33aec9a88fad8b2baba42befd6
+  ffmpeg_kit_next_flutter: c8a718f33b9f992134176593c0f84e71c879d395
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   fluttertoast: fe6790210fdba20801685be946e3a2124b72eef5
   video_player_avfoundation: 3453f792138786248960ca029747fcd9f318ef52

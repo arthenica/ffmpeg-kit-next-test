@@ -4715,11 +4715,11 @@ __metadata:
 
 "ffmpeg-kit-next-react-native@file:../../ffmpeg-kit-next/react-native::locator=ffmpeg-kit-next-react-native-test%40workspace%3A.":
   version: 8.1.0
-  resolution: "ffmpeg-kit-next-react-native@file:../../ffmpeg-kit-next/react-native#../../ffmpeg-kit-next/react-native::hash=101b2f&locator=ffmpeg-kit-next-react-native-test%40workspace%3A."
+  resolution: "ffmpeg-kit-next-react-native@file:../../ffmpeg-kit-next/react-native#../../ffmpeg-kit-next/react-native::hash=08671b&locator=ffmpeg-kit-next-react-native-test%40workspace%3A."
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/bb65a1aa1a9ac8bdc0c13d01b477cf4cb3b8f8372b3429d809747fc017acff7355b82715089c90003178fb41f53b6477dd8a449c625365aca85ba2ecf4d24701
+  checksum: 10c0/83efc1fbc6630c2eea8bbf8144198ac69a06c0f72e836dff350e6f3cb8bd2692092c6971f9537bdf85bbf0e5e2bbf953fd3a5ac3b3051511873c9f4441bbb260
   languageName: node
   linkType: hard
 

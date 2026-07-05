@@ -10,6 +10,9 @@ rm -rf ../android/test-app-kotlin/build/
 rm -rf ../ios/*.framework
 rm -rf ../ios/*.xcframework
 
+rm -rf ../ipados/*.framework
+rm -rf ../ipados/*.xcframework
+
 rm -rf ../macos/*.framework
 rm -rf ../macos/*.xcframework
 
