@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FFmpegKitNext Android Native</string>
+    <string name="version_button_text">VERSION</string>
+    <string name="probe_button_text">PROBE</string>
+    <string name="encode_button_text">ENCODE</string>
+    <string name="cross_check_button_text">CROSS-CHECK</string>
+</resources>

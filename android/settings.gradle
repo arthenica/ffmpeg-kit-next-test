@@ -20,3 +20,4 @@ dependencyResolutionManagement {
 rootProject.name='ffmpeg-kit-next-test-android'
 include ':test-app-java'
 include ':test-app-kotlin'
+include ':test-app-native'

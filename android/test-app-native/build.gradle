@@ -1,0 +1,86 @@
+import com.android.build.api.variant.FilterConfiguration
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    signingConfigs {
+        localConfig {
+            keyAlias 'androiddebugkey'
+            storeFile file(System.getProperty("user.home") + '/.android/debug.keystore')
+            storePassword 'android'
+            keyPassword 'android'
+        }
+    }
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.arthenica.ffmpegkit.nativetest'
+    }
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.arthenica.ffmpegkit.nativetest"
+        minSdk 24
+        targetSdk 35
+        versionCode 240810
+        versionName "8.1.0"
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.localConfig
+        }
+    }
+    splits {
+        abi {
+            enable true
+            reset()
+            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            universalApk false
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+    buildFeatures {
+        // Consume the native headers/libraries exported by the ffmpeg-kit-next AAR.
+        prefab true
+        viewBinding true
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+ext.abiCodes = ['x86': 1, 'x86_64': 2, 'armeabi-v7a': 3, 'arm64-v8a': 4]
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.each { output ->
+            def abi = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
+            def baseAbiVersionCode = project.ext.abiCodes.get(abi)
+            if (baseAbiVersionCode != null) {
+                output.versionCode.set(baseAbiVersionCode + output.versionCode.get())
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:2.2.21')
+    implementation 'com.arthenica:ffmpeg-kit-next:8.1.0'
+    implementation 'com.arthenica:smart-exception-java:0.2.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    testImplementation 'junit:junit:4.13.2'
+}
