@@ -20,27 +20,16 @@
  * SOFTWARE.
  */
 
-import UIKit
+import SwiftUI
 import ffmpegkit
 
-@objc(OtherViewController)
-class OtherViewController: UIViewController, ActivatableTab {
-    @IBOutlet var header: UILabel!
-    @IBOutlet var otherTestText: UITextField!
-    @IBOutlet var runButton: UIButton!
-    @IBOutlet var outputText: UITextView!
+@MainActor final class OtherModel: ObservableObject {
+    @Published var test = "chromaprint"
+    @Published var output = ""
+    let tests = ["chromaprint", "dav1d", "webp", "libjxl", "zscale", "vvenc"]
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        Util.applyEditTextStyle(otherTestText)
-        Util.applyButtonStyle(runButton)
-        Util.applyOutputTextStyle(outputText)
-        Util.applyHeaderStyle(header)
-        addUIAction { self.setActive() }
-    }
-
-    @IBAction func runTest(_ sender: Any) {
-        let selectedTest = otherTestText.text ?? ""
+    func runTest() {
+        let selectedTest = test
         clearOutput()
         if selectedTest == "chromaprint" {
             testChromaprint()
@@ -182,13 +171,23 @@ class OtherViewController: UIViewController, ActivatableTab {
     }
 
     func appendOutput(_ message: String) {
-        outputText.text = outputText.text.appending(message)
-        if !outputText.text.isEmpty {
-            outputText.scrollRangeToVisible(NSRange(location: outputText.text.count - 1, length: 1))
-        }
+        output = output.appending(message)
     }
 
     func clearOutput() {
-        outputText.text = ""
+        output = ""
+    }
+}
+
+struct OtherView: View {
+    @StateObject private var model = OtherModel()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Picker("Test", selection: $model.test) { ForEach(model.tests, id: \.self) { Text($0) } }
+            Button("RUN") { model.runTest() }.buttonStyle(.borderedProminent)
+            OutputConsole(text: model.output)
+        }
+        .padding(24).onAppear { model.setActive() }
     }
 }
