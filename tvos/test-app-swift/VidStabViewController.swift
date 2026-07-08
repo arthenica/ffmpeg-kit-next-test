@@ -48,26 +48,18 @@ class VidStabViewController: UIViewController, ActivatableTab {
         playerLayer = AVPlayerLayer(player: player)
         stabilizedVideoPlayer = AVQueuePlayer()
         stabilizedVideoPlayerLayer = AVPlayerLayer(player: stabilizedVideoPlayer)
-        let upperRectangularFrame = CGRect(
-            x: videoPlayerFrame.frame.origin.x + 20,
-            y: videoPlayerFrame.frame.origin.y + 20,
-            width: videoPlayerFrame.frame.size.width - 40,
-            height: videoPlayerFrame.frame.size.height - 40
-        )
-        playerLayer.frame = upperRectangularFrame
         playerLayer.videoGravity = .resizeAspect
-        view.layer.addSublayer(playerLayer)
+        videoPlayerFrame.layer.addSublayer(playerLayer)
 
-        let lowerRectangularFrame = CGRect(
-            x: stabilizedVideoPlayerFrame.frame.origin.x + 20,
-            y: stabilizedVideoPlayerFrame.frame.origin.y + 20,
-            width: stabilizedVideoPlayerFrame.frame.size.width - 40,
-            height: stabilizedVideoPlayerFrame.frame.size.height - 40
-        )
-        stabilizedVideoPlayerLayer.frame = lowerRectangularFrame
         stabilizedVideoPlayerLayer.videoGravity = .resizeAspect
-        view.layer.addSublayer(stabilizedVideoPlayerLayer)
+        stabilizedVideoPlayerFrame.layer.addSublayer(stabilizedVideoPlayerLayer)
         addUIAction { self.setActive() }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer.frame = videoPlayerFrame.bounds.insetBy(dx: 20, dy: 20)
+        stabilizedVideoPlayerLayer.frame = stabilizedVideoPlayerFrame.bounds.insetBy(dx: 20, dy: 20)
     }
 
     func enableLogCallback() {

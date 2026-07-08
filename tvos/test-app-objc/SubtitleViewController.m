@@ -71,14 +71,7 @@ typedef enum {
     player = [[AVQueuePlayer alloc] init];
     playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
 
-    // SETTING VIDEO FRAME POSITION
-    CGRect rectangularFrame = CGRectMake(self.videoPlayerFrame.frame.origin.x + 20,
-                                         self.videoPlayerFrame.frame.origin.y + 20,
-                                         self.videoPlayerFrame.frame.size.width - 40,
-                                         self.videoPlayerFrame.frame.size.height - 40);
-
-    playerLayer.frame = rectangularFrame;
-    [self.view.layer addSublayer:playerLayer];
+    [self.videoPlayerFrame.layer addSublayer:playerLayer];
     
     alertController = nil;
     statistics = nil;
@@ -90,6 +83,12 @@ typedef enum {
     addUIAction(^{
         [self setActive];
     });
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    playerLayer.frame = CGRectInset(self.videoPlayerFrame.bounds, 20.0, 20.0);
 }
 
 - (void)didReceiveMemoryWarning {

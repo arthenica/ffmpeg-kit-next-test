@@ -63,28 +63,22 @@
     stabilizedVideoPlayer = [[AVQueuePlayer alloc] init];
     stabilizedVideoPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:stabilizedVideoPlayer];
 
-    // SETTING VIDEO FRAME POSITIONS
-    CGRect upperRectangularFrame = CGRectMake(self.videoPlayerFrame.frame.origin.x + 20,
-                                         self.videoPlayerFrame.frame.origin.y + 20,
-                                         self.videoPlayerFrame.frame.size.width - 40,
-                                         self.videoPlayerFrame.frame.size.height - 40);
-
-    playerLayer.frame = upperRectangularFrame;
     playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    [self.view.layer addSublayer:playerLayer];
+    [self.videoPlayerFrame.layer addSublayer:playerLayer];
 
-    CGRect lowerRectangularFrame = CGRectMake(self.stabilizedVideoPlayerFrame.frame.origin.x + 20,
-                                              self.stabilizedVideoPlayerFrame.frame.origin.y + 20,
-                                              self.stabilizedVideoPlayerFrame.frame.size.width - 40,
-                                              self.stabilizedVideoPlayerFrame.frame.size.height - 40);
-
-    stabilizedVideoPlayerLayer.frame = lowerRectangularFrame;
     stabilizedVideoPlayerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    [self.view.layer addSublayer:stabilizedVideoPlayerLayer];
+    [self.stabilizedVideoPlayerFrame.layer addSublayer:stabilizedVideoPlayerLayer];
 
     addUIAction(^{
         [self setActive];
     });
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    playerLayer.frame = CGRectInset(self.videoPlayerFrame.bounds, 20.0, 20.0);
+    stabilizedVideoPlayerLayer.frame = CGRectInset(self.stabilizedVideoPlayerFrame.bounds, 20.0, 20.0);
 }
 
 - (void)didReceiveMemoryWarning {
