@@ -20,11 +20,14 @@
  * SOFTWARE.
  */
 
+import 'dart:io';
+
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_next_flutter/level.dart';
 import 'package:ffmpeg_kit_next_flutter/packages.dart';
 import 'package:ffmpeg_kit_next_flutter/signal.dart';
+import 'package:flutter/services.dart';
 
 import 'util.dart';
 
@@ -56,6 +59,45 @@ class Test {
     _testParseSingleQuotesInCommand();
     _testParseDoubleQuotesInCommand();
     _testParseDoubleQuotesAndEscapesInCommand();
+  }
+
+  static void getSupportedCameraIdsTest() async {
+    ffprint("Testing getSupportedCameraIds.");
+
+    if (Platform.isAndroid) {
+      final supportedCameraIds = await FFmpegKitConfig.getSupportedCameraIds();
+      if (supportedCameraIds.isEmpty) {
+        ffprint("No supported cameras found.");
+      } else {
+        supportedCameraIds.forEach(
+            (cameraId) => ffprint("Supported camera detected: $cameraId"));
+      }
+    } else {
+      var notSupportedExceptionThrown = false;
+      try {
+        await FFmpegKitConfig.getSupportedCameraIds();
+      } catch (e) {
+        final exceptionText = _exceptionText(e);
+        ffprint("getSupportedCameraIds failed as expected: $exceptionText");
+        notSupportedExceptionThrown = _isNotSupportedException(e);
+      }
+
+      assert(notSupportedExceptionThrown);
+    }
+  }
+
+  static bool _isNotSupportedException(Object exception) {
+    return (exception is PlatformException &&
+            exception.code == "NOT_SUPPORTED") ||
+        _exceptionText(exception).toLowerCase().contains("not supported");
+  }
+
+  static String _exceptionText(Object exception) {
+    if (exception is PlatformException) {
+      return "${exception.code}: ${exception.message}";
+    } else {
+      return exception.toString();
+    }
   }
 
   static void _testParseSimpleCommand() {

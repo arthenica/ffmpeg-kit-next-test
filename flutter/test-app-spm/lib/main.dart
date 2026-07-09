@@ -181,6 +181,7 @@ class FFmpegKitFlutterAppState extends State<MainPage>
 
       Test.testCommonApiMethods();
       Test.testParseArguments();
+      Test.getSupportedCameraIdsTest();
       Test.setSessionHistorySizeTest();
     });
   }

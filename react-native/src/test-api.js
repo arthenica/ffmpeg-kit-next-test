@@ -1,4 +1,5 @@
 import React from 'react';
+import {Platform} from 'react-native';
 import {ffprint} from './util';
 import {FFmpegKitConfig, FFmpegSession, Level, Packages, Signal} from "ffmpeg-kit-next-react-native";
 
@@ -18,6 +19,12 @@ function assertEquals(expected, real) {
     if (expected !== real) {
         throw `Assertion failed: ${real} != ${expected}`;
     }
+}
+
+function isNotSupportedException(error) {
+    const code = error?.code ?? "";
+    const message = error?.message ?? error?.toString?.() ?? "";
+    return code.toLowerCase().includes("not supported") || message.toLowerCase().includes("not supported");
 }
 
 function testParseSimpleCommand() {
@@ -157,6 +164,31 @@ export default class Test {
         testParseSingleQuotesInCommand();
         testParseDoubleQuotesInCommand();
         testParseDoubleQuotesAndEscapesInCommand();
+    }
+
+    static async getSupportedCameraIdsTest() {
+        ffprint("Testing getSupportedCameraIds.");
+
+        if (Platform.OS === 'android') {
+            const supportedCameraIds = await FFmpegKitConfig.getSupportedCameraIds();
+            if (supportedCameraIds.length === 0) {
+                ffprint("No supported cameras found.");
+            } else {
+                supportedCameraIds.forEach(cameraId => ffprint(`Supported camera detected: ${cameraId}`));
+            }
+        } else {
+            let notSupportedExceptionThrown = false;
+            try {
+                await FFmpegKitConfig.getSupportedCameraIds();
+            } catch (error) {
+                ffprint(`getSupportedCameraIds failed as expected: ${error}`);
+                notSupportedExceptionThrown = isNotSupportedException(error);
+            }
+
+            if (!notSupportedExceptionThrown) {
+                throw "Assertion failed: getSupportedCameraIds did not throw a not supported error";
+            }
+        }
     }
 
     static async setSessionHistorySizeTest() {
