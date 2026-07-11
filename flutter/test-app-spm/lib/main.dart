@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 
 import 'abstract.dart';
 import 'audio_tab.dart';
+import 'background_tab.dart';
 import 'command_tab.dart';
 import 'concurrent_execution_tab.dart';
 import 'decoration.dart';
@@ -94,6 +95,7 @@ class FFmpegKitFlutterAppState extends State<MainPage>
   static const concurrentExecutionTabIndex = 7;
   static const ffkitProtocolsTabIndex = 8;
   static const otherIndex = 9;
+  static const backgroundTabIndex = 10;
 
   // COMMON COMPONENTS
   late TabController _controller;
@@ -129,6 +131,9 @@ class FFmpegKitFlutterAppState extends State<MainPage>
   // OTHER TAB COMPONENTS
   OtherTab otherTab = new OtherTab();
 
+  // BACKGROUND TAB COMPONENTS
+  BackgroundTab backgroundTab = new BackgroundTab();
+
   void refresh() {
     setState(() {});
   }
@@ -147,8 +152,9 @@ class FFmpegKitFlutterAppState extends State<MainPage>
     concurrentExecutionTab.init(this);
     ffkitProtocolsTab.init(this);
     otherTab.init(this);
+    backgroundTab.init(this);
 
-    _controller = TabController(length: 10, vsync: this);
+    _controller = TabController(length: 11, vsync: this);
     _controller.addListener(() {
       if (_controller.indexIsChanging) {
         if (_controller.index == constantTabIndex) {
@@ -171,6 +177,8 @@ class FFmpegKitFlutterAppState extends State<MainPage>
           ffkitProtocolsTab.setActive();
         } else if (_controller.index == otherIndex) {
           otherTab.setActive();
+        } else if (_controller.index == backgroundTabIndex) {
+          backgroundTab.setActive();
         }
       }
     });
@@ -198,7 +206,8 @@ class FFmpegKitFlutterAppState extends State<MainPage>
       Tab(text: "PIPE"),
       Tab(text: "CONCURRENT EXECUTION"),
       Tab(text: "FFKIT PROTOCOLS"),
-      Tab(text: "OTHER")
+      Tab(text: "OTHER"),
+      Tab(text: "BACKGROUND")
     ];
 
     var commandColumn = Column(
@@ -887,6 +896,38 @@ class FFmpegKitFlutterAppState extends State<MainPage>
       ],
     );
 
+    var backgroundColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.only(top: 40, bottom: 20),
+          child: new InkWell(
+            onTap: () => backgroundTab.runTest(),
+            child: new Container(
+              width: 220,
+              height: 38,
+              decoration: buttonDecoration,
+              child: new Center(
+                child: new Text(
+                  'RUN IN BACKGROUND',
+                  style: buttonTextStyle,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+              alignment: Alignment(-1.0, -1.0),
+              margin: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(4.0),
+              decoration: outputDecoration,
+              child: SingleChildScrollView(
+                  reverse: true, child: Text(backgroundTab.getOutputText()))),
+        )
+      ],
+    );
+
     var columns = <Widget>[
       commandColumn,
       videoColumn,
@@ -897,7 +938,8 @@ class FFmpegKitFlutterAppState extends State<MainPage>
       pipeColumn,
       concurrentExecutionColumn,
       ffkitProtocolsColumn,
-      otherColumn
+      otherColumn,
+      backgroundColumn
     ];
 
     return Scaffold(
@@ -951,6 +993,7 @@ class FFmpegKitFlutterAppState extends State<MainPage>
   @override
   void dispose() {
     commandTab.dispose();
+    backgroundTab.dispose();
     super.dispose();
   }
 }

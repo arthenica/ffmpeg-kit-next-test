@@ -2,6 +2,8 @@ PODS:
   - ffmpeg_kit_next_flutter (8.1.0):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_background_service_ios (0.0.3):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
   - video_player_avfoundation (0.0.1):
@@ -11,6 +13,7 @@ PODS:
 DEPENDENCIES:
   - ffmpeg_kit_next_flutter (from `.symlinks/plugins/ffmpeg_kit_next_flutter/ios`)
   - Flutter (from `Flutter`)
+  - flutter_background_service_ios (from `.symlinks/plugins/flutter_background_service_ios/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
 
@@ -19,6 +22,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/ffmpeg_kit_next_flutter/ios"
   Flutter:
     :path: Flutter
+  flutter_background_service_ios:
+    :path: ".symlinks/plugins/flutter_background_service_ios/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   video_player_avfoundation:
@@ -27,6 +32,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   ffmpeg_kit_next_flutter: c8a718f33b9f992134176593c0f84e71c879d395
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_background_service_ios: 00d31bdff7b4bfe06d32375df358abe0329cf87e
   fluttertoast: fe6790210fdba20801685be946e3a2124b72eef5
   video_player_avfoundation: 3453f792138786248960ca029747fcd9f318ef52
 
