@@ -25,19 +25,65 @@
 #include "Popup.h"
 #include <FFmpegKitConfig.h>
 #include <cstdlib>
-#define RAPIDJSON_ASSERT(x)
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include <json/Value.h>
 
 using namespace ffmpegkit;
 
 static std::recursive_mutex outputMutex;
 
-std::string toString(const rapidjson::Value& value) {
-    rapidjson::StringBuffer buffer;
-    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-    value.Accept(writer);
-    return std::string(buffer.GetString(), buffer.GetSize());
+static std::string escapeJsonString(const std::string& value) {
+    std::string escaped;
+    for (const char character : value) {
+        switch (character) {
+            case '"': escaped += "\\\""; break;
+            case '\\': escaped += "\\\\"; break;
+            case '\b': escaped += "\\b"; break;
+            case '\f': escaped += "\\f"; break;
+            case '\n': escaped += "\\n"; break;
+            case '\r': escaped += "\\r"; break;
+            case '\t': escaped += "\\t"; break;
+            default: escaped += character; break;
+        }
+    }
+    return escaped;
+}
+
+std::string toString(const ffmpegkit::json::Value& value) {
+    switch (value.getType()) {
+        case ffmpegkit::json::Value::Type::Null:
+            return "null";
+        case ffmpegkit::json::Value::Type::Bool:
+            return *value.getBool() ? "true" : "false";
+        case ffmpegkit::json::Value::Type::Int:
+            return std::to_string(*value.getInt());
+        case ffmpegkit::json::Value::Type::Double:
+            return std::to_string(*value.getDouble());
+        case ffmpegkit::json::Value::Type::String:
+            return "\"" + escapeJsonString(*value.getString()) + "\"";
+        case ffmpegkit::json::Value::Type::Array: {
+            const std::vector<ffmpegkit::json::Value>& elements = value.getArray();
+            std::string serialized("[");
+            for (auto element = elements.cbegin(); element != elements.cend(); ++element) {
+                if (element != elements.cbegin()) {
+                    serialized += ",";
+                }
+                serialized += toString(*element);
+            }
+            return serialized + "]";
+        }
+        case ffmpegkit::json::Value::Type::Object: {
+            const std::map<std::string, ffmpegkit::json::Value>& members = value.getObject();
+            std::string serialized("{");
+            for (auto member = members.cbegin(); member != members.cend(); ++member) {
+                if (member != members.cbegin()) {
+                    serialized += ",";
+                }
+                serialized += "\"" + escapeJsonString(member->first) + "\":" + toString(member->second);
+            }
+            return serialized + "}";
+        }
+    }
+    return "null";
 }
 
 static gboolean appendLog(const std::pair<ffmpegkittest::HttpsTab*,const std::string>* parameters) {
@@ -194,9 +240,8 @@ MediaInformationSessionCompleteCallback ffmpegkittest::HttpsTab::createNewComple
             }
             if (information->getTags() != nullptr) {
                 auto tags = information->getTags();
-                for (auto tagIterator = tags->MemberBegin(); tagIterator != tags->MemberEnd(); ++tagIterator) {
-                    const char* tagName = tagIterator->name.GetString();
-                    appendLogToMainLoop(this, std::string("Tag: ") + tagName + ":" + toString(tagIterator->value) + "\n");
+                for (const auto& tag : tags->getObject()) {
+                    appendLogToMainLoop(this, std::string("Tag: ") + tag.first + ":" + toString(tag.second) + "\n");
                 }
             }
             if (information->getStreams() != nullptr) {
@@ -259,9 +304,8 @@ MediaInformationSessionCompleteCallback ffmpegkittest::HttpsTab::createNewComple
 
                     if (stream->getTags() != nullptr) {
                         auto tags = stream->getTags();
-                        for (auto tagIterator = tags->MemberBegin(); tagIterator != tags->MemberEnd(); ++tagIterator) {
-                            const char* tagName = tagIterator->name.GetString();
-                            appendLogToMainLoop(this, std::string("Stream tag: ") + tagName + ":" + toString(tagIterator->value) + "\n");
+                        for (const auto& tag : tags->getObject()) {
+                            appendLogToMainLoop(this, std::string("Stream tag: ") + tag.first + ":" + toString(tag.second) + "\n");
                         }
                     }
                 });
@@ -290,9 +334,8 @@ MediaInformationSessionCompleteCallback ffmpegkittest::HttpsTab::createNewComple
                     }
                     if (chapter->getTags() != nullptr) {
                         auto tags = chapter->getTags();
-                        for (auto tagIterator = tags->MemberBegin(); tagIterator != tags->MemberEnd(); ++tagIterator) {
-                            const char* tagName = tagIterator->name.GetString();
-                            appendLogToMainLoop(this, std::string("Chapter tag: ") + tagName + ":" + toString(tagIterator->value) + "\n");
+                        for (const auto& tag : tags->getObject()) {
+                            appendLogToMainLoop(this, std::string("Chapter tag: ") + tag.first + ":" + toString(tag.second) + "\n");
                         }
                     }
                 });
