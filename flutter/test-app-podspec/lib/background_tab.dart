@@ -155,16 +155,16 @@ class BackgroundTab {
     }
 
     // Background isolates can only use plugin channels on Android and iOS. The
-    // desktop (macOS) Flutter embedder does not support platform channels from a
-    // background isolate - doing so aborts the process natively, which Dart
-    // cannot catch - so we report that here instead of running.
+    // desktop (macOS, Linux) Flutter embedders do not support platform channels
+    // from a background isolate - doing so aborts the process natively, which
+    // Dart cannot catch - so we report that here instead of running.
     if (!(Platform.isAndroid || Platform.isIOS)) {
       clearOutput();
       appendOutput(
           "Background-isolate plugin channels are only supported on Android "
-          "and iOS.\n\nThe macOS Flutter embedder does not support platform "
-          "channels from a background isolate, so this test runs on Android "
-          "and iOS.\n");
+          "and iOS.\n\nThe macOS and Linux Flutter embedders do not support "
+          "platform channels from a background isolate, so this test runs on "
+          "Android and iOS.\n");
       return;
     }
 

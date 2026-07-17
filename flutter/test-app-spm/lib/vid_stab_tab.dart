@@ -37,7 +37,9 @@ import 'util.dart';
 import 'video_util.dart';
 
 class _ControllerWrapper implements PlayerTab {
-  late VideoPlayerController? _controller;
+  // Defaults to null (not late) so platforms without video_player (Linux),
+  // where setController is never called, read null instead of throwing.
+  VideoPlayerController? _controller;
 
   @override
   void setController(VideoPlayerController controller) {
