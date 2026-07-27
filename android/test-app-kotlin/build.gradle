@@ -20,8 +20,8 @@ android {
         applicationId "com.arthenica.ffmpegkit.test"
         minSdk 24
         targetSdk 35
-        versionCode 240810
-        versionName "8.1.0"
+        versionCode 240811
+        versionName "8.1.1"
     }
     buildTypes {
         debug {
