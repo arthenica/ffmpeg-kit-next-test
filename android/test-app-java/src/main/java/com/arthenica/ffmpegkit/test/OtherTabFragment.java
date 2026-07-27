@@ -174,11 +174,11 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     protected void testWebp() {
-        final File imageFile = new File(requireContext().getCacheDir(), "machupicchu.jpg");
+        final File imageFile = new File(requireContext().getCacheDir(), "tree.jpg");
         final File outputFile = new File(requireContext().getFilesDir(), "video.webp");
 
         try {
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.machupicchu, imageFile);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.tree, imageFile);
 
             Log.d(TAG, "Testing 'webp' codec");
 
@@ -232,7 +232,7 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     protected void testLibjxl() {
-        final File imageFile = new File(requireContext().getCacheDir(), "machupicchu.jpg");
+        final File imageFile = new File(requireContext().getCacheDir(), "tree.jpg");
         final File jxlOutputFile = getLibjxlOutputFile();
         final File decodedOutputFile = getLibjxlDecodedOutputFile();
 
@@ -244,7 +244,7 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
         }
 
         try {
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.machupicchu, imageFile);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.tree, imageFile);
 
             Log.d(TAG, "Testing 'libjxl' codec");
 
@@ -274,9 +274,9 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     protected void testVvenc() {
-        final File image1File = new File(requireContext().getCacheDir(), "machupicchu.jpg");
-        final File image2File = new File(requireContext().getCacheDir(), "pyramid.jpg");
-        final File image3File = new File(requireContext().getCacheDir(), "stonehenge.jpg");
+        final File image1File = new File(requireContext().getCacheDir(), "tree.jpg");
+        final File image2File = new File(requireContext().getCacheDir(), "lake.jpg");
+        final File image3File = new File(requireContext().getCacheDir(), "sunset.jpg");
         final File outputFile = getVvencOutputFile();
 
         if (outputFile.exists()) {
@@ -284,9 +284,9 @@ public class OtherTabFragment extends Fragment implements AdapterView.OnItemSele
         }
 
         try {
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.machupicchu, image1File);
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.pyramid, image2File);
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.stonehenge, image3File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.tree, image1File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.lake, image2File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.sunset, image3File);
 
             Log.d(TAG, "Testing 'vvenc' codec");
 

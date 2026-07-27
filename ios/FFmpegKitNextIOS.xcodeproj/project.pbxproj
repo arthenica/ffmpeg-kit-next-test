@@ -25,7 +25,6 @@
 		345745502113B8D300059043 /* SubtitleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3457454E2113B8D300059043 /* SubtitleViewController.m */; };
 		345E16AA24CB93D1007275F0 /* ConcurrentExecutionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345E16A824CB93D1007275F0 /* ConcurrentExecutionViewController.m */; };
 		345E16AB24CB93D1007275F0 /* ConcurrentExecutionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345E16A924CB93D1007275F0 /* ConcurrentExecutionViewController.h */; };
-		348439ED20B2EFAF001A3990 /* pyramid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 348439EA20B2EFAF001A3990 /* pyramid.jpg */; };
 		3487ABA5220CEAA300A40E8D /* PipeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3487ABA3220CEAA200A40E8D /* PipeViewController.m */; };
 		3487ABA6220CEAA300A40E8D /* PipeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3487ABA4220CEAA200A40E8D /* PipeViewController.h */; };
 		34943E6825DB499E002B5C1E /* FFmpegKitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34943E6625DB499E002B5C1E /* FFmpegKitTest.h */; };
@@ -46,6 +45,16 @@
 		34A33AA9273B1C630087F971 /* libavutil.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A99273B1C4B0087F971 /* libavutil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		34A33AAA273B1C630087F971 /* libswresample.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A94273B1C4B0087F971 /* libswresample.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		34A33AAB273B1C630087F971 /* libswscale.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A96273B1C4B0087F971 /* libswscale.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		34B3E2FB3017FE5100B974CA /* sunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F93017FE5100B974CA /* sunset.jpg */; };
+		34B3E2FC3017FE5100B974CA /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2FA3017FE5100B974CA /* tree.jpg */; };
+		34B3E2FD3017FE5100B974CA /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F73017FE5100B974CA /* notosansarabic_regular.ttf */; };
+		34B3E2FE3017FE5100B974CA /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F63017FE5100B974CA /* lake.jpg */; };
+		34B3E2FF3017FE5100B974CA /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F83017FE5100B974CA /* notosanssc_regular.ttf */; };
+		34B3E3003017FE5100B974CA /* sunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F93017FE5100B974CA /* sunset.jpg */; };
+		34B3E3013017FE5100B974CA /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2FA3017FE5100B974CA /* tree.jpg */; };
+		34B3E3023017FE5100B974CA /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F73017FE5100B974CA /* notosansarabic_regular.ttf */; };
+		34B3E3033017FE5100B974CA /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F63017FE5100B974CA /* lake.jpg */; };
+		34B3E3043017FE5100B974CA /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34B3E2F83017FE5100B974CA /* notosanssc_regular.ttf */; };
 		34BB547C2109D44800606B7C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BB547B2109D44800606B7C /* Constants.m */; };
 		34CB450C25DDF1E600CF2282 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB450B25DDF1E600CF2282 /* libz.tbd */; };
 		34CB450E25DDF1EF00CF2282 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB450D25DDF1EF00CF2282 /* libiconv.tbd */; };
@@ -55,11 +64,8 @@
 		34CB451625DDF24200CF2282 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB451525DDF24200CF2282 /* CoreMotion.framework */; };
 		34CB451825DDF25300CF2282 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB451725DDF25300CF2282 /* Accelerate.framework */; };
 		34CB451A25DDF26A00CF2282 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB451925DDF26A00CF2282 /* GameController.framework */; };
-		34CB451D25DDF76200CF2282 /* machupicchu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34CB451B25DDF76200CF2282 /* machupicchu.jpg */; };
-		34CB451E25DDF76200CF2282 /* stonehenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34CB451C25DDF76200CF2282 /* stonehenge.jpg */; };
 		34D37D0F25DBEA1D00B8914A /* OtherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D37D0D25DBEA1D00B8914A /* OtherViewController.m */; };
 		34D37D1025DBEA1D00B8914A /* OtherViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D37D0E25DBEA1D00B8914A /* OtherViewController.h */; };
-		34DC789B21215B5800C3486C /* truenorg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789721215B5800C3486C /* truenorg.otf */; };
 		34DC789C21215B5800C3486C /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789821215B5800C3486C /* subtitle.srt */; };
 		34DC789D21215B5800C3486C /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789921215B5800C3486C /* doppioone_regular.ttf */; };
 		34DC789E21215B5800C3486C /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789A21215B5800C3486C /* sil_open_font_license.txt */; };
@@ -104,12 +110,8 @@
 		F1000000000000000000003C /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB450D25DDF1EF00CF2282 /* libiconv.tbd */; };
 		F1000000000000000000003D /* libavutil.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A99273B1C4B0087F971 /* libavutil.xcframework */; };
 		F1000000000000000000003E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34CB450B25DDF1E600CF2282 /* libz.tbd */; };
-		F10000000000000000000040 /* pyramid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 348439EA20B2EFAF001A3990 /* pyramid.jpg */; };
 		F10000000000000000000041 /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789921215B5800C3486C /* doppioone_regular.ttf */; };
 		F10000000000000000000042 /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789A21215B5800C3486C /* sil_open_font_license.txt */; };
-		F10000000000000000000043 /* stonehenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34CB451C25DDF76200CF2282 /* stonehenge.jpg */; };
-		F10000000000000000000044 /* truenorg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789721215B5800C3486C /* truenorg.otf */; };
-		F10000000000000000000045 /* machupicchu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34CB451B25DDF76200CF2282 /* machupicchu.jpg */; };
 		F10000000000000000000046 /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789821215B5800C3486C /* subtitle.srt */; };
 		F10000000000000000000047 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000002B /* LaunchScreen.storyboard */; };
 		F10000000000000000000048 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000025 /* Assets.xcassets */; };
@@ -186,7 +188,6 @@
 		345E16A824CB93D1007275F0 /* ConcurrentExecutionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConcurrentExecutionViewController.m; sourceTree = "<group>"; };
 		345E16A924CB93D1007275F0 /* ConcurrentExecutionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConcurrentExecutionViewController.h; sourceTree = "<group>"; };
 		346B8266244878C000971D55 /* FFmpegKitNextIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FFmpegKitNextIOS.entitlements; sourceTree = "<group>"; };
-		348439EA20B2EFAF001A3990 /* pyramid.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pyramid.jpg; sourceTree = "<group>"; };
 		3487ABA3220CEAA200A40E8D /* PipeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeViewController.m; sourceTree = "<group>"; };
 		3487ABA4220CEAA200A40E8D /* PipeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeViewController.h; sourceTree = "<group>"; };
 		34943E6625DB499E002B5C1E /* FFmpegKitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFmpegKitTest.h; sourceTree = "<group>"; };
@@ -199,6 +200,11 @@
 		34A33A99273B1C4B0087F971 /* libavutil.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libavutil.xcframework; sourceTree = "<group>"; };
 		34A33A9A273B1C4B0087F971 /* libavformat.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libavformat.xcframework; sourceTree = "<group>"; };
 		34A33A9B273B1C4B0087F971 /* libavcodec.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libavcodec.xcframework; sourceTree = "<group>"; };
+		34B3E2F63017FE5100B974CA /* lake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lake.jpg; sourceTree = "<group>"; };
+		34B3E2F73017FE5100B974CA /* notosansarabic_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notosansarabic_regular.ttf; sourceTree = "<group>"; };
+		34B3E2F83017FE5100B974CA /* notosanssc_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notosanssc_regular.ttf; sourceTree = "<group>"; };
+		34B3E2F93017FE5100B974CA /* sunset.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sunset.jpg; sourceTree = "<group>"; };
+		34B3E2FA3017FE5100B974CA /* tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tree.jpg; sourceTree = "<group>"; };
 		34BB547B2109D44800606B7C /* Constants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		34CB450B25DDF1E600CF2282 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		34CB450D25DDF1EF00CF2282 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/usr/lib/libiconv.tbd; sourceTree = DEVELOPER_DIR; };
@@ -208,11 +214,8 @@
 		34CB451525DDF24200CF2282 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		34CB451725DDF25300CF2282 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		34CB451925DDF26A00CF2282 /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/iOSSupport/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
-		34CB451B25DDF76200CF2282 /* machupicchu.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = machupicchu.jpg; sourceTree = "<group>"; };
-		34CB451C25DDF76200CF2282 /* stonehenge.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stonehenge.jpg; sourceTree = "<group>"; };
 		34D37D0D25DBEA1D00B8914A /* OtherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherViewController.m; sourceTree = "<group>"; };
 		34D37D0E25DBEA1D00B8914A /* OtherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OtherViewController.h; sourceTree = "<group>"; };
-		34DC789721215B5800C3486C /* truenorg.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = truenorg.otf; sourceTree = "<group>"; };
 		34DC789821215B5800C3486C /* subtitle.srt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = subtitle.srt; sourceTree = "<group>"; };
 		34DC789921215B5800C3486C /* doppioone_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = doppioone_regular.ttf; sourceTree = "<group>"; };
 		34DC789A21215B5800C3486C /* sil_open_font_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sil_open_font_license.txt; sourceTree = "<group>"; };
@@ -309,13 +312,14 @@
 		346AA95920B2ED94000623FE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				34B3E2F63017FE5100B974CA /* lake.jpg */,
+				34B3E2F73017FE5100B974CA /* notosansarabic_regular.ttf */,
+				34B3E2F83017FE5100B974CA /* notosanssc_regular.ttf */,
+				34B3E2F93017FE5100B974CA /* sunset.jpg */,
+				34B3E2FA3017FE5100B974CA /* tree.jpg */,
 				34DC789921215B5800C3486C /* doppioone_regular.ttf */,
-				34CB451B25DDF76200CF2282 /* machupicchu.jpg */,
-				348439EA20B2EFAF001A3990 /* pyramid.jpg */,
 				34DC789A21215B5800C3486C /* sil_open_font_license.txt */,
-				34CB451C25DDF76200CF2282 /* stonehenge.jpg */,
 				34DC789821215B5800C3486C /* subtitle.srt */,
-				34DC789721215B5800C3486C /* truenorg.otf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -548,16 +552,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				348439ED20B2EFAF001A3990 /* pyramid.jpg in Resources */,
 				34DC789D21215B5800C3486C /* doppioone_regular.ttf in Resources */,
 				34DC789E21215B5800C3486C /* sil_open_font_license.txt in Resources */,
 				34FAE223209F7DDE005CE2AE /* LaunchScreen.storyboard in Resources */,
 				34FAE220209F7DDE005CE2AE /* Assets.xcassets in Resources */,
-				34CB451E25DDF76200CF2282 /* stonehenge.jpg in Resources */,
-				34DC789B21215B5800C3486C /* truenorg.otf in Resources */,
-				34CB451D25DDF76200CF2282 /* machupicchu.jpg in Resources */,
 				34FAE21E209F7DDD005CE2AE /* Main.storyboard in Resources */,
 				34DC789C21215B5800C3486C /* subtitle.srt in Resources */,
+				34B3E2FB3017FE5100B974CA /* sunset.jpg in Resources */,
+				34B3E2FC3017FE5100B974CA /* tree.jpg in Resources */,
+				34B3E2FD3017FE5100B974CA /* notosansarabic_regular.ttf in Resources */,
+				34B3E2FE3017FE5100B974CA /* lake.jpg in Resources */,
+				34B3E2FF3017FE5100B974CA /* notosanssc_regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,16 +570,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F10000000000000000000040 /* pyramid.jpg in Resources */,
 				F10000000000000000000041 /* doppioone_regular.ttf in Resources */,
 				F10000000000000000000042 /* sil_open_font_license.txt in Resources */,
-				F10000000000000000000043 /* stonehenge.jpg in Resources */,
-				F10000000000000000000044 /* truenorg.otf in Resources */,
-				F10000000000000000000045 /* machupicchu.jpg in Resources */,
 				F10000000000000000000046 /* subtitle.srt in Resources */,
 				F10000000000000000000047 /* LaunchScreen.storyboard in Resources */,
 				F10000000000000000000048 /* Assets.xcassets in Resources */,
 				F10000000000000000000049 /* Main.storyboard in Resources */,
+				34B3E3003017FE5100B974CA /* sunset.jpg in Resources */,
+				34B3E3013017FE5100B974CA /* tree.jpg in Resources */,
+				34B3E3023017FE5100B974CA /* notosansarabic_regular.ttf in Resources */,
+				34B3E3033017FE5100B974CA /* lake.jpg in Resources */,
+				34B3E3043017FE5100B974CA /* notosanssc_regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

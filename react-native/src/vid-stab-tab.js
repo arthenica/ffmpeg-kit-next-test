@@ -12,7 +12,10 @@ export default class VidStabTab extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            videoVersion: 0,
+            stabilizedVideoVersion: 0
+        };
 
         this.progressModalReference = React.createRef();
     }
@@ -122,11 +125,11 @@ export default class VidStabTab extends React.Component {
     }
 
     playVideo() {
-        let player = this.videoPlayer;
-        if (player !== undefined) {
-            player.seek(0);
-        }
-        this.setState({videoPaused: false});
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            videoPaused: false, videoVersion: previousState.videoVersion + 1
+        }));
     }
 
     pauseVideo() {
@@ -134,11 +137,11 @@ export default class VidStabTab extends React.Component {
     }
 
     playStabilizedVideo() {
-        let player = this.stabilizedVideoPlayer;
-        if (player !== undefined) {
-            player.seek(0);
-        }
-        this.setState({stabilizedVideoPaused: false});
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            stabilizedVideoPaused: false, stabilizedVideoVersion: previousState.stabilizedVideoVersion + 1
+        }));
     }
 
     pauseStabilizedVideo() {
@@ -182,7 +185,8 @@ export default class VidStabTab extends React.Component {
                         FFmpegKitNext ReactNative
                     </Text>
                 </View>
-                <Video source={{uri: this.getVideoFile()}}
+                <Video key={`video-${this.state.videoVersion}`}
+                       source={{uri: this.getVideoFile()}}
                        ref={(ref) => {
                            this.videoPlayer = ref
                        }}
@@ -202,7 +206,8 @@ export default class VidStabTab extends React.Component {
                 <ProgressModal
                     visible={false}
                     ref={this.progressModalReference}/>
-                <Video source={{uri: this.getStabilizedVideoFile()}}
+                <Video key={`stabilized-${this.state.stabilizedVideoVersion}`}
+                       source={{uri: this.getStabilizedVideoFile()}}
                        ref={(ref) => {
                            this.stabilizedVideoPlayer = ref
                        }}

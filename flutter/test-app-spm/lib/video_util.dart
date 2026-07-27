@@ -31,12 +31,13 @@ import 'package:path_provider/path_provider.dart';
 import 'util.dart';
 
 class VideoUtil {
-  static const String ASSET_1 = "machupicchu.jpg";
-  static const String ASSET_2 = "pyramid.jpg";
-  static const String ASSET_3 = "stonehenge.jpg";
+  static const String ASSET_1 = "tree.jpg";
+  static const String ASSET_2 = "lake.jpg";
+  static const String ASSET_3 = "sunset.jpg";
   static const String SUBTITLE_ASSET = "subtitle.srt";
   static const String FONT_ASSET_1 = "doppioone_regular.ttf";
-  static const String FONT_ASSET_2 = "truenorg.otf";
+  static const String FONT_ASSET_2 = "notosansarabic_regular.ttf";
+  static const String FONT_ASSET_3 = "notosanssc_regular.ttf";
 
   static void registerApplicationFonts() {
     var fontNameMapping = Map<String, String>();
@@ -60,6 +61,7 @@ class VideoUtil {
     await VideoUtil.assetToFile(SUBTITLE_ASSET);
     await VideoUtil.assetToFile(FONT_ASSET_1);
     await VideoUtil.assetToFile(FONT_ASSET_2);
+    await VideoUtil.assetToFile(FONT_ASSET_3);
   }
 
   static Future<File> assetToFile(String assetName) async {

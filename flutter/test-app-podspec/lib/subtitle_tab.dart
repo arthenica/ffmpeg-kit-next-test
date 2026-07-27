@@ -113,7 +113,7 @@ class SubtitleTab implements PlayerTab {
                         "Create completed successfully; burning subtitles.");
 
                     String burnSubtitlesCommand =
-                        "-y -i ${videoFile.path} -vf subtitles=filename='$subtitlePath':force_style='Fontname=Trueno' -c:v mpeg4 ${videoWithSubtitlesFile.path}";
+                        "-y -i ${videoFile.path} -vf subtitles=filename='$subtitlePath':force_style='Fontname=MyFontName' -c:v mpeg4 ${videoWithSubtitlesFile.path}";
 
                     this.showBurnProgressDialog();
 

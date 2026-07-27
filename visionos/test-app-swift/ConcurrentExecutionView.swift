@@ -41,9 +41,9 @@ import ffmpegkit
     func encodeVideo(_ buttonNumber: Int) {
         let docFolder = documentsDirectory()
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let videoFile = docFolder.appendingPathComponent("video\(buttonNumber).mp4")
         NSLog("Testing CONCURRENT EXECUTION for button %d.\n", buttonNumber)
         let ffmpegCommand = Video.generateVideoEncodeScript(image1, image2, image3, videoFile, "mpeg4", "")

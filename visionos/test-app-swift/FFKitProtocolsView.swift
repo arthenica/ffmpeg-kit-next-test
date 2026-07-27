@@ -91,7 +91,7 @@ private func ffkitFormatStatus(_ inputUrl: String, _ inputSize: Int, _ outputUrl
     }
 
     func sampleImageBytes() -> Data? {
-        let path = (Bundle.main.resourcePath ?? "").appendingPathComponent("machupicchu.jpg")
+        let path = (Bundle.main.resourcePath ?? "").appendingPathComponent("tree.jpg")
         let bytes = try? Data(contentsOf: URL(fileURLWithPath: path))
         if bytes == nil {
             alertTitle = "Error"

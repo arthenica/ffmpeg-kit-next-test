@@ -1,5 +1,6 @@
 import {FFmpegKit, FFmpegKitConfig, FFprobeKit, Level} from "ffmpeg-kit-next-react-native";
 import RNFS from 'react-native-fs';
+import {Platform} from "react-native";
 
 export function today() {
     let now = new Date();
@@ -56,7 +57,11 @@ export function listFFmpegSessions() {
 export async function registerApplicationFonts() {
     let fontNameMapping = new Map();
     fontNameMapping["MyFontName"] = "Doppio One";
-    await FFmpegKitConfig.setFontDirectoryList([RNFS.CachesDirectoryPath, "/system/fonts", "/System/Library/Fonts"], fontNameMapping);
+    if (Platform.OS === 'ios') {
+        await FFmpegKitConfig.setFontDirectoryList([RNFS.MainBundlePath], fontNameMapping);
+    } else {
+        await FFmpegKitConfig.setFontDirectoryList([RNFS.CachesDirectoryPath], fontNameMapping);
+    }
     await FFmpegKitConfig.setEnvironmentVariable("FFREPORT", "file=" +
         RNFS.CachesDirectoryPath + "/" + today() + "-ffreport.txt");
 }

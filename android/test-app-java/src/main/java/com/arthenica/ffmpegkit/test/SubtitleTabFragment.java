@@ -131,9 +131,9 @@ public class SubtitleTabFragment extends Fragment {
     }
 
     public void burnSubtitles() {
-        final File image1File = new File(requireContext().getCacheDir(), "machupicchu.jpg");
-        final File image2File = new File(requireContext().getCacheDir(), "pyramid.jpg");
-        final File image3File = new File(requireContext().getCacheDir(), "stonehenge.jpg");
+        final File image1File = new File(requireContext().getCacheDir(), "tree.jpg");
+        final File image2File = new File(requireContext().getCacheDir(), "lake.jpg");
+        final File image3File = new File(requireContext().getCacheDir(), "sunset.jpg");
         final File videoFile = getVideoFile();
         final File videoWithSubtitlesFile = getVideoWithSubtitlesFile();
 
@@ -146,9 +146,9 @@ public class SubtitleTabFragment extends Fragment {
 
             showCreateProgressDialog();
 
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.machupicchu, image1File);
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.pyramid, image2File);
-            ResourcesUtil.resourceToFile(getResources(), R.drawable.stonehenge, image3File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.tree, image1File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.lake, image2File);
+            ResourcesUtil.resourceToFile(getResources(), R.drawable.sunset, image3File);
             ResourcesUtil.rawResourceToFile(getResources(), R.raw.subtitle, getSubtitleFile());
 
             final String ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.getAbsolutePath(), image2File.getAbsolutePath(), image3File.getAbsolutePath(), videoFile.getAbsolutePath(), "mpeg4", "");

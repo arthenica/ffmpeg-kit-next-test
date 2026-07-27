@@ -4,15 +4,15 @@ import {ffprint} from './util';
 
 export default class VideoUtil {
     static get ASSET_1() {
-        return "machupicchu.jpg";
+        return "tree.jpg";
     }
 
     static get ASSET_2() {
-        return "pyramid.jpg";
+        return "lake.jpg";
     }
 
     static get ASSET_3() {
-        return "stonehenge.jpg";
+        return "sunset.jpg";
     }
 
     static get SUBTITLE_ASSET() {
@@ -24,7 +24,11 @@ export default class VideoUtil {
     }
 
     static get FONT_ASSET_2() {
-        return "truenorg.otf";
+        return "notosansarabic_regular.ttf";
+    }
+
+    static get FONT_ASSET_3() {
+        return "notosanssc_regular.ttf";
     }
 
     static async prepareAssets() {
@@ -34,6 +38,7 @@ export default class VideoUtil {
         await VideoUtil.assetToFile(VideoUtil.SUBTITLE_ASSET);
         await VideoUtil.assetToFile(VideoUtil.FONT_ASSET_1);
         await VideoUtil.assetToFile(VideoUtil.FONT_ASSET_2);
+        await VideoUtil.assetToFile(VideoUtil.FONT_ASSET_3);
     }
 
     static async assetToFile(assetName) {

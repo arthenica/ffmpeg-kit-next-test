@@ -133,7 +133,7 @@ static NSString* ffkitFormatStatus(NSString* inputUrl, long inputSize, NSString*
 }
 
 - (NSData*)sampleImageBytes {
-    NSString* path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"machupicchu.jpg"];
+    NSString* path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"tree.jpg"];
     NSData* bytes = [NSData dataWithContentsOfFile:path];
     if (bytes == nil) {
         [Util alert:self withTitle:@"Error" message:@"Could not read the sample image." andButtonText:@"OK"];

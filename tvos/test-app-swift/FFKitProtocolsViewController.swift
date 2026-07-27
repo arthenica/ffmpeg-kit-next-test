@@ -107,7 +107,7 @@ class FFKitProtocolsViewController: UIViewController, ActivatableTab {
     }
 
     func sampleImageBytes() -> Data? {
-        let path = (Bundle.main.resourcePath ?? "").appendingPathComponent("machupicchu.jpg")
+        let path = (Bundle.main.resourcePath ?? "").appendingPathComponent("tree.jpg")
         let bytes = try? Data(contentsOf: URL(fileURLWithPath: path))
         if bytes == nil {
             Util.alert(self, withTitle: "Error", message: "Could not read the sample image.", andButtonText: "OK")

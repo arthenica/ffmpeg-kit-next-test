@@ -24,7 +24,7 @@ android {
         versionName "8.1.0"
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON", "-DANDROID_STL=c++_shared"
             }
         }
     }

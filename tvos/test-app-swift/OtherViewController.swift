@@ -90,7 +90,7 @@ class OtherViewController: UIViewController, ActivatableTab {
     }
 
     func testWebp() {
-        let imageFile = (Bundle.main.resourcePath ?? "").appendingPathComponent("machupicchu.jpg")
+        let imageFile = (Bundle.main.resourcePath ?? "").appendingPathComponent("tree.jpg")
         let outputFile = documentsDirectory().appendingPathComponent("video.webp")
         NSLog("Testing 'webp' codec\n")
         let ffmpegCommand = "-hide_banner -y -i \(imageFile) \(outputFile)"
@@ -99,7 +99,7 @@ class OtherViewController: UIViewController, ActivatableTab {
     }
 
     func testLibjxl() {
-        let imageFile = (Bundle.main.resourcePath ?? "").appendingPathComponent("machupicchu.jpg")
+        let imageFile = (Bundle.main.resourcePath ?? "").appendingPathComponent("tree.jpg")
         let jxlOutputFile = getLibjxlOutputPath()
         let decodedOutputFile = getLibjxlDecodedOutputPath()
         try? FileManager.default.removeItem(atPath: jxlOutputFile)
@@ -132,9 +132,9 @@ class OtherViewController: UIViewController, ActivatableTab {
 
     func testVvenc() {
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let outputFile = getVvencOutputPath()
         try? FileManager.default.removeItem(atPath: outputFile)
         NSLog("Testing 'vvenc' codec\n")

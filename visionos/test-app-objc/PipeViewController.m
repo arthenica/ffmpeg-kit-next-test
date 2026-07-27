@@ -155,9 +155,9 @@
 
 - (IBAction)createVideo:(id)sender {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *videoFile = [self getVideoPath];
 
     NSString *pipe1 = [FFmpegKitConfig registerNewFFmpegPipe];

@@ -341,17 +341,17 @@ class FFKitProtocolsTabFragment : Fragment(R.layout.fragment_ffkit_protocols_tab
     }
 
     private fun runFFKitSafFFmpeg(outputUri: Uri) {
-        val image1File = cacheFile("machupicchu.jpg")
-        val image2File = cacheFile("pyramid.jpg")
-        val image3File = cacheFile("stonehenge.jpg")
+        val image1File = cacheFile("tree.jpg")
+        val image2File = cacheFile("lake.jpg")
+        val image3File = cacheFile("sunset.jpg")
         val videoPath = FFmpegKitConfig.getSafParameter(requireContext(), outputUri, "rw")
 
         val command: String
         try {
             val videoCodec = getCodec(videoPath)
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, image1File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.pyramid, image2File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.stonehenge, image3File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, image1File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.lake, image2File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.sunset, image3File)
             command = FFmpegCommands.buildEncodeVideoCommand(
                 image1File.absolutePath,
                 image2File.absolutePath,

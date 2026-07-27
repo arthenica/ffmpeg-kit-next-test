@@ -142,9 +142,9 @@ void ffmpegkittest::SubtitleTab::clearOutput() {
 void ffmpegkittest::SubtitleTab::burnSubtitles() {
     clearOutput();
 
-    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
-    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/pyramid.jpg";
-    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/stonehenge.jpg";
+    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
+    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/lake.jpg";
+    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/sunset.jpg";
     std::string videoFile = getVideoFile();
     std::string videoWithSubtitlesFile = getVideoWithSubtitlesFile();
 

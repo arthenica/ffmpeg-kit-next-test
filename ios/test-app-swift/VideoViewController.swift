@@ -79,9 +79,9 @@ class VideoViewController: UIViewController, UIPickerViewDataSource, UIPickerVie
 
     @IBAction func encodeVideo(_ sender: Any) {
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let videoFile = getVideoPath()
         player.removeAllItems()
         activeItem = nil
