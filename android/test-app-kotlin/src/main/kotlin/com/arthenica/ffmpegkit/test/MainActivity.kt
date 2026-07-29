@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         ResourcesUtil.rawResourceToFile(resources, R.raw.doppioone_regular, File(fontDirectory, "doppioone_regular.ttf"))
-        ResourcesUtil.rawResourceToFile(resources, R.raw.truenorg, File(fontDirectory, "truenorg.otf"))
+        ResourcesUtil.rawResourceToFile(resources, R.raw.notosansarabic_regular, File(fontDirectory, "notosansarabic_regular.ttf"))
+        ResourcesUtil.rawResourceToFile(resources, R.raw.notosanssc_regular, File(fontDirectory, "notosanssc_regular.ttf"))
 
         val fontNameMapping = hashMapOf<String?, String?>()
         fontNameMapping["MyFontName"] = "Doppio One"

@@ -91,9 +91,9 @@ class SubtitleTabFragment : Fragment(R.layout.fragment_subtitle_tab) {
     }
 
     fun burnSubtitles() {
-        val image1File = cacheFile("machupicchu.jpg")
-        val image2File = cacheFile("pyramid.jpg")
-        val image3File = cacheFile("stonehenge.jpg")
+        val image1File = cacheFile("tree.jpg")
+        val image2File = cacheFile("lake.jpg")
+        val image3File = cacheFile("sunset.jpg")
         val videoFile = getVideoFile()
         val videoWithSubtitlesFile = getVideoWithSubtitlesFile()
 
@@ -104,12 +104,13 @@ class SubtitleTabFragment : Fragment(R.layout.fragment_subtitle_tab) {
 
             showCreateProgressDialog()
 
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, image1File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.pyramid, image2File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.stonehenge, image3File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, image1File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.lake, image2File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.sunset, image3File)
             ResourcesUtil.rawResourceToFile(resources, R.raw.subtitle, getSubtitleFile())
 
-            val ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.absolutePath, image2File.absolutePath, image3File.absolutePath, videoFile.absolutePath, "mpeg4", "")
+            val videoCodec = FFmpegCommands.getPackageVideoCodec()
+            val ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.absolutePath, image2File.absolutePath, image3File.absolutePath, videoFile.absolutePath, videoCodec, "")
 
             Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand))
 
@@ -124,7 +125,7 @@ class SubtitleTabFragment : Fragment(R.layout.fragment_subtitle_tab) {
                     MainActivity.addUIAction {
                         Log.d(MainActivity.TAG, "Create completed successfully; burning subtitles.")
 
-                        val burnSubtitlesCommand = String.format("-y -i %s -vf subtitles=filename='%s':force_style='FontName=MyFontName' -c:v mpeg4 %s", videoFile.absolutePath, getSubtitleFile().absolutePath, videoWithSubtitlesFile.absolutePath)
+                        val burnSubtitlesCommand = String.format("-y -i %s -vf subtitles=filename='%s':force_style='FontName=MyFontName' -c:v %s %s", videoFile.absolutePath, getSubtitleFile().absolutePath, videoCodec, videoWithSubtitlesFile.absolutePath)
 
                         showBurnProgressDialog()
 

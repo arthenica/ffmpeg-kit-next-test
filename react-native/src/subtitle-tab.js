@@ -15,7 +15,8 @@ export default class SubtitleTab extends React.Component {
         this.state = {
             state: 'IDLE',
             statistics: undefined,
-            sessionId: 0
+            sessionId: 0,
+            videoVersion: 0
         };
 
         this.progressModalReference = React.createRef();
@@ -43,7 +44,7 @@ export default class SubtitleTab extends React.Component {
         this.updateProgressDialog();
     }
 
-    burnSubtitles = () => {
+    burnSubtitles = async () => {
         let image1Path = VideoUtil.assetPath(VideoUtil.ASSET_1);
         let image2Path = VideoUtil.assetPath(VideoUtil.ASSET_2);
         let image3Path = VideoUtil.assetPath(VideoUtil.ASSET_3);
@@ -62,7 +63,8 @@ export default class SubtitleTab extends React.Component {
         this.hideProgressDialog();
         this.showCreateProgressDialog();
 
-        let ffmpegCommand = VideoUtil.generateEncodeVideoScript(image1Path, image2Path, image3Path, videoFile, "mpeg4", "");
+        const videoCodec = await VideoUtil.packageVideoCodec();
+        let ffmpegCommand = VideoUtil.generateEncodeVideoScript(image1Path, image2Path, image3Path, videoFile, videoCodec, "");
 
         this.setState({state: 'CREATING'});
 
@@ -76,7 +78,7 @@ export default class SubtitleTab extends React.Component {
                 if (ReturnCode.isSuccess(returnCode)) {
                     ffprint("Create completed successfully; burning subtitles.");
 
-                    let burnSubtitlesCommand = `-y -i ${videoFile} -vf subtitles=filename='${subtitlePath}':force_style='FontName=MyFontName' -c:v mpeg4 ${videoWithSubtitlesFile}`;
+                    let burnSubtitlesCommand = `-y -i ${videoFile} -vf subtitles=filename='${subtitlePath}':force_style='FontName=MyFontName' -c:v ${videoCodec} ${videoWithSubtitlesFile}`;
 
                     this.showBurnProgressDialog();
 
@@ -115,11 +117,11 @@ export default class SubtitleTab extends React.Component {
     }
 
     playVideo() {
-        let player = this.player;
-        if (player !== undefined) {
-            player.seek(0);
-        }
-        this.setState({paused: false});
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            paused: false, videoVersion: previousState.videoVersion + 1
+        }));
     }
 
     pause() {
@@ -190,7 +192,8 @@ export default class SubtitleTab extends React.Component {
                 <ProgressModal
                     visible={false}
                     ref={this.progressModalReference}/>
-                <Video source={{uri: this.getVideoWithSubtitlesFile()}}
+                <Video key={`video-${this.state.videoVersion}`}
+                       source={{uri: this.getVideoWithSubtitlesFile()}}
                        ref={(ref) => {
                            this.player = ref
                        }}

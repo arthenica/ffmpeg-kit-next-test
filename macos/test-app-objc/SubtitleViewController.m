@@ -94,9 +94,9 @@ typedef enum {
 
 - (IBAction)burnSubtitles:(id)sender {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *subtitle = [self getSubtitlePath];
     NSString *videoFile = [self getVideoPath];
     NSString *videoWithSubtitlesFile = [self getVideoWithSubtitlesPath];
@@ -109,7 +109,9 @@ typedef enum {
 
     [self showProgressDialog:@"Creating video\n\n"];
 
-    NSString* ffmpegCommand = [Video generateVideoEncodeScript:image1:image2:image3:videoFile:@"mpeg4":@""];
+    NSString *videoCodec = [Video packageVideoCodec];
+
+    NSString* ffmpegCommand = [Video generateVideoEncodeScript:image1:image2:image3:videoFile:videoCodec:@""];
     
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
     
@@ -126,7 +128,7 @@ typedef enum {
         if ([ReturnCode isSuccess:[session getReturnCode]]) {
             NSLog(@"Create completed successfully; burning subtitles.\n");
 
-            NSString *burnSubtitlesCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf subtitles=filename='%@':force_style='FontName=MyFontName' %@", videoFile, subtitle, videoWithSubtitlesFile];
+            NSString *burnSubtitlesCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf subtitles=filename='%@':force_style='FontName=MyFontName' -c:v %@ %@", videoFile, subtitle, videoCodec, videoWithSubtitlesFile];
 
             addUIAction(^{
                 [self showProgressDialog:@"Burning subtitles\n\n"];

@@ -47,15 +47,13 @@ class PipeViewController: UIViewController, ActivatableTab {
         player = AVQueuePlayer()
         playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = .resize
-        let rectangularFrame = CGRect(
-            x: videoPlayerFrame.frame.origin.x + 20,
-            y: videoPlayerFrame.frame.origin.y + 20,
-            width: videoPlayerFrame.frame.size.width - 40,
-            height: videoPlayerFrame.frame.size.height - 40
-        )
-        playerLayer.frame = rectangularFrame
-        view.layer.addSublayer(playerLayer)
+        videoPlayerFrame.layer.addSublayer(playerLayer)
         addUIAction { self.setActive() }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer.frame = videoPlayerFrame.bounds.insetBy(dx: 20, dy: 20)
     }
 
     func enableLogCallback() {
@@ -103,9 +101,9 @@ class PipeViewController: UIViewController, ActivatableTab {
 
     @IBAction func createVideo(_ sender: Any) {
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let videoFile = getVideoPath()
         let pipe1 = FFmpegKitConfig.registerNewFFmpegPipe()
         let pipe2 = FFmpegKitConfig.registerNewFFmpegPipe()
@@ -113,9 +111,10 @@ class PipeViewController: UIViewController, ActivatableTab {
         player.removeAllItems()
         activeItem = nil
         try? FileManager.default.removeItem(atPath: videoFile)
-        NSLog("Testing PIPE with 'mpeg4' codec\n")
+        let videoCodec = Video.packageVideoCodec()
+        NSLog("Testing PIPE with '%@' codec\n", videoCodec)
         showProgressDialog("Creating video\n\n")
-        let ffmpegCommand = Video.generateCreateVideoWithPipesScript(pipe1 ?? "", pipe2 ?? "", pipe3 ?? "", videoFile)
+        let ffmpegCommand = Video.generateCreateVideoWithPipesScript(pipe1 ?? "", pipe2 ?? "", pipe3 ?? "", videoFile, videoCodec)
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         FFmpegKit.executeAsync(ffmpegCommand) { session in
             guard let session = session else { return }

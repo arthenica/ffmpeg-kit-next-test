@@ -56,18 +56,37 @@ class _EmbeddedPlayerState extends State<EmbeddedPlayer> {
   void initState() {
     super.initState();
 
-    _videoPlayerController = VideoPlayerController.file(_file);
-    _playerTab.setController(_videoPlayerController!);
+    // video_player has no Linux implementation, so skip creating a controller
+    // there. The owning tab keeps a null controller and skips playback.
+    if (!Platform.isLinux) {
+      _videoPlayerController = VideoPlayerController.file(_file);
+      _playerTab.setController(_videoPlayerController!);
+    }
   }
 
   @override
   void dispose() {
-    _videoPlayerController!.dispose();
+    _videoPlayerController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_videoPlayerController == null) {
+      return Material(
+          elevation: 0,
+          child: Center(
+            child: Container(
+              alignment: Alignment(0.0, 0.0),
+              decoration: videoPlayerFrameDecoration,
+              child: Text(
+                'Video preview is not available on this platform.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ));
+    }
+
     return Material(
         elevation: 0,
         child: Center(

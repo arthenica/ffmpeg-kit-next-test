@@ -129,6 +129,7 @@ export default class Main extends React.Component {
 
             Test.testCommonApiMethods();
             Test.testParseArguments();
+            Test.getSupportedCameraIdsTest();
             Test.setSessionHistorySizeTest();
         });
     }

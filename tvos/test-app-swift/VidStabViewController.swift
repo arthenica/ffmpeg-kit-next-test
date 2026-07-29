@@ -48,26 +48,18 @@ class VidStabViewController: UIViewController, ActivatableTab {
         playerLayer = AVPlayerLayer(player: player)
         stabilizedVideoPlayer = AVQueuePlayer()
         stabilizedVideoPlayerLayer = AVPlayerLayer(player: stabilizedVideoPlayer)
-        let upperRectangularFrame = CGRect(
-            x: videoPlayerFrame.frame.origin.x + 20,
-            y: videoPlayerFrame.frame.origin.y + 20,
-            width: videoPlayerFrame.frame.size.width - 40,
-            height: videoPlayerFrame.frame.size.height - 40
-        )
-        playerLayer.frame = upperRectangularFrame
         playerLayer.videoGravity = .resizeAspect
-        view.layer.addSublayer(playerLayer)
+        videoPlayerFrame.layer.addSublayer(playerLayer)
 
-        let lowerRectangularFrame = CGRect(
-            x: stabilizedVideoPlayerFrame.frame.origin.x + 20,
-            y: stabilizedVideoPlayerFrame.frame.origin.y + 20,
-            width: stabilizedVideoPlayerFrame.frame.size.width - 40,
-            height: stabilizedVideoPlayerFrame.frame.size.height - 40
-        )
-        stabilizedVideoPlayerLayer.frame = lowerRectangularFrame
         stabilizedVideoPlayerLayer.videoGravity = .resizeAspect
-        view.layer.addSublayer(stabilizedVideoPlayerLayer)
+        stabilizedVideoPlayerFrame.layer.addSublayer(stabilizedVideoPlayerLayer)
         addUIAction { self.setActive() }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer.frame = videoPlayerFrame.bounds.insetBy(dx: 20, dy: 20)
+        stabilizedVideoPlayerLayer.frame = stabilizedVideoPlayerFrame.bounds.insetBy(dx: 20, dy: 20)
     }
 
     func enableLogCallback() {
@@ -78,9 +70,9 @@ class VidStabViewController: UIViewController, ActivatableTab {
 
     @IBAction func stabilizedVideo(_ sender: Any) {
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let shakeResultsFile = getShakeResultsFilePath()
         let videoFile = getVideoPath()
         let stabilizedVideoFile = getStabilizedVideoPath()
@@ -91,7 +83,8 @@ class VidStabViewController: UIViewController, ActivatableTab {
         try? FileManager.default.removeItem(atPath: stabilizedVideoFile)
         NSLog("Testing VID.STAB\n")
         showProgressDialog("Creating video\n\n")
-        let ffmpegCommand = Video.generateShakingVideoScript(image1, image2, image3, videoFile)
+        let videoCodec = Video.packageVideoCodec()
+        let ffmpegCommand = Video.generateShakingVideoScript(image1, image2, image3, videoFile, videoCodec)
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         FFmpegKit.executeAsync(ffmpegCommand) { session in
             guard let session = session else { return }
@@ -108,7 +101,7 @@ class VidStabViewController: UIViewController, ActivatableTab {
                     let anySecondSession: Session = secondSession
                     NSLog("FFmpeg process exited with state %@ and rc %@.%@", FFmpegKitConfig.sessionState(toString: anySecondSession.getState()), String(describing: anySecondSession.getReturnCode()), notNull(anySecondSession.getFailStackTrace(), "\n"))
                     if ReturnCode.isSuccess(anySecondSession.getReturnCode()) {
-                        let stabilizeVideoCommand = "-hide_banner -y -i \(videoFile) -vf vidstabtransform=smoothing=30:input=\(shakeResultsFile) \(stabilizedVideoFile)"
+                        let stabilizeVideoCommand = "-hide_banner -y -i \(videoFile) -vf vidstabtransform=smoothing=30:input=\(shakeResultsFile) -c:v \(videoCodec) \(stabilizedVideoFile)"
                         NSLog("FFmpeg process started with arguments '%@'.\n", stabilizeVideoCommand)
                         FFmpegKit.executeAsync(stabilizeVideoCommand) { thirdSession in
                             guard let thirdSession = thirdSession else { return }

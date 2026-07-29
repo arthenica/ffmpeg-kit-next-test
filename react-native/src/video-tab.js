@@ -14,7 +14,7 @@ export default class VideoTab extends React.Component {
         super(props);
 
         this.state = {
-            selectedCodec: 'mpeg4', statistics: undefined
+            selectedCodec: 'mpeg4', statistics: undefined, videoVersion: 0
         };
 
         this.progressModalReference = React.createRef();
@@ -79,11 +79,11 @@ export default class VideoTab extends React.Component {
     }
 
     playVideo() {
-        let player = this.player;
-        if (player !== undefined) {
-            player.seek(0);
-        }
-        this.setState({paused: false});
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            paused: false, videoVersion: previousState.videoVersion + 1
+        }));
     }
 
     pause() {
@@ -266,6 +266,7 @@ export default class VideoTab extends React.Component {
                 visible={false}
                 ref={this.progressModalReference}/>
             <Video
+                key={`video-${this.state.videoVersion}`}
                 source={{uri: this.getVideoFile()}}
                 ref={(ref) => {
                     this.player = ref

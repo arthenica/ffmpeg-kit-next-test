@@ -22,6 +22,8 @@
 
 package com.arthenica.ffmpegkit.test;
 
+import com.arthenica.ffmpegkit.Packages;
+
 import java.util.Locale;
 
 /**
@@ -32,6 +34,10 @@ import java.util.Locale;
 public class FFmpegCommands {
 
     static String buildCreateVideoWithPipesCommand(final String image1Pipe, final String image2Pipe, final String image3Pipe, final String videoFilePath) {
+        return buildCreateVideoWithPipesCommand(image1Pipe, image2Pipe, image3Pipe, videoFilePath, "mpeg4");
+    }
+
+    static String buildCreateVideoWithPipesCommand(final String image1Pipe, final String image2Pipe, final String image3Pipe, final String videoFilePath, final String videoCodec) {
         return
                 "-hide_banner -y -i \"" + image1Pipe + "\" " +
                         "-i '" + image2Pipe + "' " +
@@ -49,7 +55,7 @@ public class FFmpegCommands {
                         "[stream2starting][stream1ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream2blended];" +
                         "[stream3starting][stream2ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream3blended];" +
                         "[stream1overlaid][stream2blended][stream2overlaid][stream3blended][stream3overlaid]concat=n=5:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-                        " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 " + videoFilePath;
+                        " -map [video] -fps_mode cfr -c:v " + videoCodec.toLowerCase(Locale.ENGLISH) + " -r 30 " + videoFilePath;
     }
 
     static String buildEncodeVideoCommand(final String image1Path, final String image2Path, final String image3Path, final String videoFilePath, final String videoCodec, final String customOptions) {
@@ -78,6 +84,10 @@ public class FFmpegCommands {
     }
 
     static String buildShakingVideoCommand(final String image1Path, final String image2Path, final String image3Path, final String videoFilePath) {
+        return buildShakingVideoCommand(image1Path, image2Path, image3Path, videoFilePath, "mpeg4");
+    }
+
+    static String buildShakingVideoCommand(final String image1Path, final String image2Path, final String image3Path, final String videoFilePath, final String videoCodec) {
         return
                 "-hide_banner -y -loop 1 -i \"" + image1Path + "\" " +
                         "-loop 1 -i '" + image2Path + "' " +
@@ -94,7 +104,11 @@ public class FFmpegCommands {
                         "[3:v][stream2overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream2shaking];" +
                         "[3:v][stream3overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream3shaking];" +
                         "[stream1shaking][stream2shaking][stream3shaking]concat=n=3:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-                        " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 " + videoFilePath;
+                        " -map [video] -fps_mode cfr -c:v " + videoCodec.toLowerCase(Locale.ENGLISH) + " -r 30 " + videoFilePath;
+    }
+
+    static String getPackageVideoCodec() {
+        return Packages.getExternalLibraries().contains("x264") ? "libx264" : "mpeg4";
     }
 
     static String buildZscaleVideoCommand(final String inputVideoFilePath, final String outputVideoFilePath) {

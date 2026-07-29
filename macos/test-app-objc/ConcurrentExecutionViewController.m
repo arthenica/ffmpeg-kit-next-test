@@ -104,9 +104,9 @@
 - (void)encodeVideo:(int)buttonNumber {
     NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *videoFile = [docFolder stringByAppendingPathComponent: [NSString stringWithFormat:@"video%d.mp4", buttonNumber]];
 
     NSLog(@"Testing CONCURRENT EXECUTION for button %d.\n", buttonNumber);

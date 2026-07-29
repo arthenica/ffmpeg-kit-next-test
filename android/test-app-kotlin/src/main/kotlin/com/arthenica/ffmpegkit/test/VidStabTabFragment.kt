@@ -73,9 +73,9 @@ class VidStabTabFragment : Fragment(R.layout.fragment_vidstab_tab) {
     }
 
     fun stabilizeVideo() {
-        val image1File = cacheFile("machupicchu.jpg")
-        val image2File = cacheFile("pyramid.jpg")
-        val image3File = cacheFile("stonehenge.jpg")
+        val image1File = cacheFile("tree.jpg")
+        val image2File = cacheFile("lake.jpg")
+        val image3File = cacheFile("sunset.jpg")
         val shakeResultsFile = getShakeResultsFile()
         val videoFile = getVideoFile()
         val stabilizedVideoFile = getStabilizedVideoFile()
@@ -98,11 +98,12 @@ class VidStabTabFragment : Fragment(R.layout.fragment_vidstab_tab) {
 
             showCreateProgressDialog()
 
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, image1File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.pyramid, image2File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.stonehenge, image3File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, image1File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.lake, image2File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.sunset, image3File)
 
-            val ffmpegCommand = FFmpegCommands.buildShakingVideoCommand(image1File.absolutePath, image2File.absolutePath, image3File.absolutePath, videoFile.absolutePath)
+            val videoCodec = FFmpegCommands.getPackageVideoCodec()
+            val ffmpegCommand = FFmpegCommands.buildShakingVideoCommand(image1File.absolutePath, image2File.absolutePath, image3File.absolutePath, videoFile.absolutePath, videoCodec)
 
             Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand))
 
@@ -125,7 +126,7 @@ class VidStabTabFragment : Fragment(R.layout.fragment_vidstab_tab) {
                             Log.d(MainActivity.TAG, String.format("FFmpeg process exited with state %s and rc %s.%s", secondSession.getState(), secondSession.getReturnCode(), MainActivity.notNull(secondSession.getFailStackTrace(), "\n")))
 
                             if (ReturnCode.isSuccess(secondSession.getReturnCode())) {
-                                val stabilizeVideoCommand = String.format("-y -i %s -vf vidstabtransform=smoothing=30:input=%s -c:v mpeg4 %s", videoFile.absolutePath, shakeResultsFile.absolutePath, stabilizedVideoFile.absolutePath)
+                                val stabilizeVideoCommand = String.format("-y -i %s -vf vidstabtransform=smoothing=30:input=%s -c:v %s %s", videoFile.absolutePath, shakeResultsFile.absolutePath, videoCodec, stabilizedVideoFile.absolutePath)
 
                                 Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", stabilizeVideoCommand))
 

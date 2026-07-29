@@ -221,7 +221,7 @@ void ffmpegkittest::OtherTab::testDav1d() {
 }
 
 void ffmpegkittest::OtherTab::testWebp() {
-    std::string imageFile = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
+    std::string imageFile = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
     std::string outputFile = Application::getApplicationCacheDirectory() + "/video.webp";
 
     std::cout << "Testing 'webp' codec." << std::endl;
@@ -267,7 +267,7 @@ void ffmpegkittest::OtherTab::testZscale() {
 }
 
 void ffmpegkittest::OtherTab::testLibjxl() {
-    std::string imageFile = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
+    std::string imageFile = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
     std::string jxlOutputFile = getLibjxlOutputFile();
     std::string decodedOutputFile = getLibjxlDecodedOutputFile();
 
@@ -300,9 +300,9 @@ void ffmpegkittest::OtherTab::testLibjxl() {
 }
 
 void ffmpegkittest::OtherTab::testVvenc() {
-    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
-    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/pyramid.jpg";
-    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/stonehenge.jpg";
+    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
+    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/lake.jpg";
+    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/sunset.jpg";
     std::string outputFile = getVvencOutputFile();
 
     std::remove(outputFile.c_str());

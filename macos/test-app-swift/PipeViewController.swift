@@ -89,9 +89,9 @@ class PipeViewController: NSViewController, ActivatableTab {
 
     @IBAction func createVideo(_ sender: Any) {
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let videoFile = getVideoPath()
         let pipe1 = FFmpegKitConfig.registerNewFFmpegPipe()
         let pipe2 = FFmpegKitConfig.registerNewFFmpegPipe()
@@ -99,9 +99,10 @@ class PipeViewController: NSViewController, ActivatableTab {
         player.removeAllItems()
         activeItem = nil
         try? FileManager.default.removeItem(atPath: videoFile)
-        NSLog("Testing PIPE with 'mpeg4' codec\n")
+        let videoCodec = Video.packageVideoCodec()
+        NSLog("Testing PIPE with '%@' codec\n", videoCodec)
         showProgressDialog("Creating video\n\n")
-        let ffmpegCommand = Video.generateCreateVideoWithPipesScript(pipe1 ?? "", pipe2 ?? "", pipe3 ?? "", videoFile)
+        let ffmpegCommand = Video.generateCreateVideoWithPipesScript(pipe1 ?? "", pipe2 ?? "", pipe3 ?? "", videoFile, videoCodec)
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         FFmpegKit.executeAsync(ffmpegCommand) { session in
             guard let session = session else { return }

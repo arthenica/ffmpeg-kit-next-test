@@ -1,0 +1,368 @@
+/*
+ * Copyright (c) 2018-2026 Taner Sener
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+#include <AVFoundation/AVFoundation.h>
+#include <AVKit/AVKit.h>
+#include <ffmpegkit/FFmpegKitConfig.h>
+#include <ffmpegkit/FFmpegKit.h>
+#include "VideoViewController.h"
+#include "Video.h"
+
+@interface VideoViewController ()
+
+@property (strong, nonatomic) IBOutlet UILabel *header;
+@property (strong, nonatomic) IBOutlet UIPickerView *videoCodecPicker;
+@property (strong, nonatomic) IBOutlet UIButton *encodeButton;
+@property (strong, nonatomic) IBOutlet UILabel *videoPlayerFrame;
+
+@end
+
+@implementation VideoViewController {
+
+    // Video codec data
+    NSArray *codecData;
+    NSInteger selectedCodec;
+    
+    // Video player references
+    AVQueuePlayer *player;
+    AVPlayerLayer *playerLayer;
+    AVPlayerItem *activeItem;
+    
+    // Loading view
+    UIAlertController *alertController;
+    UIActivityIndicatorView* indicator;
+    UILabel *progressMessageLabel;
+
+    Statistics *statistics;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // VIDEO CODEC PICKER INIT
+    codecData = @[@"mpeg4", @"h264 (x264)", @"h264 (openh264)", @"h264 (videotoolbox)", @"x265", @"xvid", @"vp8", @"vp9", @"aom", @"svt-av1", @"kvazaar", @"theora", @"hap"];
+    selectedCodec = 0;
+    
+    self.videoCodecPicker.dataSource = self;
+    self.videoCodecPicker.delegate = self;
+
+    // STYLE UPDATE
+    [Util applyButtonStyle: self.encodeButton];
+    [Util applyPickerViewStyle: self.videoCodecPicker];
+    [Util applyVideoPlayerFrameStyle: self.videoPlayerFrame];
+    [Util applyHeaderStyle: self.header];
+
+    // VIDEO PLAYER INIT
+    player = [[AVQueuePlayer alloc] init];
+    playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+    activeItem = nil;
+    playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+    self.videoPlayerFrame.layer.masksToBounds = YES;
+    [self.videoPlayerFrame.layer addSublayer:playerLayer];
+    [self updatePlayerLayerFrames];
+
+    alertController = nil;
+    statistics = nil;
+
+    addUIAction(^{
+        [self setActive];
+    });
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self updatePlayerLayerFrames];
+}
+
+- (void)updatePlayerLayerFrames {
+    playerLayer.frame = self.videoPlayerFrame.bounds;
+}
+
+/**
+ * The number of columns of data
+ */
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+/**
+ * The number of rows of data
+ */
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return codecData.count;
+}
+
+/**
+ * The data to return for the row and component (column) that's being passed in
+ */
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    return codecData[row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    selectedCodec = row;
+}
+
+- (IBAction)encodeVideo:(id)sender {
+    NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
+    NSString *videoFile = [self getVideoPath];
+
+    if (player != nil) {
+        [player removeAllItems];
+        activeItem = nil;
+    }
+
+    [[NSFileManager defaultManager] removeItemAtPath:videoFile error:NULL];
+
+    NSString *videoCodec = codecData[selectedCodec];
+
+    NSLog(@"Testing VIDEO encoding with '%@' codec\n", videoCodec);
+
+    [self showProgressDialog:@"Encoding video\n\n"];
+
+    NSString* ffmpegCommand = [Video generateVideoEncodeScriptWithCustomPixelFormat:image1:image2:image3:videoFile:[self getSelectedVideoCodec]:[self getPixelFormat]:[self getCustomOptions]];
+
+    NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
+
+    FFmpegSession* session = [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session){
+        SessionState state = [session getState];
+        ReturnCode *returnCode = [session getReturnCode];
+
+        addUIAction(^{
+            [self hideProgressDialog];
+        });
+
+        if ([ReturnCode isSuccess:returnCode]) {
+            NSLog(@"Encode completed successfully in %ld milliseconds; playing video.\n", [session getDuration]);
+            addUIAction(^{
+                [self playVideo];
+            });
+        } else {
+            NSLog(@"Encode failed with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:state], returnCode, notNull([session getFailStackTrace], @"\n"));
+            addUIAction(^{
+                [self hideProgressDialogAndAlert:@"Encode failed. Please check logs for the details."];
+            });
+        }
+    } withLogCallback:^(Log *log) {
+        NSLog(@"%@", [log getMessage]);
+    } withStatisticsCallback:^(Statistics *statistics) {
+        addUIAction(^{
+            self->statistics = statistics;
+            [self updateProgressDialog];
+        });
+    }];
+    
+    NSLog(@"Async FFmpeg process started with sessionId %ld.\n", [session getSessionId]);
+}
+
+- (void)playVideo {
+    NSString *videoFile = [self getVideoPath];
+    NSURL*videoURL=[NSURL fileURLWithPath:videoFile];
+
+    AVAsset *asset = [AVAsset assetWithURL:videoURL];
+    NSArray *assetKeys = @[@"playable", @"hasProtectedContent"];
+
+    AVPlayerItem *newVideo = [AVPlayerItem playerItemWithAsset:asset
+                                  automaticallyLoadedAssetKeys:assetKeys];
+
+    NSKeyValueObservingOptions options =
+    NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew;
+
+    activeItem = newVideo;
+    
+    [newVideo addObserver:self forKeyPath:@"status" options:options context:nil];
+
+    [player insertItem:newVideo afterItem:nil];
+}
+
+- (NSString*)getPixelFormat {
+    NSString *videoCodec = codecData[selectedCodec];
+
+    NSString *pixelFormat;
+    if ([videoCodec isEqualToString:@"x265"]) {
+        pixelFormat = @"yuv420p10le";
+    } else {
+        pixelFormat = @"yuv420p";
+    }
+
+    return pixelFormat;
+}
+
+- (NSString*)getSelectedVideoCodec {
+    NSString *videoCodec = codecData[selectedCodec];
+    
+    // VIDEO CODEC PICKER HAS BASIC NAMES, FFMPEG NEEDS LONGER AND EXACT CODEC NAMES.
+    // APPLYING NECESSARY TRANSFORMATION HERE
+    if ([videoCodec isEqualToString:@"h264 (x264)"]) {
+        videoCodec = @"libx264";
+    } else if ([videoCodec isEqualToString:@"h264 (openh264)"]) {
+        videoCodec = @"libopenh264";
+    } else if ([videoCodec isEqualToString:@"h264 (videotoolbox)"]) {
+        videoCodec = @"h264_videotoolbox";
+    } else if ([videoCodec isEqualToString:@"x265"]) {
+        videoCodec = @"libx265";
+    } else if ([videoCodec isEqualToString:@"xvid"]) {
+        videoCodec = @"libxvid";
+    } else if ([videoCodec isEqualToString:@"vp8"]) {
+        videoCodec = @"libvpx";
+    } else if ([videoCodec isEqualToString:@"vp9"]) {
+        videoCodec = @"libvpx-vp9";
+    } else if ([videoCodec isEqualToString:@"aom"]) {
+        videoCodec = @"libaom-av1";
+    } else if ([videoCodec isEqualToString:@"svt-av1"]) {
+        videoCodec = @"libsvtav1";
+    } else if ([videoCodec isEqualToString:@"kvazaar"]) {
+        videoCodec = @"libkvazaar";
+    } else if ([videoCodec isEqualToString:@"theora"]) {
+        videoCodec = @"libtheora";
+    }
+    
+    return videoCodec;
+}
+
+- (NSString*)getVideoPath {
+    NSString *videoCodec = codecData[selectedCodec];
+    
+    NSString *extension;
+    if ([videoCodec isEqualToString:@"vp8"] || [videoCodec isEqualToString:@"vp9"]) {
+        extension = @"webm";
+    } else if ([videoCodec isEqualToString:@"theora"]) {
+        extension = @"ogv";
+    } else if ([videoCodec isEqualToString:@"hap"]) {
+        extension = @"mov";
+    } else {
+        
+        // mpeg4, x264, x265, xvid, kvazaar
+        extension = @"mp4";
+    }
+    
+    NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [[docFolder stringByAppendingPathComponent: @"video."] stringByAppendingString: extension];
+}
+
+- (NSString*)getCustomOptions {
+    NSString *videoCodec = codecData[selectedCodec];
+
+    if ([videoCodec isEqualToString:@"x265"]) {
+        return @"-crf 28 -preset fast ";
+    } else if ([videoCodec isEqualToString:@"vp8"]) {
+        return @"-b:v 1M -crf 10 ";
+    } else if ([videoCodec isEqualToString:@"vp9"]) {
+        return @"-b:v 2M ";
+    } else if ([videoCodec isEqualToString:@"aom"]) {
+        return @"-crf 30 -strict experimental ";
+    } else if ([videoCodec isEqualToString:@"svt-av1"]) {
+        return @"-preset 8 -crf 35 ";
+    } else if ([videoCodec isEqualToString:@"theora"]) {
+        return @"-qscale:v 7 ";
+    } else if ([videoCodec isEqualToString:@"hap"]) {
+        return @"-format hap_q ";
+    } else {
+        return @"";
+    }
+}
+
+- (void)setActive {
+    NSLog(@"Video Tab Activated");
+    [FFmpegKitConfig enableLogCallback:nil];
+    [FFmpegKitConfig enableStatisticsCallback:nil];
+}
+
+- (void)showProgressDialog:(NSString*) dialogMessage {
+
+    // CLEAN STATISTICS
+    statistics = nil;
+
+    alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                     message:nil
+                                                              preferredStyle:UIAlertControllerStyleAlert];
+    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+    indicator.color = [UIColor blackColor];
+    progressMessageLabel = [Util showProgressLabel:dialogMessage indicator:indicator onAlertController:alertController bottomInset:20];
+    [indicator startAnimating];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)updateProgressDialog {
+    if (statistics == nil || [statistics getTime] < 0) {
+        return;
+    }
+
+    if (alertController != nil) {
+        double timeInMilliseconds = [statistics getTime];
+        int totalVideoDuration = 9000;
+
+        int percentage = timeInMilliseconds*100/totalVideoDuration;
+
+        progressMessageLabel.text = [NSString stringWithFormat:@"Encoding video  %% %d", percentage];
+    }
+}
+
+- (void)hideProgressDialog {
+    [indicator stopAnimating];
+    [self dismissViewControllerAnimated:TRUE completion:nil];
+}
+
+- (void)hideProgressDialogAndAlert: (NSString*)message {
+    [indicator stopAnimating];
+    [self dismissViewControllerAnimated:TRUE completion:^{
+        [Util alert:self withTitle:@"Error" message:message andButtonText:@"OK"];
+    }];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    NSNumber *statusNumber = change[NSKeyValueChangeNewKey];
+    NSInteger status = -1;
+    if ([statusNumber isKindOfClass:[NSNumber class]]) {
+        status = statusNumber.integerValue;
+    }
+
+    switch (status) {
+        case AVPlayerItemStatusReadyToPlay: {
+            [player play];
+        } break;
+        case AVPlayerItemStatusFailed: {
+            if (activeItem != nil && activeItem.error != nil) {
+                
+                NSString *message = activeItem.error.localizedFailureReason;
+                if (message == nil) {
+                    message = activeItem.error.localizedDescription;
+                }
+                
+                [Util alert:self withTitle:@"Player Error" message:message andButtonText:@"OK"];
+            }
+        } break;
+        default: {
+            NSLog(@"Status %ld received from player.\n", status);
+        }
+    }
+}
+
+@end

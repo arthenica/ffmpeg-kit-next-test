@@ -580,10 +580,10 @@ void assertChapter(std::shared_ptr<Chapter> chapter, long id, std::string timeBa
     assertNumber(end, chapter->getEnd());
     assertString(endTime, chapter->getEndTime());
 
-    std::shared_ptr<rapidjson::Value> tags = chapter->getTags();
+    std::shared_ptr<ffmpegkit::json::Value> tags = chapter->getTags();
     assert(tags);
 
-    assert(1 == tags->MemberCount());
+    assert(1 == tags->getObject().size());
 }
 
 void assertMediaInput(std::shared_ptr<MediaInformation> mediaInformation, std::string expectedFormat, std::string expectedFilename) {
@@ -612,23 +612,29 @@ void assertMediaDuration(std::shared_ptr<MediaInformation> mediaInformation, std
 }
 
 void assertTag(std::shared_ptr<MediaInformation> mediaInformation, std::string expectedKey, std::string expectedValue) {
-    std::shared_ptr<rapidjson::Value> tags = mediaInformation->getTags();
+    std::shared_ptr<ffmpegkit::json::Value> tags = mediaInformation->getTags();
     assert(tags);
 
-    auto value = (*tags)[expectedKey.c_str()].GetString();
+    const ffmpegkit::json::Value* tag = tags->find(expectedKey);
+    assert(tag);
+
+    std::shared_ptr<std::string> value = tag->getString();
     assert(value);
 
-    assert(value == expectedValue);
+    assert(*value == expectedValue);
 }
 
 void assertStreamTag(std::shared_ptr<StreamInformation> streamInformation, std::string expectedKey, std::string expectedValue) {
-    std::shared_ptr<rapidjson::Value> tags = streamInformation->getTags();
+    std::shared_ptr<ffmpegkit::json::Value> tags = streamInformation->getTags();
     assert(tags);
-    
-    auto value = (*tags)[expectedKey.c_str()].GetString();
+
+    const ffmpegkit::json::Value* tag = tags->find(expectedKey);
+    assert(tag);
+
+    std::shared_ptr<std::string> value = tag->getString();
     assert(value);
-    
-    assert(value == expectedValue);
+
+    assert(*value == expectedValue);
 }
 
 void testMediaInformationMp3() {

@@ -22,10 +22,11 @@
 
 package com.arthenica.ffmpegkit.test
 
+import com.arthenica.ffmpegkit.Packages
 import java.util.Locale
 
 object FFmpegCommands {
-    fun buildCreateVideoWithPipesCommand(image1Pipe: String, image2Pipe: String, image3Pipe: String, videoFilePath: String): String {
+    fun buildCreateVideoWithPipesCommand(image1Pipe: String, image2Pipe: String, image3Pipe: String, videoFilePath: String, videoCodec: String = "mpeg4"): String {
         return "-hide_banner -y -i \"$image1Pipe\" " +
             "-i '$image2Pipe' " +
             "-i $image3Pipe " +
@@ -42,7 +43,7 @@ object FFmpegCommands {
             "[stream2starting][stream1ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream2blended];" +
             "[stream3starting][stream2ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream3blended];" +
             "[stream1overlaid][stream2blended][stream2overlaid][stream3blended][stream3overlaid]concat=n=5:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-            " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 $videoFilePath"
+            " -map [video] -fps_mode cfr -c:v ${videoCodec.lowercase(Locale.ENGLISH)} -r 30 $videoFilePath"
     }
 
     fun buildEncodeVideoCommand(image1Path: String, image2Path: String, image3Path: String, videoFilePath: String, videoCodec: String, customOptions: String): String {
@@ -69,7 +70,7 @@ object FFmpegCommands {
             " -map [video] -fps_mode cfr ${customOptions}-c:v ${videoCodec.lowercase(Locale.ENGLISH)} -r 30 $videoFilePath"
     }
 
-    fun buildShakingVideoCommand(image1Path: String, image2Path: String, image3Path: String, videoFilePath: String): String {
+    fun buildShakingVideoCommand(image1Path: String, image2Path: String, image3Path: String, videoFilePath: String, videoCodec: String = "mpeg4"): String {
         return "-hide_banner -y -loop 1 -i \"$image1Path\" " +
             "-loop 1 -i '$image2Path' " +
             "-loop 1 -i $image3Path " +
@@ -85,7 +86,11 @@ object FFmpegCommands {
             "[3:v][stream2overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream2shaking];" +
             "[3:v][stream3overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream3shaking];" +
             "[stream1shaking][stream2shaking][stream3shaking]concat=n=3:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-            " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 $videoFilePath"
+            " -map [video] -fps_mode cfr -c:v ${videoCodec.lowercase(Locale.ENGLISH)} -r 30 $videoFilePath"
+    }
+
+    fun getPackageVideoCodec(): String {
+        return if (Packages.getExternalLibraries().contains("x264")) "libx264" else "mpeg4"
     }
 
     fun buildZscaleVideoCommand(inputVideoFilePath: String, outputVideoFilePath: String): String {

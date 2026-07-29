@@ -23,9 +23,9 @@
 		34695ED322AD441500889D20 /* VidStabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34695ECA22AD441400889D20 /* VidStabViewController.m */; };
 		34695ED422AD441500889D20 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34695ECC22AD441500889D20 /* VideoViewController.m */; };
 		34695ED522AD441500889D20 /* PipeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34695ECE22AD441500889D20 /* PipeViewController.m */; };
-		3494908725E16A030017F7CC /* pyramid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908425E16A030017F7CC /* pyramid.jpg */; };
-		3494908825E16A030017F7CC /* machupicchu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908525E16A030017F7CC /* machupicchu.jpg */; };
-		3494908925E16A030017F7CC /* stonehenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908625E16A030017F7CC /* stonehenge.jpg */; };
+		3494908725E16A030017F7CC /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908425E16A030017F7CC /* lake.jpg */; };
+		3494908825E16A030017F7CC /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908525E16A030017F7CC /* tree.jpg */; };
+		3494908925E16A030017F7CC /* sunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908625E16A030017F7CC /* sunset.jpg */; };
 		3494910825E1980B0017F7CC /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494910625E1980B0017F7CC /* Video.m */; };
 		3494910D25E19B1A0017F7CC /* OtherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494910B25E19B1A0017F7CC /* OtherViewController.m */; };
 		3494911325E1A2410017F7CC /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3494911225E1A2410017F7CC /* Accelerate.framework */; };
@@ -54,9 +54,12 @@
 		34C06C0922ADAA4E0039DF48 /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789921215B5800C3486C /* doppioone_regular.ttf */; };
 		34C06C0B22ADAA4E0039DF48 /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789A21215B5800C3486C /* sil_open_font_license.txt */; };
 		34C06C0C22ADAA4E0039DF48 /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789821215B5800C3486C /* subtitle.srt */; };
-		34C06C0E22ADAA4E0039DF48 /* truenorg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789721215B5800C3486C /* truenorg.otf */; };
 		34C97E8823CB7655004F75D3 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C97E8723CB7655004F75D3 /* libiconv.tbd */; };
 		34E281A624A5686C0048B3EC /* ConcurrentExecutionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E281A524A5686C0048B3EC /* ConcurrentExecutionViewController.m */; };
+		34FA277E301801EE0037C9D6 /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA277C301801EE0037C9D6 /* notosansarabic_regular.ttf */; };
+		34FA277F301801EE0037C9D6 /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA277D301801EE0037C9D6 /* notosanssc_regular.ttf */; };
+		34FA2780301801EE0037C9D6 /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA277C301801EE0037C9D6 /* notosansarabic_regular.ttf */; };
+		34FA2781301801EE0037C9D6 /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA277D301801EE0037C9D6 /* notosanssc_regular.ttf */; };
 		F20000000000000000000012 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000011 /* AppDelegate.swift */; };
 		F20000000000000000000014 /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000013 /* AudioViewController.swift */; };
 		F20000000000000000000016 /* CommandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000015 /* CommandViewController.swift */; };
@@ -78,13 +81,12 @@
 		F20000000000000000000036 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20000000000000000000035 /* main.swift */; };
 		F20000000000000000000037 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2000000000000000000000E /* Assets.xcassets */; };
 		F20000000000000000000038 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2000000000000000000000C /* Main.storyboard */; };
-		F20000000000000000000039 /* machupicchu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908525E16A030017F7CC /* machupicchu.jpg */; };
-		F2000000000000000000003A /* stonehenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908625E16A030017F7CC /* stonehenge.jpg */; };
+		F20000000000000000000039 /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908525E16A030017F7CC /* tree.jpg */; };
+		F2000000000000000000003A /* sunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908625E16A030017F7CC /* sunset.jpg */; };
 		F2000000000000000000003B /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789921215B5800C3486C /* doppioone_regular.ttf */; };
 		F2000000000000000000003C /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789A21215B5800C3486C /* sil_open_font_license.txt */; };
 		F2000000000000000000003D /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789821215B5800C3486C /* subtitle.srt */; };
-		F2000000000000000000003E /* truenorg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789721215B5800C3486C /* truenorg.otf */; };
-		F2000000000000000000003F /* pyramid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908425E16A030017F7CC /* pyramid.jpg */; };
+		F2000000000000000000003F /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3494908425E16A030017F7CC /* lake.jpg */; };
 		F20000000000000000000040 /* libavdevice.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33AB2273B1D700087F971 /* libavdevice.xcframework */; };
 		F20000000000000000000041 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3494911225E1A2410017F7CC /* Accelerate.framework */; };
 		F20000000000000000000042 /* ffmpegkit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33AAC273B1D700087F971 /* ffmpegkit.xcframework */; };
@@ -182,9 +184,9 @@
 		34695ECC22AD441500889D20 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		34695ECD22AD441500889D20 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
 		34695ECE22AD441500889D20 /* PipeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeViewController.m; sourceTree = "<group>"; };
-		3494908425E16A030017F7CC /* pyramid.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pyramid.jpg; sourceTree = "<group>"; };
-		3494908525E16A030017F7CC /* machupicchu.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = machupicchu.jpg; sourceTree = "<group>"; };
-		3494908625E16A030017F7CC /* stonehenge.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stonehenge.jpg; sourceTree = "<group>"; };
+		3494908425E16A030017F7CC /* lake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lake.jpg; sourceTree = "<group>"; };
+		3494908525E16A030017F7CC /* tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tree.jpg; sourceTree = "<group>"; };
+		3494908625E16A030017F7CC /* sunset.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sunset.jpg; sourceTree = "<group>"; };
 		3494910625E1980B0017F7CC /* Video.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
 		3494910725E1980B0017F7CC /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
 		3494910B25E19B1A0017F7CC /* OtherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherViewController.m; sourceTree = "<group>"; };
@@ -207,12 +209,13 @@
 		34C06C0622ADA0B10039DF48 /* TvButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TvButton.m; sourceTree = "<group>"; };
 		34C97E8723CB7655004F75D3 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		34D678CE25E2DA25004564B7 /* FFmpegKitNextTVOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = FFmpegKitNextTVOS.entitlements; sourceTree = "<group>"; };
-		34DC789721215B5800C3486C /* truenorg.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = truenorg.otf; sourceTree = "<group>"; };
 		34DC789821215B5800C3486C /* subtitle.srt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = subtitle.srt; sourceTree = "<group>"; };
 		34DC789921215B5800C3486C /* doppioone_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = doppioone_regular.ttf; sourceTree = "<group>"; };
 		34DC789A21215B5800C3486C /* sil_open_font_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sil_open_font_license.txt; sourceTree = "<group>"; };
 		34E281A424A5686C0048B3EC /* ConcurrentExecutionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConcurrentExecutionViewController.h; sourceTree = "<group>"; };
 		34E281A524A5686C0048B3EC /* ConcurrentExecutionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConcurrentExecutionViewController.m; sourceTree = "<group>"; };
+		34FA277C301801EE0037C9D6 /* notosansarabic_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notosansarabic_regular.ttf; sourceTree = "<group>"; };
+		34FA277D301801EE0037C9D6 /* notosanssc_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notosanssc_regular.ttf; sourceTree = "<group>"; };
 		F20000000000000000000002 /* test-app-swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "test-app-swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2000000000000000000000D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F2000000000000000000000E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -340,13 +343,14 @@
 		346AA95920B2ED94000623FE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3494908525E16A030017F7CC /* machupicchu.jpg */,
-				3494908425E16A030017F7CC /* pyramid.jpg */,
-				3494908625E16A030017F7CC /* stonehenge.jpg */,
+				34FA277C301801EE0037C9D6 /* notosansarabic_regular.ttf */,
+				34FA277D301801EE0037C9D6 /* notosanssc_regular.ttf */,
+				3494908525E16A030017F7CC /* tree.jpg */,
+				3494908425E16A030017F7CC /* lake.jpg */,
+				3494908625E16A030017F7CC /* sunset.jpg */,
 				34DC789921215B5800C3486C /* doppioone_regular.ttf */,
 				34DC789A21215B5800C3486C /* sil_open_font_license.txt */,
 				34DC789821215B5800C3486C /* subtitle.srt */,
-				34DC789721215B5800C3486C /* truenorg.otf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -507,13 +511,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3494908825E16A030017F7CC /* machupicchu.jpg in Resources */,
-				3494908925E16A030017F7CC /* stonehenge.jpg in Resources */,
+				3494908825E16A030017F7CC /* tree.jpg in Resources */,
+				3494908925E16A030017F7CC /* sunset.jpg in Resources */,
 				34C06C0922ADAA4E0039DF48 /* doppioone_regular.ttf in Resources */,
 				34C06C0B22ADAA4E0039DF48 /* sil_open_font_license.txt in Resources */,
+				34FA277E301801EE0037C9D6 /* notosansarabic_regular.ttf in Resources */,
+				34FA277F301801EE0037C9D6 /* notosanssc_regular.ttf in Resources */,
 				34C06C0C22ADAA4E0039DF48 /* subtitle.srt in Resources */,
-				34C06C0E22ADAA4E0039DF48 /* truenorg.otf in Resources */,
-				3494908725E16A030017F7CC /* pyramid.jpg in Resources */,
+				3494908725E16A030017F7CC /* lake.jpg in Resources */,
 				34695E9222AD292300889D20 /* Assets.xcassets in Resources */,
 				34695E9022AD292100889D20 /* Main.storyboard in Resources */,
 			);
@@ -523,13 +528,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F20000000000000000000039 /* machupicchu.jpg in Resources */,
-				F2000000000000000000003A /* stonehenge.jpg in Resources */,
+				F20000000000000000000039 /* tree.jpg in Resources */,
+				F2000000000000000000003A /* sunset.jpg in Resources */,
 				F2000000000000000000003B /* doppioone_regular.ttf in Resources */,
 				F2000000000000000000003C /* sil_open_font_license.txt in Resources */,
+				34FA2780301801EE0037C9D6 /* notosansarabic_regular.ttf in Resources */,
+				34FA2781301801EE0037C9D6 /* notosanssc_regular.ttf in Resources */,
 				F2000000000000000000003D /* subtitle.srt in Resources */,
-				F2000000000000000000003E /* truenorg.otf in Resources */,
-				F2000000000000000000003F /* pyramid.jpg in Resources */,
+				F2000000000000000000003F /* lake.jpg in Resources */,
 				F20000000000000000000037 /* Assets.xcassets in Resources */,
 				F20000000000000000000038 /* Main.storyboard in Resources */,
 			);
@@ -674,7 +680,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
@@ -702,7 +708,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};
@@ -851,7 +857,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
@@ -883,7 +889,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};

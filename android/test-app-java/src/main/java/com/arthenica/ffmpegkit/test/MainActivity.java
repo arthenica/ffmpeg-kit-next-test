@@ -152,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
         // SAVE FONTS
         ResourcesUtil.rawResourceToFile(getResources(), R.raw.doppioone_regular, new File(fontDirectory, "doppioone_regular.ttf"));
-        ResourcesUtil.rawResourceToFile(getResources(), R.raw.truenorg, new File(fontDirectory, "truenorg.otf"));
+        ResourcesUtil.rawResourceToFile(getResources(), R.raw.notosansarabic_regular, new File(fontDirectory, "notosansarabic_regular.ttf"));
+        ResourcesUtil.rawResourceToFile(getResources(), R.raw.notosanssc_regular, new File(fontDirectory, "notosanssc_regular.ttf"));
 
         final HashMap<String, String> fontNameMapping = new HashMap<>();
         fontNameMapping.put("MyFontName", "Doppio One");

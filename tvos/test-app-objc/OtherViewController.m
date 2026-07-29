@@ -127,7 +127,7 @@
 
 -(void)testWebp {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *imageFile = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
+    NSString *imageFile = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
     NSString* docFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *outputFile = [docFolder stringByAppendingPathComponent: @"video.webp"];
 
@@ -150,7 +150,7 @@
 
 -(void)testLibjxl {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *imageFile = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
+    NSString *imageFile = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
     NSString *jxlOutputFile = [self getLibjxlOutputPath];
     NSString *decodedOutputFile = [self getLibjxlDecodedOutputPath];
 
@@ -213,9 +213,9 @@
 
 -(void)testVvenc {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *outputFile = [self getVvencOutputPath];
 
     [[NSFileManager defaultManager] removeItemAtPath:outputFile error:NULL];

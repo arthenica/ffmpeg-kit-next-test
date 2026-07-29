@@ -82,8 +82,8 @@ android {
         applicationId "com.arthenica.ffmpegkit.reactnative.test"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 810
-        versionName "8.1.0"
+        versionCode 811
+        versionName "8.1.1"
     }
     signingConfigs {
         debug {

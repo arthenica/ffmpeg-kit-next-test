@@ -142,9 +142,9 @@ void ffmpegkittest::SubtitleTab::clearOutput() {
 void ffmpegkittest::SubtitleTab::burnSubtitles() {
     clearOutput();
 
-    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
-    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/pyramid.jpg";
-    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/stonehenge.jpg";
+    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
+    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/lake.jpg";
+    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/sunset.jpg";
     std::string videoFile = getVideoFile();
     std::string videoWithSubtitlesFile = getVideoWithSubtitlesFile();
 
@@ -152,13 +152,14 @@ void ffmpegkittest::SubtitleTab::burnSubtitles() {
 
     showCreateProgressDialog();
 
-    std::string ffmpegCommand = Video::generateEncodeVideoScript(image1File, image2File, image3File, videoFile, "mpeg4", "");
+    std::string videoCodec = Video::packageVideoCodec();
+    std::string ffmpegCommand = Video::generateEncodeVideoScript(image1File, image2File, image3File, videoFile, videoCodec, "");
 
     std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
 
     state = StateCreating;
 
-    sessionId = FFmpegKit::executeAsync(ffmpegCommand, [this, videoFile, videoWithSubtitlesFile](auto session) {
+    sessionId = FFmpegKit::executeAsync(ffmpegCommand, [this, videoFile, videoWithSubtitlesFile, videoCodec](auto session) {
         std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(session->getState()) << " and rc " << session->getReturnCode() << "." << session->getFailStackTrace() << std::endl;
 
         this->hideCreateProgressDialog();
@@ -166,7 +167,7 @@ void ffmpegkittest::SubtitleTab::burnSubtitles() {
         if (ReturnCode::isSuccess(session->getReturnCode())) {
             std::cout << "Create completed successfully; burning subtitles." << std::endl;
 
-            std::string burnSubtitlesCommand = "-y -i " + videoFile + " -vf subtitles=filename='" + getSubtitleFile() + "':force_style='FontName=MyFontName' -c:v mpeg4 " + videoWithSubtitlesFile;
+            std::string burnSubtitlesCommand = "-y -i " + videoFile + " -vf subtitles=filename='" + getSubtitleFile() + "':force_style='FontName=MyFontName' -c:v " + videoCodec + " " + videoWithSubtitlesFile;
 
             this->showBurnProgressDialog();
 

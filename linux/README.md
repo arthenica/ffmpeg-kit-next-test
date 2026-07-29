@@ -1,19 +1,49 @@
 # FFmpegKitNext Linux
 
-<img src="https://github.com/arthenica/ffmpeg-kit-next-test/blob/main/docs/assets/linux.gif" width="640">
+The `linux` folder contains a GTK-based Linux test application that consumes a local `FFmpegKitNext` Linux bundle.
 
-Test application that depends on a local `ffmpeg-kit-next` build.
+## Demo
 
-#### Prerequisites
+<br/>
+
+[![Test Application]](https://github.com/user-attachments/assets/e0b51c25-b141-403d-8907-0e99872e660d)
+
+## Add FFmpegKitNext to a Linux App
+
+This assumes the Linux headers, shared libraries and `pkg-config` file already exist in a local bundle such as:
+
+```text
+<path-to-ffmpeg-kit-next>/prebuilt/bundle-linux/ffmpeg-kit-next
+```
+
+Point `pkg-config` at the bundle before configuring your application:
+
+```sh
+export PKG_CONFIG_PATH="<path-to-bundle>/pkgconfig:${PKG_CONFIG_PATH}"
+```
+
+Then consume the package from CMake:
+
+```cmake
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=8.1.1)
+target_link_libraries(<your-target> PRIVATE PkgConfig::FFMPEG_KIT)
+```
+
+At runtime, make sure the dynamic loader can find the FFmpegKitNext shared libraries. Use an install location known to
+the loader, an rpath in your application, or an application launcher that sets `LD_LIBRARY_PATH` to the bundle's `lib`
+directory.
+
+## Test App Prerequisites
+
 - `cmake` > 3.7
 - C++ compiler with C++11 support
 - `libgtkmm-3.0-dev` > 3.0
 
-#### Building
+## Run This Test App
 
-1. Use `cmake` to configure to build. 
-
-  - `FFMPEG_KIT_BUNDLE_PATH` is the path where the local `ffmpeg-kit-next` Linux bundle exists
+1. Configure the app with the local bundle path. `FFMPEG_KIT_BUNDLE_PATH` is the path where the local
+   `ffmpeg-kit-next` Linux bundle exists.
 
     ```shell
     mkdir build
@@ -21,16 +51,14 @@ Test application that depends on a local `ffmpeg-kit-next` build.
     cmake -DFFMPEG_KIT_BUNDLE_PATH=/home/taner/Projects/ffmpeg-kit-next/prebuilt/bundle-linux/ffmpeg-kit-next ..
     ```
 
-2. Run `make` to build and/or to install the library.
+2. Run `make` to build and install the test app.
 
     ```shell
     make
     make install
     ```
 
-#### Running
-
-1. Execute `ffmpeg-kit-linux-test-app.sh` from the `bin` directory after installing the app via `make install`.
+3. Execute `ffmpeg-kit-linux-test-app.sh` from the `bin` directory.
 
     ```shell
     ./ffmpeg-kit-linux-test-app.sh

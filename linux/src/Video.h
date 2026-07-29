@@ -30,9 +30,12 @@ namespace ffmpegkittest {
     class Video {
         public:
             static std::string generateCreateVideoWithPipesScript(std::string image1Pipe, std::string image2Pipe, std::string image3Pipe, std::string videoFilePath);
+            static std::string generateCreateVideoWithPipesScript(std::string image1Pipe, std::string image2Pipe, std::string image3Pipe, std::string videoFilePath, std::string videoCodec);
             static std::string generateEncodeVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath, std::string videoCodec, std::string customOptions);
             static std::string generateEncodeVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath, std::string videoCodec, std::string pixelFormat, std::string customOptions);
             static std::string generateShakingVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath);
+            static std::string generateShakingVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath, std::string videoCodec);
+            static std::string packageVideoCodec();
             static std::string generateZscaleVideoScript(std::string inputVideoFilePath, std::string outputVideoFilePath);
     };
 

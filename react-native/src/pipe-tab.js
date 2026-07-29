@@ -13,7 +13,8 @@ export default class PipeTab extends React.Component {
         super(props);
 
         this.state = {
-            statistics: undefined
+            statistics: undefined,
+            videoVersion: 0
         };
 
         this.progressModalReference = React.createRef();
@@ -45,19 +46,21 @@ export default class PipeTab extends React.Component {
         let videoFile = this.getVideoFile();
         FFmpegKitConfig.registerNewFFmpegPipe().then((pipe1) => {
             FFmpegKitConfig.registerNewFFmpegPipe().then((pipe2) => {
-                FFmpegKitConfig.registerNewFFmpegPipe().then((pipe3) => {
+                FFmpegKitConfig.registerNewFFmpegPipe().then(async (pipe3) => {
 
                     // IF VIDEO IS PLAYING STOP PLAYBACK
                     this.pause();
 
                     deleteFile(videoFile);
 
-                    ffprint("Testing PIPE with 'mpeg4' codec");
+                    const videoCodec = await VideoUtil.packageVideoCodec();
+
+                    ffprint(`Testing PIPE with '${videoCodec}' codec`);
 
                     this.hideProgressDialog();
                     this.showProgressDialog();
 
-                    let ffmpegCommand = VideoUtil.generateCreateVideoWithPipesScript(pipe1, pipe2, pipe3, videoFile);
+                    let ffmpegCommand = VideoUtil.generateCreateVideoWithPipesScript(pipe1, pipe2, pipe3, videoFile, videoCodec);
 
                     ffprint(`FFmpeg process started with arguments: \'${ffmpegCommand}\'.`);
 
@@ -94,11 +97,11 @@ export default class PipeTab extends React.Component {
     }
 
     playVideo() {
-        let player = this.player;
-        if (player !== undefined) {
-            player.seek(0);
-        }
-        this.setState({paused: false});
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            paused: false, videoVersion: previousState.videoVersion + 1
+        }));
     }
 
     pause() {
@@ -154,7 +157,8 @@ export default class PipeTab extends React.Component {
                 <ProgressModal
                     visible={false}
                     ref={this.progressModalReference}/>
-                <Video source={{uri: this.getVideoFile()}}
+                <Video key={`video-${this.state.videoVersion}`}
+                       source={{uri: this.getVideoFile()}}
                        ref={(ref) => {
                            this.player = ref
                        }}

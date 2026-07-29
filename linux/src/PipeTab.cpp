@@ -123,9 +123,9 @@ void ffmpegkittest::PipeTab::clearOutput() {
 void ffmpegkittest::PipeTab::createVideo() {
     clearOutput();
 
-    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
-    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/pyramid.jpg";
-    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/stonehenge.jpg";
+    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
+    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/lake.jpg";
+    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/sunset.jpg";
     std::string videoFile = getVideoFile();
 
     auto pipe1 = FFmpegKitConfig::registerNewFFmpegPipe();
@@ -134,11 +134,13 @@ void ffmpegkittest::PipeTab::createVideo() {
 
     std::remove(videoFile.c_str());
 
-    std::cout << "Testing PIPE with 'mpeg4' codec" << std::endl;
+    std::string videoCodec = Video::packageVideoCodec();
+
+    std::cout << "Testing PIPE with '" << videoCodec << "' codec" << std::endl;
 
     showProgressDialog();
 
-    std::string ffmpegCommand = Video::generateCreateVideoWithPipesScript(*pipe1, *pipe2, *pipe3, videoFile);
+    std::string ffmpegCommand = Video::generateCreateVideoWithPipesScript(*pipe1, *pipe2, *pipe3, videoFile, videoCodec);
 
     std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
 

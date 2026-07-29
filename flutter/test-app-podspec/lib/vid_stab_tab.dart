@@ -37,7 +37,9 @@ import 'util.dart';
 import 'video_util.dart';
 
 class _ControllerWrapper implements PlayerTab {
-  late VideoPlayerController? _controller;
+  // Defaults to null (not late) so platforms without video_player (Linux),
+  // where setController is never called, read null instead of throwing.
+  VideoPlayerController? _controller;
 
   @override
   void setController(VideoPlayerController controller) {
@@ -73,7 +75,7 @@ class VidStabTab {
         VideoUtil.assetPath(VideoUtil.ASSET_3).then((image3Path) {
           getShakeResultsFile().then((shakeResultsFile) {
             getVideoFile().then((videoFile) {
-              getStabilizedVideoFile().then((stabilizedVideoFile) {
+              getStabilizedVideoFile().then((stabilizedVideoFile) async {
                 // IF VIDEO IS PLAYING STOP PLAYBACK
                 pauseVideo();
                 pauseStabilizedVideo();
@@ -87,8 +89,13 @@ class VidStabTab {
                 this.hideProgressDialog();
                 this.showCreateProgressDialog();
 
+                final videoCodec = await VideoUtil.packageVideoCodec();
                 final ffmpegCommand = VideoUtil.generateShakingVideoScript(
-                    image1Path, image2Path, image3Path, videoFile.path);
+                    image1Path,
+                    image2Path,
+                    image3Path,
+                    videoFile.path,
+                    videoCodec);
 
                 ffprint(
                     "FFmpeg process started with arguments: \'${ffmpegCommand}\'.");
@@ -130,7 +137,7 @@ class VidStabTab {
 
                       if (ReturnCode.isSuccess(secondReturnCode)) {
                         final stabilizeVideoCommand =
-                            "-y -i ${videoFile.path} -vf vidstabtransform=smoothing=30:input=${shakeResultsFile.path} -c:v mpeg4 ${stabilizedVideoFile.path}";
+                            "-y -i ${videoFile.path} -vf vidstabtransform=smoothing=30:input=${shakeResultsFile.path} -c:v $videoCodec ${stabilizedVideoFile.path}";
 
                         ffprint(
                             "FFmpeg process started with arguments: \'${stabilizeVideoCommand}\'.");

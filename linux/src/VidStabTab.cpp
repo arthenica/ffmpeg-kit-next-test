@@ -88,9 +88,9 @@ void ffmpegkittest::VidStabTab::clearOutput() {
 void ffmpegkittest::VidStabTab::stabilizeVideo() {
     clearOutput();
 
-    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/machupicchu.jpg";
-    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/pyramid.jpg";
-    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/stonehenge.jpg";
+    std::string image1File = Application::getApplicationInstallDirectory() + "/share/images/tree.jpg";
+    std::string image2File = Application::getApplicationInstallDirectory() + "/share/images/lake.jpg";
+    std::string image3File = Application::getApplicationInstallDirectory() + "/share/images/sunset.jpg";
     std::string shakeResultsFile = getShakeResultsFile();
     std::string videoFile = getVideoFile();
     std::string stabilizedVideoFile = getStabilizedVideoFile();
@@ -103,11 +103,12 @@ void ffmpegkittest::VidStabTab::stabilizeVideo() {
 
     showCreateProgressDialog();
 
-    std::string ffmpegCommand = Video::generateShakingVideoScript(image1File, image2File, image3File, videoFile);
+    std::string videoCodec = Video::packageVideoCodec();
+    std::string ffmpegCommand = Video::generateShakingVideoScript(image1File, image2File, image3File, videoFile, videoCodec);
 
     std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
 
-    FFmpegKit::executeAsync(ffmpegCommand, [this, videoFile, shakeResultsFile, stabilizedVideoFile](auto session) {
+    FFmpegKit::executeAsync(ffmpegCommand, [this, videoFile, shakeResultsFile, stabilizedVideoFile, videoCodec](auto session) {
         std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(session->getState()) << " and rc " << session->getReturnCode() << "." << session->getFailStackTrace() << std::endl;
 
         this->hideCreateProgressDialog();
@@ -121,11 +122,11 @@ void ffmpegkittest::VidStabTab::stabilizeVideo() {
 
             std::cout << "FFmpeg process started with arguments: '" << analyzeVideoCommand << "'." << std::endl;
 
-            FFmpegKit::executeAsync(analyzeVideoCommand, [this, videoFile, shakeResultsFile, stabilizedVideoFile](auto secondSession) {
+            FFmpegKit::executeAsync(analyzeVideoCommand, [this, videoFile, shakeResultsFile, stabilizedVideoFile, videoCodec](auto secondSession) {
                 std::cout << "FFmpeg process exited with state " << FFmpegKitConfig::sessionStateToString(secondSession->getState()) << " and rc " << secondSession->getReturnCode() << "." << secondSession->getFailStackTrace() << std::endl;
 
                 if (ReturnCode::isSuccess(secondSession->getReturnCode())) {
-                    std::string stabilizeVideoCommand = "-y -i " + videoFile + " -vf vidstabtransform=smoothing=30:input=" + shakeResultsFile + " -c:v mpeg4 " + stabilizedVideoFile;
+                    std::string stabilizeVideoCommand = "-y -i " + videoFile + " -vf vidstabtransform=smoothing=30:input=" + shakeResultsFile + " -c:v " + videoCodec + " " + stabilizedVideoFile;
 
                     std::cout << "FFmpeg process started with arguments: '" << stabilizeVideoCommand << "'." << std::endl;
 

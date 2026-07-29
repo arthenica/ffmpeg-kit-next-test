@@ -63,28 +63,22 @@
     stabilizedVideoPlayer = [[AVQueuePlayer alloc] init];
     stabilizedVideoPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:stabilizedVideoPlayer];
 
-    // SETTING VIDEO FRAME POSITIONS
-    CGRect upperRectangularFrame = CGRectMake(self.videoPlayerFrame.frame.origin.x + 20,
-                                         self.videoPlayerFrame.frame.origin.y + 20,
-                                         self.videoPlayerFrame.frame.size.width - 40,
-                                         self.videoPlayerFrame.frame.size.height - 40);
-
-    playerLayer.frame = upperRectangularFrame;
     playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    [self.view.layer addSublayer:playerLayer];
+    [self.videoPlayerFrame.layer addSublayer:playerLayer];
 
-    CGRect lowerRectangularFrame = CGRectMake(self.stabilizedVideoPlayerFrame.frame.origin.x + 20,
-                                              self.stabilizedVideoPlayerFrame.frame.origin.y + 20,
-                                              self.stabilizedVideoPlayerFrame.frame.size.width - 40,
-                                              self.stabilizedVideoPlayerFrame.frame.size.height - 40);
-
-    stabilizedVideoPlayerLayer.frame = lowerRectangularFrame;
     stabilizedVideoPlayerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    [self.view.layer addSublayer:stabilizedVideoPlayerLayer];
+    [self.stabilizedVideoPlayerFrame.layer addSublayer:stabilizedVideoPlayerLayer];
 
     addUIAction(^{
         [self setActive];
     });
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    playerLayer.frame = CGRectInset(self.videoPlayerFrame.bounds, 20.0, 20.0);
+    stabilizedVideoPlayerLayer.frame = CGRectInset(self.stabilizedVideoPlayerFrame.bounds, 20.0, 20.0);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -99,9 +93,9 @@
 
 - (IBAction)stabilizedVideo:(id)sender {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *shakeResultsFile = [self getShakeResultsFilePath];
     NSString *videoFile = [self getVideoPath];
     NSString *stabilizedVideoFile = [self getStabilizedVideoPath];
@@ -121,7 +115,9 @@
     
     [self showProgressDialog:@"Creating video\n\n"];
 
-    NSString* ffmpegCommand = [Video generateShakingVideoScript:image1:image2:image3:videoFile];
+    NSString *videoCodec = [Video packageVideoCodec];
+
+    NSString* ffmpegCommand = [Video generateShakingVideoScript:image1:image2:image3:videoFile:videoCodec];
 
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
 
@@ -149,7 +145,7 @@
 
                 if ([ReturnCode isSuccess:[secondSession getReturnCode]]) {
 
-                    NSString *stabilizeVideoCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf vidstabtransform=smoothing=30:input=%@ %@", videoFile, shakeResultsFile, stabilizedVideoFile];
+                    NSString *stabilizeVideoCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf vidstabtransform=smoothing=30:input=%@ -c:v %@ %@", videoFile, shakeResultsFile, videoCodec, stabilizedVideoFile];
                     
                     NSLog(@"FFmpeg process started with arguments '%@'.\n", stabilizeVideoCommand);
 

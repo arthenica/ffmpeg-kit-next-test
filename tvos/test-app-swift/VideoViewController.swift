@@ -48,22 +48,20 @@ class VideoViewController: UIViewController, ActivatableTab {
         player = AVQueuePlayer()
         playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = .resize
-        let rectangularFrame = CGRect(
-            x: videoPlayerFrame.frame.origin.x + 20,
-            y: videoPlayerFrame.frame.origin.y + 20,
-            width: videoPlayerFrame.frame.size.width - 40,
-            height: videoPlayerFrame.frame.size.height - 40
-        )
-        playerLayer.frame = rectangularFrame
-        view.layer.addSublayer(playerLayer)
+        videoPlayerFrame.layer.addSublayer(playerLayer)
         addUIAction { self.setActive() }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        playerLayer.frame = videoPlayerFrame.bounds.insetBy(dx: 20, dy: 20)
     }
 
     @IBAction func encodeVideo(_ sender: Any) {
         let resourceFolder = Bundle.main.resourcePath ?? ""
-        let image1 = resourceFolder.appendingPathComponent("machupicchu.jpg")
-        let image2 = resourceFolder.appendingPathComponent("pyramid.jpg")
-        let image3 = resourceFolder.appendingPathComponent("stonehenge.jpg")
+        let image1 = resourceFolder.appendingPathComponent("tree.jpg")
+        let image2 = resourceFolder.appendingPathComponent("lake.jpg")
+        let image3 = resourceFolder.appendingPathComponent("sunset.jpg")
         let videoFile = getVideoPath()
         player.removeAllItems()
         activeItem = nil

@@ -1,6 +1,6 @@
 name: ffmpeg_kit_flutter_test
 description: Demonstrates how to use the ffmpeg_kit_flutter plugin.
-version: 8.1.0
+version: 8.1.1
 publish_to: none
 
 environment:
@@ -16,6 +16,7 @@ dependencies:
   path: ^1.9.1
   fluttertoast: 9.1.0
   video_player: ^2.11.1
+  flutter_background_service: ^5.1.0
 
 dev_dependencies:
   flutter_test:

@@ -63,14 +63,7 @@
     playerLayer.videoGravity = AVLayerVideoGravityResize;
     activeItem = nil;
 
-    // SETTING VIDEO FRAME POSITION
-    CGRect rectangularFrame = CGRectMake(self.videoPlayerFrame.frame.origin.x + 20,
-                                         self.videoPlayerFrame.frame.origin.y + 20,
-                                         self.videoPlayerFrame.frame.size.width - 40,
-                                         self.videoPlayerFrame.frame.size.height - 40);
-
-    playerLayer.frame = rectangularFrame;
-    [self.view.layer addSublayer:playerLayer];
+    [self.videoPlayerFrame.layer addSublayer:playerLayer];
 
     alertController = nil;
     statistics = nil;
@@ -78,6 +71,12 @@
     addUIAction(^{
         [self setActive];
     });
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    playerLayer.frame = CGRectInset(self.videoPlayerFrame.bounds, 20.0, 20.0);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -151,9 +150,9 @@
 
 - (IBAction)createVideo:(id)sender {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *videoFile = [self getVideoPath];
 
     NSString *pipe1 = [FFmpegKitConfig registerNewFFmpegPipe];
@@ -167,11 +166,13 @@
 
     [[NSFileManager defaultManager] removeItemAtPath:videoFile error:NULL];
 
-    NSLog(@"Testing PIPE with 'mpeg4' codec\n");
+    NSString *videoCodec = [Video packageVideoCodec];
+
+    NSLog(@"Testing PIPE with '%@' codec\n", videoCodec);
 
     [self showProgressDialog:@"Creating video\n\n"];
 
-    NSString* ffmpegCommand = [Video generateCreateVideoWithPipesScript:pipe1:pipe2:pipe3:videoFile];
+    NSString* ffmpegCommand = [Video generateCreateVideoWithPipesScript:pipe1:pipe2:pipe3:videoFile:videoCodec];
     
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
 

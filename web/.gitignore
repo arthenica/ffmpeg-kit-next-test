@@ -1,0 +1,9 @@
+# Built FFmpegKitNext web artifacts, copied in by copy_local_binaries.sh
+/lib/
+
+# Shipped JS binding layer (sourced from the main repo), copied in by copy_local_binaries.sh
+/dist/
+
+# OS / editor noise
+.DS_Store
+node_modules/

@@ -87,9 +87,9 @@ class PipeTabFragment : Fragment(R.layout.fragment_pipe_tab) {
     }
 
     fun createVideo() {
-        val image1File = cacheFile("machupicchu.jpg")
-        val image2File = cacheFile("pyramid.jpg")
-        val image3File = cacheFile("stonehenge.jpg")
+        val image1File = cacheFile("tree.jpg")
+        val image2File = cacheFile("lake.jpg")
+        val image3File = cacheFile("sunset.jpg")
         val videoFile = getVideoFile()
 
         val pipe1 = FFmpegKitConfig.registerNewFFmpegPipe(requireContext())!!
@@ -103,15 +103,17 @@ class PipeTabFragment : Fragment(R.layout.fragment_pipe_tab) {
                 videoFile.delete()
             }
 
-            Log.d(MainActivity.TAG, "Testing PIPE with 'mpeg4' codec")
+            val videoCodec = FFmpegCommands.getPackageVideoCodec()
+
+            Log.d(MainActivity.TAG, String.format("Testing PIPE with '%s' codec", videoCodec))
 
             showProgressDialog()
 
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, image1File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.pyramid, image2File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.stonehenge, image3File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, image1File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.lake, image2File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.sunset, image3File)
 
-            val ffmpegCommand = FFmpegCommands.buildCreateVideoWithPipesCommand(pipe1, pipe2, pipe3, videoFile.absolutePath)
+            val ffmpegCommand = FFmpegCommands.buildCreateVideoWithPipesCommand(pipe1, pipe2, pipe3, videoFile.absolutePath, videoCodec)
 
             Log.d(MainActivity.TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand))
 

@@ -420,6 +420,7 @@ printf '%-13s %-58s %-26s %s\n' "--------" "----" "-----" "----------"
 if should_update_platform "android"; then
     update_android_gradle_file "android/test-app-java/build.gradle" "$ANDROID_VERSION_CODE" "$VERSION"
     update_android_gradle_file "android/test-app-kotlin/build.gradle" "$ANDROID_VERSION_CODE" "$VERSION"
+    update_android_gradle_file "android/test-app-native/build.gradle" "$ANDROID_VERSION_CODE" "$VERSION"
 fi
 
 if should_update_platform "linux"; then

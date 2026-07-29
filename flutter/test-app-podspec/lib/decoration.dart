@@ -21,9 +21,22 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+const headerColor = Color(0xFFF46842);
+
+// Material 3 derives the app bar background from colorScheme.surface and
+// ignores primaryColor, so the header color is set explicitly here to match
+// the other test applications.
 final appThemeData = ThemeData(
-  primaryColor: Color(0xFFF46842),
+  primaryColor: headerColor,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: headerColor,
+    foregroundColor: Colors.white,
+    elevation: 0,
+    scrolledUnderElevation: 0,
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+  ),
 );
 
 final buttonDecoration = new BoxDecoration(

@@ -71,9 +71,9 @@
 
 - (IBAction)stabilizedVideo:(id)sender {
     NSString *resourceFolder = [[NSBundle mainBundle] resourcePath];
-    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"machupicchu.jpg"];
-    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"pyramid.jpg"];
-    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"stonehenge.jpg"];
+    NSString *image1 = [resourceFolder stringByAppendingPathComponent: @"tree.jpg"];
+    NSString *image2 = [resourceFolder stringByAppendingPathComponent: @"lake.jpg"];
+    NSString *image3 = [resourceFolder stringByAppendingPathComponent: @"sunset.jpg"];
     NSString *shakeResultsFile = [self getShakeResultsFilePath];
     NSString *videoFile = [self getVideoPath];
     NSString *stabilizedVideoFile = [self getStabilizedVideoPath];
@@ -93,7 +93,9 @@
     
     [self showProgressDialog:@"Creating video\n\n"];
 
-    NSString* ffmpegCommand = [Video generateShakingVideoScript:image1:image2:image3:videoFile];
+    NSString *videoCodec = [Video packageVideoCodec];
+
+    NSString* ffmpegCommand = [Video generateShakingVideoScript:image1:image2:image3:videoFile:videoCodec];
 
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
 
@@ -121,7 +123,7 @@
 
                 if ([ReturnCode isSuccess:[secondSession getReturnCode]]) {
 
-                    NSString *stabilizeVideoCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf vidstabtransform=smoothing=30:input=%@ %@", videoFile, shakeResultsFile, stabilizedVideoFile];
+                    NSString *stabilizeVideoCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf vidstabtransform=smoothing=30:input=%@ -c:v %@ %@", videoFile, shakeResultsFile, videoCodec, stabilizedVideoFile];
                     
                     NSLog(@"FFmpeg process started with arguments '%@'.\n", stabilizeVideoCommand);
 

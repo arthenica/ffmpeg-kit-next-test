@@ -24,12 +24,11 @@
 		342F4C8F2736C5450092FC45 /* libavutil.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 342F4C7A2736C5340092FC45 /* libavutil.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		342F4C902736C5450092FC45 /* libswresample.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 342F4C7C2736C5340092FC45 /* libswresample.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		342F4C912736C5450092FC45 /* libswscale.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 342F4C7F2736C5340092FC45 /* libswscale.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		34B244F525E6F4300066DE76 /* stonehenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244EE25E6F4300066DE76 /* stonehenge.jpg */; };
+		34B244F525E6F4300066DE76 /* sunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244EE25E6F4300066DE76 /* sunset.jpg */; };
 		34B244F625E6F4300066DE76 /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34B244EF25E6F4300066DE76 /* doppioone_regular.ttf */; };
-		34B244F725E6F4300066DE76 /* truenorg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F025E6F4300066DE76 /* truenorg.otf */; };
 		34B244F825E6F4300066DE76 /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F125E6F4300066DE76 /* subtitle.srt */; };
-		34B244F925E6F4300066DE76 /* pyramid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F225E6F4300066DE76 /* pyramid.jpg */; };
-		34B244FA25E6F4300066DE76 /* machupicchu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F325E6F4300066DE76 /* machupicchu.jpg */; };
+		34B244F925E6F4300066DE76 /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F225E6F4300066DE76 /* lake.jpg */; };
+		34B244FA25E6F4300066DE76 /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F325E6F4300066DE76 /* tree.jpg */; };
 		34B244FB25E6F4300066DE76 /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F425E6F4300066DE76 /* sil_open_font_license.txt */; };
 		34D678BB25E2D9BA004564B7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D678BA25E2D9BA004564B7 /* AppDelegate.m */; };
 		34D678BE25E2D9BA004564B7 /* CommandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D678BD25E2D9BA004564B7 /* CommandViewController.m */; };
@@ -63,6 +62,10 @@
 		34D67AFE25E49309004564B7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D67AFD25E49308004564B7 /* CoreMedia.framework */; };
 		34D67B0125E4931E004564B7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D67B0025E4931E004564B7 /* AVFoundation.framework */; };
 		34F9FDDA25EAA07100B4F3D8 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34F9FDD925EAA07100B4F3D8 /* AVKit.framework */; };
+		34FA2778301801050037C9D6 /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA2776301801050037C9D6 /* notosansarabic_regular.ttf */; };
+		34FA2779301801050037C9D6 /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA2777301801050037C9D6 /* notosanssc_regular.ttf */; };
+		34FA277A301801050037C9D6 /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA2776301801050037C9D6 /* notosansarabic_regular.ttf */; };
+		34FA277B301801050037C9D6 /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA2777301801050037C9D6 /* notosanssc_regular.ttf */; };
 		BF000000000000000000001C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR0000000000000000000002 /* AppDelegate.swift */; };
 		BF000000000000000000001D /* AudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR0000000000000000000003 /* AudioViewController.swift */; };
 		BF000000000000000000001E /* CommandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR0000000000000000000004 /* CommandViewController.swift */; };
@@ -105,11 +108,10 @@
 		BF0000000000000000000044 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D6795925E2F178004564B7 /* libc++.tbd */; };
 		BF0000000000000000000046 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FR0000000000000000000015 /* Assets.xcassets */; };
 		BF0000000000000000000047 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = VG0000000000000000000019 /* Main.storyboard */; };
-		BF0000000000000000000048 /* machupicchu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F325E6F4300066DE76 /* machupicchu.jpg */; };
-		BF0000000000000000000049 /* truenorg.otf in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F025E6F4300066DE76 /* truenorg.otf */; };
+		BF0000000000000000000048 /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F325E6F4300066DE76 /* tree.jpg */; };
 		BF000000000000000000004A /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F125E6F4300066DE76 /* subtitle.srt */; };
-		BF000000000000000000004B /* stonehenge.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244EE25E6F4300066DE76 /* stonehenge.jpg */; };
-		BF000000000000000000004C /* pyramid.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F225E6F4300066DE76 /* pyramid.jpg */; };
+		BF000000000000000000004B /* sunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244EE25E6F4300066DE76 /* sunset.jpg */; };
+		BF000000000000000000004C /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F225E6F4300066DE76 /* lake.jpg */; };
 		BF000000000000000000004D /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F425E6F4300066DE76 /* sil_open_font_license.txt */; };
 		BF000000000000000000004E /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34B244EF25E6F4300066DE76 /* doppioone_regular.ttf */; };
 		BF0000000000000000000050 /* ffmpegkit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 342F4C7E2736C5340092FC45 /* ffmpegkit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -173,12 +175,11 @@
 		342F4C7F2736C5340092FC45 /* libswscale.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libswscale.xcframework; sourceTree = "<group>"; };
 		342F4C802736C5340092FC45 /* libavfilter.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libavfilter.xcframework; sourceTree = "<group>"; };
 		342F4C812736C5340092FC45 /* libavdevice.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libavdevice.xcframework; sourceTree = "<group>"; };
-		34B244EE25E6F4300066DE76 /* stonehenge.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stonehenge.jpg; sourceTree = "<group>"; };
+		34B244EE25E6F4300066DE76 /* sunset.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sunset.jpg; sourceTree = "<group>"; };
 		34B244EF25E6F4300066DE76 /* doppioone_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = doppioone_regular.ttf; sourceTree = "<group>"; };
-		34B244F025E6F4300066DE76 /* truenorg.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = truenorg.otf; sourceTree = "<group>"; };
 		34B244F125E6F4300066DE76 /* subtitle.srt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = subtitle.srt; sourceTree = "<group>"; };
-		34B244F225E6F4300066DE76 /* pyramid.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = pyramid.jpg; sourceTree = "<group>"; };
-		34B244F325E6F4300066DE76 /* machupicchu.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = machupicchu.jpg; sourceTree = "<group>"; };
+		34B244F225E6F4300066DE76 /* lake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lake.jpg; sourceTree = "<group>"; };
+		34B244F325E6F4300066DE76 /* tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tree.jpg; sourceTree = "<group>"; };
 		34B244F425E6F4300066DE76 /* sil_open_font_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sil_open_font_license.txt; sourceTree = "<group>"; };
 		34D678B625E2D9BA004564B7 /* test-app-objc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "test-app-objc.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D678B925E2D9BA004564B7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -234,6 +235,8 @@
 		34D67AFD25E49308004564B7 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		34D67B0025E4931E004564B7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		34F9FDD925EAA07100B4F3D8 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		34FA2776301801050037C9D6 /* notosansarabic_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notosansarabic_regular.ttf; sourceTree = "<group>"; };
+		34FA2777301801050037C9D6 /* notosanssc_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = notosanssc_regular.ttf; sourceTree = "<group>"; };
 		FF2A0000000000000000002C /* FFKitProtocolsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFKitProtocolsViewController.m; sourceTree = "<group>"; };
 		FF2A0000000000000000002D /* FFKitProtocolsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFKitProtocolsViewController.h; sourceTree = "<group>"; };
 		FR0000000000000000000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -325,13 +328,14 @@
 		34B244ED25E6F3BD0066DE76 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				34FA2776301801050037C9D6 /* notosansarabic_regular.ttf */,
+				34FA2777301801050037C9D6 /* notosanssc_regular.ttf */,
 				34B244EF25E6F4300066DE76 /* doppioone_regular.ttf */,
-				34B244F325E6F4300066DE76 /* machupicchu.jpg */,
-				34B244F225E6F4300066DE76 /* pyramid.jpg */,
+				34B244F325E6F4300066DE76 /* tree.jpg */,
+				34B244F225E6F4300066DE76 /* lake.jpg */,
 				34B244F425E6F4300066DE76 /* sil_open_font_license.txt */,
-				34B244EE25E6F4300066DE76 /* stonehenge.jpg */,
+				34B244EE25E6F4300066DE76 /* sunset.jpg */,
 				34B244F125E6F4300066DE76 /* subtitle.srt */,
-				34B244F025E6F4300066DE76 /* truenorg.otf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -544,12 +548,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34B244FA25E6F4300066DE76 /* machupicchu.jpg in Resources */,
-				34B244F725E6F4300066DE76 /* truenorg.otf in Resources */,
+				34B244FA25E6F4300066DE76 /* tree.jpg in Resources */,
 				34B244F825E6F4300066DE76 /* subtitle.srt in Resources */,
 				34D678C025E2D9BA004564B7 /* Assets.xcassets in Resources */,
-				34B244F525E6F4300066DE76 /* stonehenge.jpg in Resources */,
-				34B244F925E6F4300066DE76 /* pyramid.jpg in Resources */,
+				34B244F525E6F4300066DE76 /* sunset.jpg in Resources */,
+				34FA2778301801050037C9D6 /* notosansarabic_regular.ttf in Resources */,
+				34FA2779301801050037C9D6 /* notosanssc_regular.ttf in Resources */,
+				34B244F925E6F4300066DE76 /* lake.jpg in Resources */,
 				34B244FB25E6F4300066DE76 /* sil_open_font_license.txt in Resources */,
 				34D678C325E2D9BA004564B7 /* Main.storyboard in Resources */,
 				34B244F625E6F4300066DE76 /* doppioone_regular.ttf in Resources */,
@@ -562,11 +567,12 @@
 			files = (
 				BF0000000000000000000046 /* Assets.xcassets in Resources */,
 				BF0000000000000000000047 /* Main.storyboard in Resources */,
-				BF0000000000000000000048 /* machupicchu.jpg in Resources */,
-				BF0000000000000000000049 /* truenorg.otf in Resources */,
+				BF0000000000000000000048 /* tree.jpg in Resources */,
 				BF000000000000000000004A /* subtitle.srt in Resources */,
-				BF000000000000000000004B /* stonehenge.jpg in Resources */,
-				BF000000000000000000004C /* pyramid.jpg in Resources */,
+				34FA277A301801050037C9D6 /* notosansarabic_regular.ttf in Resources */,
+				34FA277B301801050037C9D6 /* notosanssc_regular.ttf in Resources */,
+				BF000000000000000000004B /* sunset.jpg in Resources */,
+				BF000000000000000000004C /* lake.jpg in Resources */,
 				BF000000000000000000004D /* sil_open_font_license.txt in Resources */,
 				BF000000000000000000004E /* doppioone_regular.ttf in Resources */,
 			);

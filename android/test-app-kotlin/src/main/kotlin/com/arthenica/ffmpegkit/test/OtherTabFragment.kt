@@ -143,11 +143,11 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
     }
 
     fun testWebp() {
-        val imageFile = cacheFile("machupicchu.jpg")
+        val imageFile = cacheFile("tree.jpg")
         val outputFile = filesFile("video.webp")
 
         try {
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, imageFile)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, imageFile)
 
             Log.d(MainActivity.TAG, "Testing 'webp' codec")
 
@@ -196,7 +196,7 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
     }
 
     fun testLibjxl() {
-        val imageFile = cacheFile("machupicchu.jpg")
+        val imageFile = cacheFile("tree.jpg")
         val jxlOutputFile = getLibjxlOutputFile()
         val decodedOutputFile = getLibjxlDecodedOutputFile()
 
@@ -208,7 +208,7 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
         }
 
         try {
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, imageFile)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, imageFile)
 
             Log.d(MainActivity.TAG, "Testing 'libjxl' codec")
 
@@ -236,9 +236,9 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
     }
 
     fun testVvenc() {
-        val image1File = cacheFile("machupicchu.jpg")
-        val image2File = cacheFile("pyramid.jpg")
-        val image3File = cacheFile("stonehenge.jpg")
+        val image1File = cacheFile("tree.jpg")
+        val image2File = cacheFile("lake.jpg")
+        val image3File = cacheFile("sunset.jpg")
         val outputFile = getVvencOutputFile()
 
         if (outputFile.exists()) {
@@ -246,9 +246,9 @@ class OtherTabFragment : Fragment(R.layout.fragment_other_tab), AdapterView.OnIt
         }
 
         try {
-            ResourcesUtil.resourceToFile(resources, R.drawable.machupicchu, image1File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.pyramid, image2File)
-            ResourcesUtil.resourceToFile(resources, R.drawable.stonehenge, image3File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.tree, image1File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.lake, image2File)
+            ResourcesUtil.resourceToFile(resources, R.drawable.sunset, image3File)
 
             Log.d(MainActivity.TAG, "Testing 'vvenc' codec")
 

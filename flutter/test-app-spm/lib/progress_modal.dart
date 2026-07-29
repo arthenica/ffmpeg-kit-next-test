@@ -27,6 +27,7 @@ class ProgressModal {
   late BuildContext _context;
   BuildContext? _cancelContext;
   late bool displayed;
+  bool _hideRequested = false;
 
   ProgressModal(BuildContext context) {
     _context = context;
@@ -37,6 +38,9 @@ class ProgressModal {
     if (displayed) {
       return;
     }
+    _hideRequested = false;
+    _cancelContext = null;
+
     if (cancelFunction == null) {
       _progress = new _Progress(message);
     } else {
@@ -51,6 +55,9 @@ class ProgressModal {
         barrierDismissible: cancelFunction != null,
         builder: (BuildContext context) {
           _cancelContext = context;
+          if (_hideRequested) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => hide());
+          }
           return new WillPopScope(
               onWillPop: () async => cancelFunction != null,
               child: Dialog(
@@ -61,7 +68,11 @@ class ProgressModal {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   child: _progress));
-        });
+        }).then((_) {
+      displayed = false;
+      _cancelContext = null;
+      _hideRequested = false;
+    });
 
     displayed = true;
   }
@@ -73,10 +84,18 @@ class ProgressModal {
   }
 
   void hide() {
-    if (displayed && _cancelContext != null) {
-      Navigator.of(_cancelContext!).pop();
-      displayed = false;
+    if (!displayed) {
+      return;
     }
+    if (_cancelContext == null) {
+      _hideRequested = true;
+      return;
+    }
+
+    Navigator.of(_cancelContext!).pop();
+    displayed = false;
+    _cancelContext = null;
+    _hideRequested = false;
   }
 }
 
