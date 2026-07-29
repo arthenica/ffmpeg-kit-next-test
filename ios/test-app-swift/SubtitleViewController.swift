@@ -88,7 +88,8 @@ class SubtitleViewController: UIViewController, ActivatableTab {
         player.removeAllItems()
         NSLog("Testing SUBTITLE burning\n")
         showProgressDialog("Creating video\n\n")
-        let ffmpegCommand = Video.generateVideoEncodeScript(image1, image2, image3, videoFile, "mpeg4", "")
+        let videoCodec = Video.packageVideoCodec()
+        let ffmpegCommand = Video.generateVideoEncodeScript(image1, image2, image3, videoFile, videoCodec, "")
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         state = .creating
         let firstSession = FFmpegKit.executeAsync(ffmpegCommand) { session in
@@ -98,7 +99,7 @@ class SubtitleViewController: UIViewController, ActivatableTab {
             addUIAction { self.hideProgressDialog() }
             if ReturnCode.isSuccess(anySession.getReturnCode()) {
                 NSLog("Create completed successfully; burning subtitles.\n")
-                let burnSubtitlesCommand = "-hide_banner -y -i \(videoFile) -vf subtitles=filename='\(subtitle)':force_style='FontName=MyFontName' \(videoWithSubtitlesFile)"
+                let burnSubtitlesCommand = "-hide_banner -y -i \(videoFile) -vf subtitles=filename='\(subtitle)':force_style='FontName=MyFontName' -c:v \(videoCodec) \(videoWithSubtitlesFile)"
                 addUIAction { self.showProgressDialog("Burning subtitles\n\n") }
                 NSLog("FFmpeg process started with arguments '%@'.\n", burnSubtitlesCommand)
                 self.state = .burning

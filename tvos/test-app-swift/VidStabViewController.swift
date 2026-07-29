@@ -83,7 +83,8 @@ class VidStabViewController: UIViewController, ActivatableTab {
         try? FileManager.default.removeItem(atPath: stabilizedVideoFile)
         NSLog("Testing VID.STAB\n")
         showProgressDialog("Creating video\n\n")
-        let ffmpegCommand = Video.generateShakingVideoScript(image1, image2, image3, videoFile)
+        let videoCodec = Video.packageVideoCodec()
+        let ffmpegCommand = Video.generateShakingVideoScript(image1, image2, image3, videoFile, videoCodec)
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         FFmpegKit.executeAsync(ffmpegCommand) { session in
             guard let session = session else { return }
@@ -100,7 +101,7 @@ class VidStabViewController: UIViewController, ActivatableTab {
                     let anySecondSession: Session = secondSession
                     NSLog("FFmpeg process exited with state %@ and rc %@.%@", FFmpegKitConfig.sessionState(toString: anySecondSession.getState()), String(describing: anySecondSession.getReturnCode()), notNull(anySecondSession.getFailStackTrace(), "\n"))
                     if ReturnCode.isSuccess(anySecondSession.getReturnCode()) {
-                        let stabilizeVideoCommand = "-hide_banner -y -i \(videoFile) -vf vidstabtransform=smoothing=30:input=\(shakeResultsFile) \(stabilizedVideoFile)"
+                        let stabilizeVideoCommand = "-hide_banner -y -i \(videoFile) -vf vidstabtransform=smoothing=30:input=\(shakeResultsFile) -c:v \(videoCodec) \(stabilizedVideoFile)"
                         NSLog("FFmpeg process started with arguments '%@'.\n", stabilizeVideoCommand)
                         FFmpegKit.executeAsync(stabilizeVideoCommand) { thirdSession in
                             guard let thirdSession = thirdSession else { return }

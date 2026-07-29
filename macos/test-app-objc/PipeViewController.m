@@ -150,11 +150,13 @@
 
     [[NSFileManager defaultManager] removeItemAtPath:videoFile error:NULL];
 
-    NSLog(@"Testing PIPE with 'mpeg4' codec\n");
+    NSString *videoCodec = [Video packageVideoCodec];
+
+    NSLog(@"Testing PIPE with '%@' codec\n", videoCodec);
 
     [self showProgressDialog:@"Creating video\n\n"];
 
-    NSString* ffmpegCommand = [Video generateCreateVideoWithPipesScript:pipe1:pipe2:pipe3:videoFile];
+    NSString* ffmpegCommand = [Video generateCreateVideoWithPipesScript:pipe1:pipe2:pipe3:videoFile:videoCodec];
     
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
 

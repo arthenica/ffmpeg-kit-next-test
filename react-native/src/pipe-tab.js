@@ -46,19 +46,21 @@ export default class PipeTab extends React.Component {
         let videoFile = this.getVideoFile();
         FFmpegKitConfig.registerNewFFmpegPipe().then((pipe1) => {
             FFmpegKitConfig.registerNewFFmpegPipe().then((pipe2) => {
-                FFmpegKitConfig.registerNewFFmpegPipe().then((pipe3) => {
+                FFmpegKitConfig.registerNewFFmpegPipe().then(async (pipe3) => {
 
                     // IF VIDEO IS PLAYING STOP PLAYBACK
                     this.pause();
 
                     deleteFile(videoFile);
 
-                    ffprint("Testing PIPE with 'mpeg4' codec");
+                    const videoCodec = await VideoUtil.packageVideoCodec();
+
+                    ffprint(`Testing PIPE with '${videoCodec}' codec`);
 
                     this.hideProgressDialog();
                     this.showProgressDialog();
 
-                    let ffmpegCommand = VideoUtil.generateCreateVideoWithPipesScript(pipe1, pipe2, pipe3, videoFile);
+                    let ffmpegCommand = VideoUtil.generateCreateVideoWithPipesScript(pipe1, pipe2, pipe3, videoFile, videoCodec);
 
                     ffprint(`FFmpeg process started with arguments: \'${ffmpegCommand}\'.`);
 

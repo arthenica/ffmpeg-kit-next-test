@@ -151,7 +151,8 @@ public class SubtitleTabFragment extends Fragment {
             ResourcesUtil.resourceToFile(getResources(), R.drawable.sunset, image3File);
             ResourcesUtil.rawResourceToFile(getResources(), R.raw.subtitle, getSubtitleFile());
 
-            final String ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.getAbsolutePath(), image2File.getAbsolutePath(), image3File.getAbsolutePath(), videoFile.getAbsolutePath(), "mpeg4", "");
+            final String videoCodec = FFmpegCommands.getPackageVideoCodec();
+            final String ffmpegCommand = FFmpegCommands.buildEncodeVideoCommand(image1File.getAbsolutePath(), image2File.getAbsolutePath(), image3File.getAbsolutePath(), videoFile.getAbsolutePath(), videoCodec, "");
 
             Log.d(TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand));
 
@@ -174,7 +175,7 @@ public class SubtitleTabFragment extends Fragment {
 
                                 Log.d(TAG, "Create completed successfully; burning subtitles.");
 
-                                String burnSubtitlesCommand = String.format("-y -i %s -vf subtitles=filename='%s':force_style='FontName=MyFontName' -c:v mpeg4 %s", videoFile.getAbsolutePath(), getSubtitleFile().getAbsolutePath(), videoWithSubtitlesFile.getAbsolutePath());
+                                String burnSubtitlesCommand = String.format("-y -i %s -vf subtitles=filename='%s':force_style='FontName=MyFontName' -c:v %s %s", videoFile.getAbsolutePath(), getSubtitleFile().getAbsolutePath(), videoCodec, videoWithSubtitlesFile.getAbsolutePath());
 
                                 showBurnProgressDialog();
 

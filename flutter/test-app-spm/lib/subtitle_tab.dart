@@ -75,7 +75,7 @@ class SubtitleTab implements PlayerTab {
         VideoUtil.assetPath(VideoUtil.ASSET_3).then((image3Path) {
           VideoUtil.assetPath(VideoUtil.SUBTITLE_ASSET).then((subtitlePath) {
             getVideoFile().then((videoFile) {
-              getVideoWithSubtitlesFile().then((videoWithSubtitlesFile) {
+              getVideoWithSubtitlesFile().then((videoWithSubtitlesFile) async {
                 // IF VIDEO IS PLAYING STOP PLAYBACK
                 pause();
 
@@ -87,12 +87,13 @@ class SubtitleTab implements PlayerTab {
                 this.hideProgressDialog();
                 this.showCreateProgressDialog();
 
+                final videoCodec = await VideoUtil.packageVideoCodec();
                 final ffmpegCommand = VideoUtil.generateEncodeVideoScript(
                     image1Path,
                     image2Path,
                     image3Path,
                     videoFile.path,
-                    "mpeg4",
+                    videoCodec,
                     "");
 
                 _state = _State.CREATING;
@@ -113,7 +114,7 @@ class SubtitleTab implements PlayerTab {
                         "Create completed successfully; burning subtitles.");
 
                     String burnSubtitlesCommand =
-                        "-y -i ${videoFile.path} -vf subtitles=filename='$subtitlePath':force_style='Fontname=MyFontName' -c:v mpeg4 ${videoWithSubtitlesFile.path}";
+                        "-y -i ${videoFile.path} -vf subtitles=filename='$subtitlePath':force_style='Fontname=MyFontName' -c:v $videoCodec ${videoWithSubtitlesFile.path}";
 
                     this.showBurnProgressDialog();
 

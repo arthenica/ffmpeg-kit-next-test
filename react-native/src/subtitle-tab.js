@@ -44,7 +44,7 @@ export default class SubtitleTab extends React.Component {
         this.updateProgressDialog();
     }
 
-    burnSubtitles = () => {
+    burnSubtitles = async () => {
         let image1Path = VideoUtil.assetPath(VideoUtil.ASSET_1);
         let image2Path = VideoUtil.assetPath(VideoUtil.ASSET_2);
         let image3Path = VideoUtil.assetPath(VideoUtil.ASSET_3);
@@ -63,7 +63,8 @@ export default class SubtitleTab extends React.Component {
         this.hideProgressDialog();
         this.showCreateProgressDialog();
 
-        let ffmpegCommand = VideoUtil.generateEncodeVideoScript(image1Path, image2Path, image3Path, videoFile, "mpeg4", "");
+        const videoCodec = await VideoUtil.packageVideoCodec();
+        let ffmpegCommand = VideoUtil.generateEncodeVideoScript(image1Path, image2Path, image3Path, videoFile, videoCodec, "");
 
         this.setState({state: 'CREATING'});
 
@@ -77,7 +78,7 @@ export default class SubtitleTab extends React.Component {
                 if (ReturnCode.isSuccess(returnCode)) {
                     ffprint("Create completed successfully; burning subtitles.");
 
-                    let burnSubtitlesCommand = `-y -i ${videoFile} -vf subtitles=filename='${subtitlePath}':force_style='FontName=MyFontName' -c:v mpeg4 ${videoWithSubtitlesFile}`;
+                    let burnSubtitlesCommand = `-y -i ${videoFile} -vf subtitles=filename='${subtitlePath}':force_style='FontName=MyFontName' -c:v ${videoCodec} ${videoWithSubtitlesFile}`;
 
                     this.showBurnProgressDialog();
 

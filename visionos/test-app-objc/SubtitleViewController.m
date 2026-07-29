@@ -133,7 +133,9 @@ typedef enum {
 
     [self showProgressDialog:@"Creating video\n\n"];
 
-    NSString* ffmpegCommand = [Video generateVideoEncodeScript:image1:image2:image3:videoFile:@"mpeg4":@""];
+    NSString *videoCodec = [Video packageVideoCodec];
+
+    NSString* ffmpegCommand = [Video generateVideoEncodeScript:image1:image2:image3:videoFile:videoCodec:@""];
     
     NSLog(@"FFmpeg process started with arguments '%@'.\n", ffmpegCommand);
     
@@ -150,7 +152,7 @@ typedef enum {
         if ([ReturnCode isSuccess:[session getReturnCode]]) {
             NSLog(@"Create completed successfully; burning subtitles.\n");
 
-            NSString *burnSubtitlesCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf subtitles=filename='%@':force_style='FontName=MyFontName' %@", videoFile, subtitle, videoWithSubtitlesFile];
+            NSString *burnSubtitlesCommand = [NSString stringWithFormat:@"-hide_banner -y -i %@ -vf subtitles=filename='%@':force_style='FontName=MyFontName' -c:v %@ %@", videoFile, subtitle, videoCodec, videoWithSubtitlesFile];
 
             addUIAction(^{
                 [self showProgressDialog:@"Burning subtitles\n\n"];

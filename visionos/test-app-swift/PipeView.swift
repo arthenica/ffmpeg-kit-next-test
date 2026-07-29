@@ -91,9 +91,10 @@ import ffmpegkit
         player.removeAllItems()
         activeItem = nil
         try? FileManager.default.removeItem(atPath: videoFile)
-        NSLog("Testing PIPE with 'mpeg4' codec\n")
+        let videoCodec = Video.packageVideoCodec()
+        NSLog("Testing PIPE with '%@' codec\n", videoCodec)
         showProgressDialog("Creating video\n\n")
-        let ffmpegCommand = Video.generateCreateVideoWithPipesScript(pipe1 ?? "", pipe2 ?? "", pipe3 ?? "", videoFile)
+        let ffmpegCommand = Video.generateCreateVideoWithPipesScript(pipe1 ?? "", pipe2 ?? "", pipe3 ?? "", videoFile, videoCodec)
         NSLog("FFmpeg process started with arguments '%@'.\n", ffmpegCommand)
         FFmpegKit.executeAsync(ffmpegCommand) { session in
             guard let session = session else { return }

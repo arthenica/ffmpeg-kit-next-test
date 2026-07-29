@@ -21,15 +21,20 @@
  */
 
 import Foundation
+import ffmpegkit
 
 @objc(Video)
 final class Video: NSObject {
     static func generateCreateVideoWithPipesScript(_ image1: String, _ image2: String, _ image3: String, _ videoFile: String) -> String {
+        return generateCreateVideoWithPipesScript(image1, image2, image3, videoFile, "mpeg4")
+    }
+
+    static func generateCreateVideoWithPipesScript(_ image1: String, _ image2: String, _ image3: String, _ videoFile: String, _ videoCodec: String) -> String {
         return String(format: videoEncodeTemplate(inputPrefix: "-hide_banner -y -i %@ -i %@ -i %@",
                                                   framePrefix: "loop=loop=-1:size=1:start=0,",
                                                   pixelFormat: "yuv420p",
                                                   customOptions: "",
-                                                  codec: "mpeg4"), image1, image2, image3, videoFile)
+                                                  codec: videoCodec), image1, image2, image3, videoFile)
     }
 
     static func generateVideoEncodeScript(_ image1: String, _ image2: String, _ image3: String, _ videoFile: String, _ videoCodec: String, _ customOptions: String) -> String {
@@ -65,6 +70,10 @@ final class Video: NSObject {
     }
 
     static func generateShakingVideoScript(_ image1: String, _ image2: String, _ image3: String, _ videoFile: String) -> String {
+        return generateShakingVideoScript(image1, image2, image3, videoFile, "mpeg4")
+    }
+
+    static func generateShakingVideoScript(_ image1: String, _ image2: String, _ image3: String, _ videoFile: String, _ videoCodec: String) -> String {
         let format = "-hide_banner -y -loop 1 -i %@ " +
             "-loop 1 -i %@ " +
             "-loop 1 -i %@ " +
@@ -79,8 +88,12 @@ final class Video: NSObject {
             "[3:v][stream2overlaid]overlay=x='2*mod(n,4)':y='2*mod(n,2)',trim=duration=3[stream2shaking];" +
             "[3:v][stream3overlaid]overlay=x='2*mod(n,4)':y='2*mod(n,2)',trim=duration=3[stream3shaking];" +
             "[stream1shaking][stream2shaking][stream3shaking]concat=n=3:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\" " +
-            "-map [video] -fps_mode cfr -c:v mpeg4 -r 30 %@"
-        return String(format: format, image1, image2, image3, videoFile)
+            "-map [video] -fps_mode cfr -c:v %@ -r 30 %@"
+        return String(format: format, image1, image2, image3, videoCodec, videoFile)
+    }
+
+    static func packageVideoCodec() -> String {
+        return ((Packages.getExternalLibraries() as? [String])?.contains("x264") == true) ? "libx264" : "mpeg4"
     }
 
     static func generateZscaleVideoScript(_ inputVideoFilePath: String, _ outputVideoFilePath: String) -> String {

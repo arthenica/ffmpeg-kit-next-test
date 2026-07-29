@@ -38,7 +38,7 @@ export default class VidStabTab extends React.Component {
         ffprint(log.getMessage());
     }
 
-    stabilizeVideo = () => {
+    stabilizeVideo = async () => {
         let image1Path = VideoUtil.assetPath(VideoUtil.ASSET_1);
         let image2Path = VideoUtil.assetPath(VideoUtil.ASSET_2);
         let image3Path = VideoUtil.assetPath(VideoUtil.ASSET_3);
@@ -59,7 +59,8 @@ export default class VidStabTab extends React.Component {
         this.hideProgressDialog();
         this.showCreateProgressDialog();
 
-        let ffmpegCommand = VideoUtil.generateShakingVideoScript(image1Path, image2Path, image3Path, videoFile);
+        const videoCodec = await VideoUtil.packageVideoCodec();
+        let ffmpegCommand = VideoUtil.generateShakingVideoScript(image1Path, image2Path, image3Path, videoFile, videoCodec);
 
         ffprint(`FFmpeg process started with arguments: \'${ffmpegCommand}\'.`);
 
@@ -91,7 +92,7 @@ export default class VidStabTab extends React.Component {
 
                         if (ReturnCode.isSuccess(secondReturnCode)) {
 
-                            let stabilizeVideoCommand = `-y -i ${videoFile} -vf vidstabtransform=smoothing=30:input=${shakeResultsFile} -c:v mpeg4 ${stabilizedVideoFile}`;
+                            let stabilizeVideoCommand = `-y -i ${videoFile} -vf vidstabtransform=smoothing=30:input=${shakeResultsFile} -c:v ${videoCodec} ${stabilizedVideoFile}`;
 
                             ffprint(`FFmpeg process started with arguments: \'${stabilizeVideoCommand}\'.`);
 

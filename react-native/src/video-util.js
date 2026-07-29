@@ -1,5 +1,6 @@
 import {Platform} from 'react-native';
 import RNFS from 'react-native-fs';
+import {Packages} from 'ffmpeg-kit-next-react-native';
 import {ffprint} from './util';
 
 export default class VideoUtil {
@@ -97,7 +98,7 @@ export default class VideoUtil {
             " -map [video] -fps_mode cfr " + customOptions + "-c:v " + videoCodec.toLowerCase() + " -r 30 " + videoFilePath;
     }
 
-    static generateShakingVideoScript(image1Path, image2Path, image3Path, videoFilePath) {
+    static generateShakingVideoScript(image1Path, image2Path, image3Path, videoFilePath, videoCodec = 'mpeg4') {
         return "-hide_banner -y -loop 1 -i \"" +
             image1Path +
             "\" " +
@@ -119,10 +120,10 @@ export default class VideoUtil {
             "[3:v][stream2overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream2shaking];" +
             "[3:v][stream3overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream3shaking];" +
             "[stream1shaking][stream2shaking][stream3shaking]concat=n=3:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-            " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 " + videoFilePath;
+            " -map [video] -fps_mode cfr -c:v " + videoCodec + " -r 30 " + videoFilePath;
     }
 
-    static generateCreateVideoWithPipesScript(image1Pipe, image2Pipe, image3Pipe, videoFilePath) {
+    static generateCreateVideoWithPipesScript(image1Pipe, image2Pipe, image3Pipe, videoFilePath, videoCodec = 'mpeg4') {
         return "-hide_banner -y -i \"" +
             image1Pipe +
             "\" " +
@@ -145,7 +146,12 @@ export default class VideoUtil {
             "[stream2starting][stream1ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream2blended];" +
             "[stream3starting][stream2ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream3blended];" +
             "[stream1overlaid][stream2blended][stream2overlaid][stream3blended][stream3overlaid]concat=n=5:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-            " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 " + videoFilePath;
+            " -map [video] -fps_mode cfr -c:v " + videoCodec + " -r 30 " + videoFilePath;
+    }
+
+    static async packageVideoCodec() {
+        const packageList = await Packages.getExternalLibraries();
+        return packageList.includes('x264') ? 'libx264' : 'mpeg4';
     }
 
     static generateZscaleVideoScript(inputVideoFilePath, outputVideoFilePath) {

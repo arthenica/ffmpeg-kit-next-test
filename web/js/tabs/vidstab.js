@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import { FFmpegKitConfig, readFile } from '../../dist/index.js';
+import { FFmpegKitConfig, Packages, readFile } from '../../dist/index.js';
 import { shakingScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
 
 export default {
@@ -42,8 +42,11 @@ export default {
       log.clear();
       media.replaceChildren();
       try {
+        const externalLibraries = await Packages.getExternalLibraries();
+        const videoCodec = externalLibraries.includes('x264') ? 'libx264' : 'mpeg4';
+
         log.line('creating a shaky slideshow…', 'muted');
-        let session = await executeFFmpegAsync(shakingScript('video.mp4'));
+        let session = await executeFFmpegAsync(shakingScript('video.mp4', videoCodec));
         await reportResult(log, session, { writeLogs: false });
         let rc = session.getReturnCode();
         if (!(rc && rc.isValueSuccess())) return;
@@ -58,7 +61,7 @@ export default {
 
         log.line('pass 2: vidstabtransform…', 'muted');
         session = await executeFFmpegAsync(
-          '-hide_banner -y -i video.mp4 -vf vidstabtransform=smoothing=30:input=transforms.trf -c:v mpeg4 stabilized.mp4'
+          `-hide_banner -y -i video.mp4 -vf vidstabtransform=smoothing=30:input=transforms.trf -c:v ${videoCodec} stabilized.mp4`
         );
         await reportResult(log, session, { writeLogs: false });
         rc = session.getReturnCode();

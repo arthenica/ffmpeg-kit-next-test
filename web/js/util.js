@@ -245,7 +245,7 @@ export function encodeScript(codec, pixelFormat, opts, output) {
 }
 
 // The jittery slideshow the Video-stabilization tab feeds to vidstabdetect/transform.
-export function shakingScript(output) {
+export function shakingScript(output, codec = 'mpeg4') {
   const [a, b, c] = IMAGES;
   const filter =
     `[0:v]setpts=PTS-STARTPTS,${SCALE}[stream1out];` +
@@ -261,7 +261,7 @@ export function shakingScript(output) {
   return (
     `-hide_banner -y -loop 1 -i "${a}" -loop 1 -i '${b}' -loop 1 -i ${c} ` +
     `-f lavfi -i color=black:s=640x427 ` +
-    `-filter_complex "${filter}" -map [video] -fps_mode cfr -c:v mpeg4 -r 30 ${output}`
+    `-filter_complex "${filter}" -map [video] -fps_mode cfr -c:v ${codec} -r 30 ${output}`
   );
 }
 

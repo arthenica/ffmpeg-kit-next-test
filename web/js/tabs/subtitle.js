@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-import { FFmpegKitConfig, readFile } from '../../dist/index.js';
+import { FFmpegKitConfig, Packages, readFile } from '../../dist/index.js';
 import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
 
 export default {
@@ -50,9 +50,12 @@ export default {
       media.replaceChildren();
       const output = 'video_with_subtitles.mp4';
       try {
+        const externalLibraries = await Packages.getExternalLibraries();
+        const videoCodec = externalLibraries.includes('x264') ? 'libx264' : 'mpeg4';
+
         progressLabel = 'Creating video';
         log.line('creating the slideshow…', 'muted');
-        let session = await executeFFmpegAsync(encodeScript('mpeg4', 'yuv420p', '', 'video.mp4'));
+        let session = await executeFFmpegAsync(encodeScript(videoCodec, 'yuv420p', '', 'video.mp4'));
         await reportResult(log, session, { writeLogs: false });
         const rc = session.getReturnCode();
         if (!(rc && rc.isValueSuccess())) return;
@@ -60,7 +63,7 @@ export default {
         progressLabel = 'Burning subtitles';
         log.line('burning subtitles…', 'muted');
         session = await executeFFmpegAsync(
-          `-hide_banner -y -i video.mp4 -vf "subtitles=filename='subtitle.srt':force_style='FontName=MyFontName'" -c:v mpeg4 ${output}`
+          `-hide_banner -y -i video.mp4 -vf "subtitles=filename='subtitle.srt':force_style='FontName=MyFontName'" -c:v ${videoCodec} ${output}`
         );
         await reportResult(log, session, { writeLogs: false });
         const burnReturnCode = session.getReturnCode();

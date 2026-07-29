@@ -147,7 +147,9 @@ public class PipeTabFragment extends Fragment {
                 videoFile.delete();
             }
 
-            Log.d(TAG, "Testing PIPE with 'mpeg4' codec");
+            final String videoCodec = FFmpegCommands.getPackageVideoCodec();
+
+            Log.d(TAG, String.format("Testing PIPE with '%s' codec", videoCodec));
 
             showProgressDialog();
 
@@ -155,7 +157,7 @@ public class PipeTabFragment extends Fragment {
             ResourcesUtil.resourceToFile(getResources(), R.drawable.lake, image2File);
             ResourcesUtil.resourceToFile(getResources(), R.drawable.sunset, image3File);
 
-            final String ffmpegCommand = FFmpegCommands.buildCreateVideoWithPipesCommand(pipe1, pipe2, pipe3, videoFile.getAbsolutePath());
+            final String ffmpegCommand = FFmpegCommands.buildCreateVideoWithPipesCommand(pipe1, pipe2, pipe3, videoFile.getAbsolutePath(), videoCodec);
 
             Log.d(TAG, String.format("FFmpeg process started with arguments: '%s'.", ffmpegCommand));
 

@@ -21,10 +21,15 @@
  */
 
 #import "Video.h"
+#include <ffmpegkit/Packages.h>
 
 @implementation Video
 
 + (NSString*)generateCreateVideoWithPipesScript:(NSString *)image1 :(NSString *)image2 :(NSString *)image3 :(NSString *)videoFile {
+    return [Video generateCreateVideoWithPipesScript:image1:image2:image3:videoFile:@"mpeg4"];
+}
+
++ (NSString*)generateCreateVideoWithPipesScript:(NSString *)image1 :(NSString *)image2 :(NSString *)image3 :(NSString *)videoFile :(NSString *)videoCodec {
     return [NSString stringWithFormat:
 @"-hide_banner -y -i %@ \
 -i %@ \
@@ -44,7 +49,7 @@
 [stream2fadein][stream1fadeout]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2,trim=duration=1,select=lte(n\\,30)[stream2blended];\
 [stream3fadein][stream2fadeout]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2,trim=duration=1,select=lte(n\\,30)[stream3blended];\
 [stream1overlaid][stream2blended][stream2overlaid][stream3blended][stream3overlaid]concat=n=5:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\" \
--map [video] -fps_mode cfr -c:v mpeg4 -r 30 %@", image1, image2, image3, videoFile];
+-map [video] -fps_mode cfr -c:v %@ -r 30 %@", image1, image2, image3, videoCodec, videoFile];
 }
 
 + (NSString*)generateVideoEncodeScript:(NSString *)image1 :(NSString *)image2 :(NSString *)image3 :(NSString *)videoFile :(NSString *)videoCodec :(NSString *)customOptions {
@@ -75,6 +80,10 @@
 }
 
 + (NSString*)generateShakingVideoScript:(NSString *)image1 :(NSString *)image2 :(NSString *)image3 :(NSString *)videoFile {
+    return [Video generateShakingVideoScript:image1:image2:image3:videoFile:@"mpeg4"];
+}
+
++ (NSString*)generateShakingVideoScript:(NSString *)image1 :(NSString *)image2 :(NSString *)image3 :(NSString *)videoFile :(NSString *)videoCodec {
     return [NSString stringWithFormat:
 @"-hide_banner -y -loop 1 -i %@ \
 -loop 1 -i %@ \
@@ -91,7 +100,11 @@
 [3:v][stream2overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream2shaking];\
 [3:v][stream3overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream3shaking];\
 [stream1shaking][stream2shaking][stream3shaking]concat=n=3:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\" \
--map [video] -fps_mode cfr -c:v mpeg4 -r 30 %@", image1, image2, image3, videoFile];
+-map [video] -fps_mode cfr -c:v %@ -r 30 %@", image1, image2, image3, videoCodec, videoFile];
+}
+
++ (NSString*)packageVideoCodec {
+    return [[Packages getExternalLibraries] containsObject:@"x264"] ? @"libx264" : @"mpeg4";
 }
 
 + (NSString*)generateZscaleVideoScript:(NSString *)inputVideoFilePath :(NSString *)outputVideoFilePath {

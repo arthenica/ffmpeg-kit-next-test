@@ -21,8 +21,15 @@
  */
 
 #include "Video.h"
+#include <Packages.h>
+
+using namespace ffmpegkit;
 
 std::string ffmpegkittest::Video::generateCreateVideoWithPipesScript(std::string image1Pipe, std::string image2Pipe, std::string image3Pipe, std::string videoFilePath) {
+    return ffmpegkittest::Video::generateCreateVideoWithPipesScript(image1Pipe, image2Pipe, image3Pipe, videoFilePath, "mpeg4");
+}
+
+std::string ffmpegkittest::Video::generateCreateVideoWithPipesScript(std::string image1Pipe, std::string image2Pipe, std::string image3Pipe, std::string videoFilePath, std::string videoCodec) {
     return  
             "-hide_banner -y -i \"" + image1Pipe + "\" " +
             "-i '" + image2Pipe + "' " +
@@ -40,7 +47,7 @@ std::string ffmpegkittest::Video::generateCreateVideoWithPipesScript(std::string
             "[stream2starting][stream1ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream2blended];" +
             "[stream3starting][stream2ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream3blended];" +
             "[stream1overlaid][stream2blended][stream2overlaid][stream3blended][stream3overlaid]concat=n=5:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-            " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 " + videoFilePath;
+            " -map [video] -fps_mode cfr -c:v " + videoCodec + " -r 30 " + videoFilePath;
 }
 
 std::string ffmpegkittest::Video::generateEncodeVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath, std::string videoCodec, std::string customOptions) {
@@ -69,6 +76,10 @@ std::string ffmpegkittest::Video::generateEncodeVideoScript(std::string image1Pa
 }
 
 std::string ffmpegkittest::Video::generateShakingVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath) {
+    return ffmpegkittest::Video::generateShakingVideoScript(image1Path, image2Path, image3Path, videoFilePath, "mpeg4");
+}
+
+std::string ffmpegkittest::Video::generateShakingVideoScript(std::string image1Path, std::string image2Path, std::string image3Path, std::string videoFilePath, std::string videoCodec) {
     return
             "-hide_banner -y -loop 1 -i \"" + image1Path + "\" " +
             "-loop 1 -i '" + image2Path + "' " +
@@ -85,7 +96,12 @@ std::string ffmpegkittest::Video::generateShakingVideoScript(std::string image1P
             "[3:v][stream2overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream2shaking];" +
             "[3:v][stream3overlaid]overlay=x=\'2*mod(n,4)\':y=\'2*mod(n,2)\',trim=duration=3[stream3shaking];" +
             "[stream1shaking][stream2shaking][stream3shaking]concat=n=3:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
-            " -map [video] -fps_mode cfr -c:v mpeg4 -r 30 " + videoFilePath;
+            " -map [video] -fps_mode cfr -c:v " + videoCodec + " -r 30 " + videoFilePath;
+}
+
+std::string ffmpegkittest::Video::packageVideoCodec() {
+    auto externalLibraries = Packages::getExternalLibraries();
+    return externalLibraries->find("x264") != externalLibraries->end() ? "libx264" : "mpeg4";
 }
 
 std::string ffmpegkittest::Video::generateZscaleVideoScript(std::string inputVideoFilePath, std::string outputVideoFilePath) {

@@ -134,11 +134,13 @@ void ffmpegkittest::PipeTab::createVideo() {
 
     std::remove(videoFile.c_str());
 
-    std::cout << "Testing PIPE with 'mpeg4' codec" << std::endl;
+    std::string videoCodec = Video::packageVideoCodec();
+
+    std::cout << "Testing PIPE with '" << videoCodec << "' codec" << std::endl;
 
     showProgressDialog();
 
-    std::string ffmpegCommand = Video::generateCreateVideoWithPipesScript(*pipe1, *pipe2, *pipe3, videoFile);
+    std::string ffmpegCommand = Video::generateCreateVideoWithPipesScript(*pipe1, *pipe2, *pipe3, videoFile, videoCodec);
 
     std::cout << "FFmpeg process started with arguments: '" << ffmpegCommand << "'." << std::endl;
 
