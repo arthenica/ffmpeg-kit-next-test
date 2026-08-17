@@ -1,0 +1,8 @@
+#include <windows.h>
+
+/* CREATEPROCESS_MANIFEST_RESOURCE_ID / RT_MANIFEST. Embedding the manifest is what
+   activates the version 6 common controls and the DPI settings it declares. */
+1 24 "../data/app.manifest"
+
+/* Referenced by name from Application::create(). */
+APPICON ICON "../data/icons/ffmpeg-kit-windows-test.ico"

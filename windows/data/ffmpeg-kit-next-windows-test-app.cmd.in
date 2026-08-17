@@ -1,0 +1,30 @@
+@echo off
+rem Launches the test app from cmd.exe or Explorer.
+rem
+rem Up to two directories are added to PATH before the executable starts:
+rem   - the toolchain runtime directory, which provides the compiler runtime
+rem     DLLs the app was linked against. For a MinGW-w64 build this is the MSYS2
+rem     MinGW prefix bin directory (libwinpthread, and libc++/libunwind or
+rem     libstdc++/libgcc depending on the environment). For an MSVC build it is
+rem     empty: the Visual C++ runtime is installed system wide.
+rem   - the FFmpegKitNext bundle bin directory, which provides the FFmpeg and
+rem     ffmpegkit DLLs
+rem
+rem An installed copy already has the FFmpegKitNext DLLs next to the executable,
+rem so only the toolchain runtime strictly matters there. Both are added anyway
+rem so the same launcher works from the build tree.
+rem
+rem The user interface itself has no runtime dependency: it is built on the Win32
+rem common controls that ship with Windows.
+
+setlocal
+
+set "EXTRA_RUNTIME_BIN=@EXTRA_RUNTIME_BIN_NATIVE@"
+set "FFMPEG_KIT_BIN=@FFMPEG_KIT_BINARY_PATH_NATIVE@"
+
+set "PATH=%FFMPEG_KIT_BIN%;%PATH%"
+if defined EXTRA_RUNTIME_BIN set "PATH=%EXTRA_RUNTIME_BIN%;%PATH%"
+
+"%~dp0ffmpeg-kit-next-windows-test-app.exe" %*
+
+endlocal
