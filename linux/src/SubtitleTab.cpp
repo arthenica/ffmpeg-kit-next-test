@@ -74,6 +74,11 @@ static gboolean appendLog(const std::pair<ffmpegkittest::SubtitleTab*,const std:
     return FALSE;
 }
 
+static gboolean enablePlayButton(ffmpegkittest::SubtitleTab* tab) {
+    tab->setPlayButtonEnabled(true);
+    return FALSE;
+}
+
 ffmpegkittest::SubtitleTab::SubtitleTab() : statistics(nullptr) {
     encodeButton.set_label("BURN SUBTITLES");
     encodeButton.set_size_request(120, 30);
@@ -86,7 +91,14 @@ ffmpegkittest::SubtitleTab::SubtitleTab() : statistics(nullptr) {
     cancelButton.signal_clicked().connect(sigc::mem_fun(*this, &SubtitleTab::cancel));
     Util::applyButtonStyle(cancelButton);
     buttonBox.pack_start(encodeButton, Gtk::PACK_EXPAND_PADDING);
+    playButton.set_label("PLAY");
+    playButton.set_size_request(120, 30);
+    playButton.set_tooltip_text(Constants::PlayTooltipText);
+    playButton.signal_clicked().connect(sigc::mem_fun(*this, &SubtitleTab::playOutputFile));
+    playButton.set_sensitive(false);
+    Util::applyButtonStyle(playButton);
     buttonBox.pack_start(cancelButton, Gtk::PACK_EXPAND_PADDING);
+    buttonBox.pack_start(playButton, Gtk::PACK_EXPAND_PADDING);
 
     outputText.set_editable(false);
     Util::applyOutputTextStyle(outputText);
@@ -139,6 +151,18 @@ void ffmpegkittest::SubtitleTab::clearOutput() {
     outputText.get_buffer()->set_text("");
 }
 
+void ffmpegkittest::SubtitleTab::setPlayButtonEnabled(const bool enabled) {
+    playButton.set_sensitive(enabled);
+}
+
+void ffmpegkittest::SubtitleTab::playOutputFile() {
+    const std::string outputFile = getVideoWithSubtitlesFile();
+
+    if (!Util::openInSystemPlayer(outputFile, parentWindow)) {
+        Popup::show(parentWindow, Gtk::MESSAGE_INFO, "No application is registered to play this file.\n\nIt was written to:\n" + outputFile);
+    }
+}
+
 void ffmpegkittest::SubtitleTab::burnSubtitles() {
     clearOutput();
 
@@ -181,6 +205,7 @@ void ffmpegkittest::SubtitleTab::burnSubtitles() {
 
                 if (ReturnCode::isSuccess(secondSession->getReturnCode())) {
                     std::cout << "Burn subtitles completed successfully." << std::endl;
+                    g_idle_add((GSourceFunc)enablePlayButton, this);
                 } else if (ReturnCode::isCancel(secondSession->getReturnCode())) {
                     g_idle_add((GSourceFunc)showBurningCancelledPopup, new std::pair<Gtk::Window*,const std::string>(this->parentWindow, "Burn subtitles operation cancelled."));
                     std::cout << "Burn subtitles operation cancelled." << std::endl;

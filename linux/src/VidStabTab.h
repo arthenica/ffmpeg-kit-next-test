@@ -36,8 +36,10 @@ namespace ffmpegkittest {
             void setActive();
             void setParentWindow(Gtk::Window* parentWindow);
             void appendOutput(const std::string& string);
+            void setPlayButtonEnabled(const bool enabled);
 
         private:
+            void playOutputFile();
             void clearOutput();
             void stabilizeVideo();
             std::string getShakeResultsFile();
@@ -49,6 +51,7 @@ namespace ffmpegkittest {
             void hideStabilizeProgressDialog();
 
             Gtk::Button stabilizeVideoButton;
+            Gtk::Button playButton;
             Gtk::HBox stabilizeVideoButtonBox;
             Gtk::TextView outputText;
             Gtk::ScrolledWindow outputTextWindow;

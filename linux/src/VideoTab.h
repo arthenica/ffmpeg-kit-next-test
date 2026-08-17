@@ -36,9 +36,11 @@ namespace ffmpegkittest {
             void setActive();
             void setParentWindow(Gtk::Window* parentWindow);
             void appendOutput(const std::string& string);
+            void setPlayButtonEnabled(const bool enabled);
             void updateProgressDialog(const std::shared_ptr<ffmpegkit::Statistics> statistics);
 
         private:
+            void playOutputFile();
             void clearOutput();
             void initVideoCodecData();
             void onVideoCodecChanged();
@@ -56,6 +58,7 @@ namespace ffmpegkittest {
             Gtk::HBox videoCodecBox;
             int selectedCodec;
             Gtk::Button encodeButton;
+            Gtk::Button playButton;
             Gtk::HBox encodeButtonBox;
             Gtk::TextView outputText;
             Gtk::ScrolledWindow outputTextWindow;

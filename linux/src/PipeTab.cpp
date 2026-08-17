@@ -54,6 +54,11 @@ static gboolean appendLog(const std::pair<ffmpegkittest::PipeTab*,const std::sha
     return FALSE;
 }
 
+static gboolean enablePlayButton(ffmpegkittest::PipeTab* tab) {
+    tab->setPlayButtonEnabled(true);
+    return FALSE;
+}
+
 static void startAsyncCatImageProcess(std::string imagePath, std::shared_ptr<std::string> namedPipePath) {
     auto thread = std::thread([imagePath,namedPipePath]() {
         std::string asyncCommand = "cat " + imagePath + " > " + *namedPipePath;
@@ -73,7 +78,14 @@ ffmpegkittest::PipeTab::PipeTab() : statistics(nullptr) {
     createButton.set_tooltip_text(Constants::PipeTestTooltipText);
     createButton.signal_clicked().connect(sigc::mem_fun(*this, &PipeTab::createVideo));
     Util::applyButtonStyle(createButton);
+    playButton.set_label("PLAY");
+    playButton.set_size_request(120, 30);
+    playButton.set_tooltip_text(Constants::PlayTooltipText);
+    playButton.signal_clicked().connect(sigc::mem_fun(*this, &PipeTab::playOutputFile));
+    playButton.set_sensitive(false);
+    Util::applyButtonStyle(playButton);
     createButtonBox.pack_start(createButton, Gtk::PACK_EXPAND_PADDING);
+    createButtonBox.pack_start(playButton, Gtk::PACK_EXPAND_PADDING);
 
     outputText.set_editable(false);
     Util::applyOutputTextStyle(outputText);
@@ -120,6 +132,18 @@ void ffmpegkittest::PipeTab::clearOutput() {
     outputText.get_buffer()->set_text("");
 }
 
+void ffmpegkittest::PipeTab::setPlayButtonEnabled(const bool enabled) {
+    playButton.set_sensitive(enabled);
+}
+
+void ffmpegkittest::PipeTab::playOutputFile() {
+    const std::string outputFile = getVideoFile();
+
+    if (!Util::openInSystemPlayer(outputFile, parentWindow)) {
+        Popup::show(parentWindow, Gtk::MESSAGE_INFO, "No application is registered to play this file.\n\nIt was written to:\n" + outputFile);
+    }
+}
+
 void ffmpegkittest::PipeTab::createVideo() {
     clearOutput();
 
@@ -159,6 +183,7 @@ void ffmpegkittest::PipeTab::createVideo() {
 
         if (ReturnCode::isSuccess(returnCode)) {
             std::cout << "Create completed successfully." << std::endl;
+            g_idle_add((GSourceFunc)enablePlayButton, this);
         } else {
             g_idle_add((GSourceFunc)showCreateFailedPopup, this->parentWindow);
         }

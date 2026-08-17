@@ -25,6 +25,7 @@
 
 #include <gtkmm.h>
 #include <iostream>
+#include <string>
 
 namespace ffmpegkittest {
 
@@ -35,6 +36,7 @@ namespace ffmpegkittest {
             static void applyComboBoxStyle(Gtk::ComboBox& comboBox);
             static void applyOutputTextStyle(Gtk::TextView& textView);
             static void applyVideoPlayerFrameStyle(Gtk::Button& button);
+            static bool openInSystemPlayer(const std::string& path, Gtk::Window* parentWindow);
     };
 
     class ComboBoxModelColumn : public Gtk::TreeModel::ColumnRecord {

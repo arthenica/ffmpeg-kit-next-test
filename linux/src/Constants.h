@@ -37,6 +37,8 @@ namespace ffmpegkittest {
 
             static constexpr const char* VideoTestTooltipText = "Select a video codec and press the ENCODE button";
 
+            static constexpr const char* PlayTooltipText = "Open the encoded file in the default system player";
+
             static constexpr const char* HttpsTestTooltipText = "Enter the https url of a media file and click the button";
 
             static constexpr const char* AudioTestTooltipText = "Select an audio codec and press the ENCODE button";
