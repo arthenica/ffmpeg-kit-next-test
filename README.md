@@ -34,6 +34,7 @@ target a newer version before a release tag is created.
 
 |  Platform | FFmpegKit Version |                                        Tag                                        |
 | :----: |:-----------------:|:---------------------------------------------------------------------------------:|
+|   Windows    |       8.1.1       |  [8.1.1](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v8.1.1.windows)   |
 |   Android<br>Flutter<br>iOS<br>iPadOS<br>Linux<br>macOS<br>React Native<br>tvOS<br>visionOS<br>Web    |       8.1.1       |  [8.1.1](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v8.1.1)   |
 |   Android<br>Flutter<br>iOS<br>Linux<br>macOS<br>React Native<br>tvOS    |       8.1.0       |  [8.1.0](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v8.1.0)   |
 |   Android<br>Flutter<br>iOS<br>Linux<br>macOS<br>React Native<br>tvOS    |       7.1.0       |  [7.1.0](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v7.1.0)   |
