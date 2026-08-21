@@ -66,6 +66,42 @@ void ffmpegkittest::Util::applyComboBoxStyle(Gtk::ComboBox& comboBox) {
     applyCssData(comboBox, "combobox {background-image: image(rgba(155, 89, 182, 1.0)); border-radius: 5px; border: 1px solid rgba(142, 68, 173, 1.0);}");
 }
 
+bool ffmpegkittest::Util::openInSystemPlayer(const std::string& path, Gtk::Window* parentWindow) {
+    std::string uri;
+
+    try {
+        uri = Glib::filename_to_uri(path);
+    } catch (const Glib::Error& error) {
+        std::cout << "Failed to build a URI for " << path << ": " << error.what() << std::endl;
+        return false;
+    }
+
+    GError* gerror = nullptr;
+
+    // gtk_show_uri_on_window() routes through GIO, which resolves the registered
+    // handler from the desktop's MIME database. The C entry point is used directly
+    // because its gtkmm wrapper reports failure by exception in some versions and
+    // by return value in others.
+    const gboolean shown = gtk_show_uri_on_window(
+        parentWindow != nullptr ? parentWindow->gobj() : nullptr,
+        uri.c_str(),
+        GDK_CURRENT_TIME,
+        &gerror);
+
+    if (!shown) {
+        std::cout << "Failed to open " << uri << " in the system player";
+        if (gerror != nullptr) {
+            std::cout << ": " << gerror->message;
+            g_error_free(gerror);
+        }
+        std::cout << "." << std::endl;
+        return false;
+    }
+
+    std::cout << "Opened " << uri << " in the system player." << std::endl;
+    return true;
+}
+
 void ffmpegkittest::Util::applyVideoPlayerFrameStyle(Gtk::Button& button) {
     button.set_margin_top(10);
     button.set_margin_bottom(10);

@@ -34,6 +34,12 @@ At runtime, make sure the dynamic loader can find the FFmpegKitNext shared libra
 the loader, an rpath in your application, or an application launcher that sets `LD_LIBRARY_PATH` to the bundle's `lib`
 directory.
 
+## Video Playback
+
+This app has no embedded player. The Video, Subtitle, Vid.Stab and Pipe tabs have a **PLAY** button that hands the
+encoded file to whatever application the desktop has registered for it, in an external window. The button is disabled
+until an output file has been produced.
+
 ## Test App Prerequisites
 
 - `cmake` > 3.7

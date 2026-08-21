@@ -47,13 +47,25 @@ static gboolean appendLog(const std::pair<ffmpegkittest::VidStabTab*,const std::
     return FALSE;
 }
 
+static gboolean enablePlayButton(ffmpegkittest::VidStabTab* tab) {
+    tab->setPlayButtonEnabled(true);
+    return FALSE;
+}
+
 ffmpegkittest::VidStabTab::VidStabTab() {
     stabilizeVideoButton.set_label("STABILIZE VIDEO");
     stabilizeVideoButton.set_size_request(120, 30);
     stabilizeVideoButton.set_tooltip_text(Constants::VidStabTestTooltipText);
     stabilizeVideoButton.signal_clicked().connect(sigc::mem_fun(*this, &VidStabTab::stabilizeVideo));
     Util::applyButtonStyle(stabilizeVideoButton);
+    playButton.set_label("PLAY");
+    playButton.set_size_request(120, 30);
+    playButton.set_tooltip_text(Constants::PlayTooltipText);
+    playButton.signal_clicked().connect(sigc::mem_fun(*this, &VidStabTab::playOutputFile));
+    playButton.set_sensitive(false);
+    Util::applyButtonStyle(playButton);
     stabilizeVideoButtonBox.pack_start(stabilizeVideoButton, Gtk::PACK_EXPAND_PADDING);
+    stabilizeVideoButtonBox.pack_start(playButton, Gtk::PACK_EXPAND_PADDING);
 
     outputText.set_editable(false);
     Util::applyOutputTextStyle(outputText);
@@ -83,6 +95,18 @@ void ffmpegkittest::VidStabTab::appendOutput(const std::string& string) {
 
 void ffmpegkittest::VidStabTab::clearOutput() {
     outputText.get_buffer()->set_text("");
+}
+
+void ffmpegkittest::VidStabTab::setPlayButtonEnabled(const bool enabled) {
+    playButton.set_sensitive(enabled);
+}
+
+void ffmpegkittest::VidStabTab::playOutputFile() {
+    const std::string outputFile = getStabilizedVideoFile();
+
+    if (!Util::openInSystemPlayer(outputFile, parentWindow)) {
+        Popup::show(parentWindow, Gtk::MESSAGE_INFO, "No application is registered to play this file.\n\nIt was written to:\n" + outputFile);
+    }
 }
 
 void ffmpegkittest::VidStabTab::stabilizeVideo() {
@@ -138,6 +162,7 @@ void ffmpegkittest::VidStabTab::stabilizeVideo() {
 
                         if (ReturnCode::isSuccess(thirdSession->getReturnCode())) {
                             std::cout << "Stabilize video completed successfully." << std::endl;
+                            g_idle_add((GSourceFunc)enablePlayButton, this);
                         } else {
                             g_idle_add((GSourceFunc)showStabilizeFailedPopup, new std::pair<Gtk::Window*,const std::string>(this->parentWindow, "Stabilize video failed. Please check logs for the details."));
                         }

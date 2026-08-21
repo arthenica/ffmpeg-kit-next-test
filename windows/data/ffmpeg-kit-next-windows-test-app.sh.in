@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Launches the test app from an MSYS2 MinGW shell.
+#
+# The MinGW prefix is already on PATH in that shell, so only the FFmpegKitNext
+# bundle bin directory has to be added. Windows resolves DLLs through PATH, not
+# through LD_LIBRARY_PATH, which is what makes this differ from the Linux
+# launcher.
+
+export PATH="@FFMPEG_KIT_BINARY_PATH_POSIX@:${PATH}"
+
+./ffmpeg-kit-next-windows-test-app.exe "$@"

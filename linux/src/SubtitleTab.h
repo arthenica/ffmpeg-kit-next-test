@@ -36,9 +36,11 @@ namespace ffmpegkittest {
             void setActive();
             void setParentWindow(Gtk::Window* parentWindow);
             void appendOutput(const std::string& string);
+            void setPlayButtonEnabled(const bool enabled);
             void updateProgressDialog(const std::shared_ptr<ffmpegkit::Statistics> statistics);
 
         private:
+            void playOutputFile();
             void clearOutput();
             void burnSubtitles();
             void cancel();
@@ -51,6 +53,7 @@ namespace ffmpegkittest {
             void hideBurnProgressDialog();
 
             Gtk::Button encodeButton;
+            Gtk::Button playButton;
             Gtk::Button cancelButton;
             Gtk::HBox buttonBox;
             Gtk::TextView outputText;

@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2022, 2026 Taner Sener
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+#ifndef FFMPEG_KIT_TEST_APPLICATION_H
+#define FFMPEG_KIT_TEST_APPLICATION_H
+
+#include "AudioTab.h"
+#include "CommandTab.h"
+#include "ConcurrentExecutionTab.h"
+#include "FFKitProtocolsTab.h"
+#include "HttpsTab.h"
+#include "OtherTab.h"
+#include "SubtitleTab.h"
+#include "Tab.h"
+#include "VideoTab.h"
+#include "VidStabTab.h"
+
+#include <vector>
+#include <windows.h>
+
+namespace ffmpegkittest {
+
+    /**
+     * The main window: a tab control hosting one child window per test page.
+     */
+    class Application {
+        public:
+            Application();
+
+            /** Creates and shows the main window. Returns false when creation fails. */
+            bool create();
+
+            /** Runs the message loop until the window is closed. Returns the exit code. */
+            int run();
+
+            static void listFFmpegSessions();
+            static void listFFprobeSessions();
+
+            // Both directories are returned with forward slashes so that every
+            // caller can drop them straight into an FFmpeg command. See
+            // Util::toCommandPath() for why that conversion is needed here.
+            static std::string getApplicationCacheDirectory();
+            static std::string getApplicationInstallDirectory();
+
+            // The raw, unconverted install prefix as CMake configured it.
+            static std::string getConfiguredInstallDirectory() {
+                return "@CMAKE_INSTALL_PREFIX@";
+            }
+
+        private:
+            static LRESULT CALLBACK windowProcedure(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
+
+            void onCreate();
+            void onLayout();
+            void onTabChanged();
+            void paintHeader(HDC deviceContext);
+
+            void initApplicationCacheDirectory();
+            void registerApplicationFonts();
+
+            HWND hwnd;
+            HWND tabControl;
+
+            AudioTab audioTab;
+            CommandTab commandTab;
+            ConcurrentExecutionTab concurrentExecutionTab;
+            FFKitProtocolsTab ffkitProtocolsTab;
+            HttpsTab httpsTab;
+            OtherTab otherTab;
+            SubtitleTab subtitleTab;
+            VideoTab videoTab;
+            VidStabTab vidStabTab;
+
+            // Display order. There is deliberately no Pipe tab: named pipes are not
+            // supported on Windows.
+            std::vector<Tab*> tabs;
+    };
+
+}
+
+#endif // FFMPEG_KIT_TEST_APPLICATION_H

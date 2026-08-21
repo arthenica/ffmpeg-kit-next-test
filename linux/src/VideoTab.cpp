@@ -54,6 +54,11 @@ static gboolean appendLog(const std::pair<ffmpegkittest::VideoTab*,const std::sh
     return FALSE;
 }
 
+static gboolean enablePlayButton(ffmpegkittest::VideoTab* tab) {
+    tab->setPlayButtonEnabled(true);
+    return FALSE;
+}
+
 ffmpegkittest::VideoTab::VideoTab() : selectedCodec(-1), statistics(nullptr) {
     videoCodecModel = Gtk::ListStore::create(videoCodecModelColumn);
     videoCodec.set_model(videoCodecModel);
@@ -68,7 +73,14 @@ ffmpegkittest::VideoTab::VideoTab() : selectedCodec(-1), statistics(nullptr) {
     encodeButton.set_tooltip_text(Constants::VideoTestTooltipText);
     encodeButton.signal_clicked().connect(sigc::mem_fun(*this, &VideoTab::encodeVideo));
     Util::applyButtonStyle(encodeButton);
+    playButton.set_label("PLAY");
+    playButton.set_size_request(120, 30);
+    playButton.set_tooltip_text(Constants::PlayTooltipText);
+    playButton.signal_clicked().connect(sigc::mem_fun(*this, &VideoTab::playOutputFile));
+    playButton.set_sensitive(false);
+    Util::applyButtonStyle(playButton);
     encodeButtonBox.pack_start(encodeButton, Gtk::PACK_EXPAND_PADDING);
+    encodeButtonBox.pack_start(playButton, Gtk::PACK_EXPAND_PADDING);
 
     outputText.set_editable(false);
     Util::applyOutputTextStyle(outputText);
@@ -110,6 +122,18 @@ void ffmpegkittest::VideoTab::updateProgressDialog(const std::shared_ptr<ffmpegk
 
 void ffmpegkittest::VideoTab::clearOutput() {
     outputText.get_buffer()->set_text("");
+}
+
+void ffmpegkittest::VideoTab::setPlayButtonEnabled(const bool enabled) {
+    playButton.set_sensitive(enabled);
+}
+
+void ffmpegkittest::VideoTab::playOutputFile() {
+    const std::string outputFile = getVideoFile();
+
+    if (!Util::openInSystemPlayer(outputFile, parentWindow)) {
+        Popup::show(parentWindow, Gtk::MESSAGE_INFO, "No application is registered to play this file.\n\nIt was written to:\n" + outputFile);
+    }
 }
 
 void ffmpegkittest::VideoTab::initVideoCodecData() {
@@ -221,6 +245,7 @@ void ffmpegkittest::VideoTab::encodeVideo() {
 
         if (ReturnCode::isSuccess(returnCode)) {
             std::cout << "Encode completed successfully in " << session->getDuration() << " milliseconds." << std::endl;
+            g_idle_add((GSourceFunc)enablePlayButton, this);
         } else {
             g_idle_add((GSourceFunc)showEncodeFailedPopup, this->parentWindow);
             std::cout << "Encode failed with state " << FFmpegKitConfig::sessionStateToString(state) << " and rc " << returnCode << "." << session->getFailStackTrace() << std::endl;
