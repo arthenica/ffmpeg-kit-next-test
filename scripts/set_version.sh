@@ -19,7 +19,7 @@ Usage:
   scripts/set_version.sh [options] VERSION
 
 Options:
-  -p, --platform PLATFORM          Platform to update: all, android, linux, flutter, react-native
+  -p, --platform PLATFORM          Platform to update: all, android, linux, flutter, react-native, web, windows
       --dry-run                    Print planned changes without writing files
       --android-version-code CODE  Override Android versionCode
       --android-code-prefix PREFIX Prefix used for derived Android versionCode (default: 24)
@@ -32,10 +32,14 @@ Examples:
   scripts/set_version.sh 6.1.3
   scripts/set_version.sh --platform flutter 6.1.4
   scripts/set_version.sh -p android --android-version-code 240614 6.1.4
+  scripts/set_version.sh -p windows 6.1.4
 
 Default version-code derivation:
   Flutter / React Native: 6.1.3 -> 613
   Android:                6.1.3 -> 240613
+
+Notes:
+  web has no version-controlled version file, so it is accepted but skipped.
 EOF
 }
 
@@ -62,14 +66,14 @@ validate_version() {
 
 normalize_platform() {
     case "$1" in
-        all|android|linux|flutter|react-native)
+        all|android|linux|flutter|react-native|web|windows)
             printf '%s\n' "$1"
             ;;
         react_native|reactnative|rn)
             printf '%s\n' "react-native"
             ;;
         *)
-            die "unknown platform '$1' (expected all, android, linux, flutter, react-native)"
+            die "unknown platform '$1' (expected all, android, linux, flutter, react-native, web, windows)"
             ;;
     esac
 }
@@ -80,6 +84,20 @@ compact_version_code() {
         NF == 3 { printf "%d%d%d\n", $1, $2, $3; next }
         { exit 1 }
     '
+}
+
+windows_manifest_version() {
+    case "$1" in
+        *.*.*)
+            printf '%s.0\n' "$1"
+            ;;
+        *.*)
+            printf '%s.0.0\n' "$1"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 derive_android_version_code() {
@@ -114,12 +132,15 @@ update_android_gradle_file() {
 
     old_code="$(awk '/^[[:space:]]*versionCode[[:space:]]+[0-9]+[[:space:]]*$/ { print $2; exit }' "${REPO_ROOT}/${file}")"
     old_name="$(awk 'match($0, /^[[:space:]]*versionName[[:space:]]+"[^"]+"/) { line=$0; sub(/^.*versionName[[:space:]]+"/, "", line); sub(/".*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
+    old_dep="$(awk 'match($0, /com\.arthenica:ffmpeg-kit-next:[0-9]+(\.[0-9]+){1,2}/) { line=$0; sub(/^.*com\.arthenica:ffmpeg-kit-next:/, "", line); sub(/[^0-9.].*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
 
     [ -n "$old_code" ] || die "could not find versionCode in $file"
     [ -n "$old_name" ] || die "could not find versionName in $file"
+    [ -n "$old_dep" ] || die "could not find ffmpeg-kit-next dependency version in $file"
 
     print_change "android" "$file" "versionCode" "$old_code" "$version_code"
     print_change "android" "$file" "versionName" "$old_name" "$version_name"
+    print_change "android" "$file" "ffmpeg-kit-next dependency" "$old_dep" "$version_name"
 
     if [ "$DRY_RUN" = "0" ]; then
         awk -v code="$version_code" -v name="$version_name" '
@@ -131,9 +152,39 @@ update_android_gradle_file() {
                 sub(/versionName[[:space:]]+"[^"]+"/, "versionName \"" name "\"")
                 done_name=1
             }
+            /com\.arthenica:ffmpeg-kit-next:[0-9]+(\.[0-9]+){1,2}/ && !done_dep {
+                sub(/com\.arthenica:ffmpeg-kit-next:[0-9]+(\.[0-9]+){1,2}/, "com.arthenica:ffmpeg-kit-next:" name)
+                done_dep=1
+            }
             { print }
             END {
-                if (!done_code || !done_name) {
+                if (!done_code || !done_name || !done_dep) {
+                    exit 42
+                }
+            }
+        ' "${REPO_ROOT}/${file}" | write_temp_file "${REPO_ROOT}/${file}"
+    fi
+}
+
+update_android_readme_file() {
+    file="$1"
+    version="$2"
+
+    old_dep="$(awk 'match($0, /com\.arthenica:ffmpeg-kit-next:[0-9]+(\.[0-9]+){1,2}/) { line=$0; sub(/^.*com\.arthenica:ffmpeg-kit-next:/, "", line); sub(/[^0-9.].*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
+    [ -n "$old_dep" ] || die "could not find ffmpeg-kit-next dependency version in $file"
+
+    print_change "android" "$file" "ffmpeg-kit-next dependency" "$old_dep" "$version"
+
+    if [ "$DRY_RUN" = "0" ]; then
+        awk -v version="$version" '
+            /com\.arthenica:ffmpeg-kit-next:[0-9]+(\.[0-9]+){1,2}/ {
+                if (gsub(/com\.arthenica:ffmpeg-kit-next:[0-9]+(\.[0-9]+){1,2}/, "com.arthenica:ffmpeg-kit-next:" version) > 0) {
+                    done_dep=1
+                }
+            }
+            { print }
+            END {
+                if (!done_dep) {
                     exit 42
                 }
             }
@@ -171,6 +222,152 @@ update_linux_cmake_file() {
                 }
             }
         ' "${REPO_ROOT}/${file}" | write_temp_file "${REPO_ROOT}/${file}"
+    fi
+}
+
+update_linux_readme_file() {
+    file="$1"
+    version="$2"
+
+    old_pkg="$(awk 'match($0, /ffmpeg-kit-next=[^)[:space:]]+/) { line=$0; sub(/^.*ffmpeg-kit-next=/, "", line); sub(/[)[:space:]].*$/, "", line); print line; exit }' "${REPO_ROOT}/${file}")"
+    [ -n "$old_pkg" ] || die "could not find ffmpeg-kit-next pkg version in $file"
+
+    print_change "linux" "$file" "ffmpeg-kit-next pkg version" "$old_pkg" "$version"
+
+    if [ "$DRY_RUN" = "0" ]; then
+        awk -v version="$version" '
+            /ffmpeg-kit-next=[^)[:space:]]+/ {
+                if (gsub(/ffmpeg-kit-next=[^)[:space:]]+/, "ffmpeg-kit-next=" version) > 0) {
+                    done_pkg=1
+                }
+            }
+            { print }
+            END {
+                if (!done_pkg) {
+                    exit 42
+                }
+            }
+        ' "${REPO_ROOT}/${file}" | write_temp_file "${REPO_ROOT}/${file}"
+    fi
+}
+
+update_windows_cmake_file() {
+    file="$1"
+    version="$2"
+    path="${REPO_ROOT}/${file}"
+
+    old_project="$(awk 'match($0, /project\(ffmpeg-kit-next-windows-test VERSION [^)]+\)/) { line=$0; sub(/^.*VERSION /, "", line); sub(/\).*$/, "", line); print line; exit }' "$path")"
+    [ -n "$old_project" ] || die "could not find project VERSION in $file"
+    print_change "windows" "$file" "project VERSION" "$old_project" "$version"
+
+    # The MSVC ABI pins the dependency through find_package(... CONFIG); the MinGW
+    # ABI pins it through pkg_check_modules(... ffmpeg-kit-next=...). Each file uses
+    # exactly one form, so update whichever is present.
+    old_find="$(awk 'match($0, /find_package\(ffmpeg-kit-next [0-9]+(\.[0-9]+){1,2} /) { line=$0; sub(/^.*find_package\(ffmpeg-kit-next /, "", line); sub(/ .*$/, "", line); print line; exit }' "$path")"
+    old_pkg="$(awk 'match($0, /ffmpeg-kit-next=[^)[:space:]]+/) { line=$0; sub(/^.*ffmpeg-kit-next=/, "", line); sub(/[)[:space:]].*$/, "", line); print line; exit }' "$path")"
+
+    [ -n "$old_find" ] || [ -n "$old_pkg" ] || \
+        die "could not find ffmpeg-kit-next dependency version in $file"
+
+    [ -n "$old_find" ] && print_change "windows" "$file" "find_package version" "$old_find" "$version"
+    [ -n "$old_pkg" ] && print_change "windows" "$file" "ffmpeg-kit-next pkg version" "$old_pkg" "$version"
+
+    if [ "$DRY_RUN" = "0" ]; then
+        awk -v version="$version" '
+            /project\(ffmpeg-kit-next-windows-test VERSION [^)]+\)/ && !done_project {
+                sub(/project\(ffmpeg-kit-next-windows-test VERSION [^)]+\)/, "project(ffmpeg-kit-next-windows-test VERSION " version ")")
+                done_project=1
+            }
+            /find_package\(ffmpeg-kit-next [0-9]+(\.[0-9]+){1,2} / && !done_find {
+                sub(/find_package\(ffmpeg-kit-next [0-9]+(\.[0-9]+){1,2} /, "find_package(ffmpeg-kit-next " version " ")
+                done_find=1
+            }
+            /ffmpeg-kit-next=[^)[:space:]]+/ && !done_pkg {
+                sub(/ffmpeg-kit-next=[^)[:space:]]+/, "ffmpeg-kit-next=" version)
+                done_pkg=1
+            }
+            { print }
+            END {
+                if (!done_project || (!done_find && !done_pkg)) {
+                    exit 42
+                }
+            }
+        ' "$path" | write_temp_file "$path"
+    fi
+}
+
+update_windows_readme_file() {
+    file="$1"
+    version="$2"
+    path="${REPO_ROOT}/${file}"
+
+    old_pkg="$(awk 'match($0, /ffmpeg-kit-next=[^)[:space:]]+/) { line=$0; sub(/^.*ffmpeg-kit-next=/, "", line); sub(/[)[:space:]].*$/, "", line); print line; exit }' "$path")"
+    old_find="$(awk 'match($0, /ffmpeg-kit-next [0-9]+(\.[0-9]+){1,2}/) { line=$0; sub(/^.*ffmpeg-kit-next /, "", line); sub(/[^0-9.].*$/, "", line); print line; exit }' "$path")"
+
+    [ -n "$old_pkg" ] || die "could not find ffmpeg-kit-next pkg version in $file"
+    [ -n "$old_find" ] || die "could not find ffmpeg-kit-next find_package version in $file"
+
+    print_change "windows" "$file" "ffmpeg-kit-next pkg version" "$old_pkg" "$version"
+    print_change "windows" "$file" "find_package version" "$old_find" "$version"
+
+    if [ "$DRY_RUN" = "0" ]; then
+        awk -v version="$version" '
+            /ffmpeg-kit-next=[^)[:space:]]+/ {
+                if (gsub(/ffmpeg-kit-next=[^)[:space:]]+/, "ffmpeg-kit-next=" version) > 0) {
+                    done_pkg=1
+                }
+            }
+            /ffmpeg-kit-next [0-9]+(\.[0-9]+){1,2}/ {
+                if (gsub(/ffmpeg-kit-next [0-9]+(\.[0-9]+){1,2}/, "ffmpeg-kit-next " version) > 0) {
+                    done_find=1
+                }
+            }
+            { print }
+            END {
+                if (!done_pkg || !done_find) {
+                    exit 42
+                }
+            }
+        ' "$path" | write_temp_file "$path"
+    fi
+}
+
+update_windows_manifest_file() {
+    file="$1"
+    version="$2"
+    manifest_version="$(windows_manifest_version "$version")"
+    path="${REPO_ROOT}/${file}"
+
+    old_version="$(awk '
+        /name="com\.arthenica\.ffmpegkitnext\.test"/ { app_identity=1 }
+        /version="[0-9]+(\.[0-9]+){3}"/ && app_identity {
+            line=$0
+            sub(/^.*version="/, "", line)
+            sub(/".*$/, "", line)
+            print line
+            exit
+        }
+        /\/>/ && app_identity { app_identity=0 }
+    ' "$path")"
+    [ -n "$old_version" ] || die "could not find assemblyIdentity version in $file"
+
+    print_change "windows" "$file" "assemblyIdentity version" "$old_version" "$manifest_version"
+
+    if [ "$DRY_RUN" = "0" ]; then
+        awk -v version="$manifest_version" '
+            /name="com\.arthenica\.ffmpegkitnext\.test"/ { app_identity=1 }
+            /version="[0-9]+(\.[0-9]+){3}"/ && app_identity && !done_version {
+                sub(/version="[0-9]+(\.[0-9]+){3}"/, "version=\"" version "\"")
+                done_version=1
+            }
+            /\/>/ && app_identity { app_identity=0 }
+            { print }
+            END {
+                if (!done_version) {
+                    exit 42
+                }
+            }
+        ' "$path" | write_temp_file "$path"
     fi
 }
 
@@ -418,6 +615,7 @@ printf '\n%-13s %-58s %-26s %s\n' "platform" "file" "field" "old -> new"
 printf '%-13s %-58s %-26s %s\n' "--------" "----" "-----" "----------"
 
 if should_update_platform "android"; then
+    update_android_readme_file "android/README.md" "$VERSION"
     update_android_gradle_file "android/test-app-java/build.gradle" "$ANDROID_VERSION_CODE" "$VERSION"
     update_android_gradle_file "android/test-app-kotlin/build.gradle" "$ANDROID_VERSION_CODE" "$VERSION"
     update_android_gradle_file "android/test-app-native/build.gradle" "$ANDROID_VERSION_CODE" "$VERSION"
@@ -425,6 +623,7 @@ fi
 
 if should_update_platform "linux"; then
     update_linux_cmake_file "linux/CMakeLists.txt" "$VERSION"
+    update_linux_readme_file "linux/README.md" "$VERSION"
 fi
 
 if should_update_platform "flutter"; then
@@ -437,4 +636,15 @@ fi
 if should_update_platform "react-native"; then
     update_react_native_package_file "react-native/package.json" "$VERSION"
     update_react_native_gradle_file "react-native/android/app/build.gradle" "$REACT_NATIVE_VERSION_CODE" "$VERSION"
+fi
+
+if should_update_platform "windows"; then
+    update_windows_cmake_file "windows/msvc-abi/CMakeLists.txt" "$VERSION"
+    update_windows_cmake_file "windows/mingw-abi/CMakeLists.txt" "$VERSION"
+    update_windows_readme_file "windows/README.md" "$VERSION"
+    update_windows_manifest_file "windows/data/app.manifest" "$VERSION"
+fi
+
+if should_update_platform "web"; then
+    printf '%-13s %s\n' "web" "(no version-controlled version file; nothing to update)"
 fi
