@@ -1,6 +1,6 @@
 PODS:
   - FBLazyVector (0.85.3)
-  - ffmpeg-kit-next-react-native (8.1.1):
+  - ffmpeg-kit-next-react-native (9.0.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2317,7 +2317,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBLazyVector: 24e62c765683b8d89006a88a2c8f5cf019f0074d
-  ffmpeg-kit-next-react-native: bc89bba99e8fa9b3f79242768d46783f95902ed2
+  ffmpeg-kit-next-react-native: 58ed018c814d64388aee409e4fa116d03079b608
   hermes-engine: 4b94907d2046133469c53ad5f3461fda4de708ba
   RCTDeprecation: a4c521821fab57cbb125b36effe84d897d0dfa12
   RCTRequired: 9f3a7e5645d4bc3f551593de7550bb66ab6e42bc

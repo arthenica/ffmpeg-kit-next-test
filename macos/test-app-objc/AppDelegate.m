@@ -56,6 +56,10 @@ void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"Listed FFmpeg sessions.\n");
 }
 
++ (NSString*)getCACertificateBundlePath {
+    return [[NSBundle mainBundle] pathForResource:@"cacert_2026_08_13" ofType:@"pem"];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Insert code here to initialize your application
 

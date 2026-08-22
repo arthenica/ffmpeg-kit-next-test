@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "ffmpeg-kit-next-test";
 
+    public static final String CA_CERTIFICATE_BUNDLE = "cacert.pem";
+
     static {
         Exceptions.registerRootPackage("com.arthenica");
     }
@@ -94,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             registerApplicationFonts();
             Log.d(TAG, "Application fonts registered.");
-        } catch (final IOException e) {
+            registerCACertificateBundle();
+            Log.d(TAG, "CA Certificate Bundle registered.");
+        } catch (final Exception e) {
             Log.e(TAG, String.format("Font registration failed.%s.", Exceptions.getStackTraceString(e)));
         }
 
@@ -159,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
         fontNameMapping.put("MyFontName", "Doppio One");
         FFmpegKitConfig.setFontDirectoryList(this, Arrays.asList(fontDirectory.getAbsolutePath(), "/system/fonts"), fontNameMapping);
         FFmpegKitConfig.setEnvironmentVariable("FFREPORT", String.format("file=%s", new File(cacheDirectory.getAbsolutePath(), "ffreport.txt").getAbsolutePath()));
+    }
+
+    protected void registerCACertificateBundle() throws IOException {
+        ResourcesUtil.rawResourceToFile(getResources(), R.raw.cacert_2026_08_13, new File(getCacheDir(), CA_CERTIFICATE_BUNDLE));
     }
 
     protected void listSupportedCameraIds() {

@@ -86,7 +86,7 @@ class HttpsTabFragment : Fragment(R.layout.fragment_https_tab) {
             }
         }
 
-        Log.d(MainActivity.TAG, String.format("Testing HTTPS with for button %d using url %s.", buttonNumber, testUrl))
+        Log.d(MainActivity.TAG, String.format("Testing HTTPS for button %d using url %s.", buttonNumber, testUrl))
 
         if (buttonNumber == 4) {
             clearOutput()

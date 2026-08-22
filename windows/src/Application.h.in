@@ -60,6 +60,7 @@ namespace ffmpegkittest {
             // Util::toCommandPath() for why that conversion is needed here.
             static std::string getApplicationCacheDirectory();
             static std::string getApplicationInstallDirectory();
+            static std::string getCACertificateBundlePath();
 
             // The raw, unconverted install prefix as CMake configured it.
             static std::string getConfiguredInstallDirectory() {

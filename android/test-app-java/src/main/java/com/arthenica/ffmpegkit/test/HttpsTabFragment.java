@@ -22,8 +22,10 @@
 
 package com.arthenica.ffmpegkit.test;
 
+import static com.arthenica.ffmpegkit.test.MainActivity.CA_CERTIFICATE_BUNDLE;
 import static com.arthenica.ffmpegkit.test.MainActivity.notNull;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -35,15 +37,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.arthenica.ffmpegkit.AbstractSession;
 import com.arthenica.ffmpegkit.Chapter;
 import com.arthenica.ffmpegkit.FFmpegKitConfig;
-import com.arthenica.ffmpegkit.FFprobeKit;
 import com.arthenica.ffmpegkit.MediaInformation;
+import com.arthenica.ffmpegkit.MediaInformationSession;
 import com.arthenica.ffmpegkit.MediaInformationSessionCompleteCallback;
 import com.arthenica.ffmpegkit.StreamInformation;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -64,6 +68,7 @@ public class HttpsTabFragment extends Fragment {
 
     private EditText urlText;
     private TextView outputText;
+    private File caFile;
 
     public HttpsTabFragment() {
         super(R.layout.fragment_https_tab);
@@ -113,6 +118,13 @@ public class HttpsTabFragment extends Fragment {
 
         outputText = view.findViewById(R.id.outputText);
         outputText.setMovementMethod(new ScrollingMovementMethod());
+
+        Context context = getContext();
+        if (context != null) {
+            caFile = new File(context.getCacheDir(), CA_CERTIFICATE_BUNDLE);
+        } else {
+            caFile = new File(CA_CERTIFICATE_BUNDLE);
+        }
     }
 
     @Override
@@ -155,7 +167,7 @@ public class HttpsTabFragment extends Fragment {
             }
         }
 
-        android.util.Log.d(MainActivity.TAG, String.format("Testing HTTPS with for button %d using url %s.", buttonNumber, testUrl));
+        android.util.Log.d(MainActivity.TAG, String.format("Testing HTTPS with custom ca bundle for button %d using url %s.", buttonNumber, testUrl));
 
         if (buttonNumber == 4) {
 
@@ -163,8 +175,26 @@ public class HttpsTabFragment extends Fragment {
             clearOutput();
         }
 
-        // EXECUTE
-        FFprobeKit.getMediaInformationAsync(testUrl, createNewCompleteCallback());
+        // GET MEDIA INFORMATION USING A CUSTOM COMMAND WITH A CA CERTIFICATE BUNDLE
+        // PROVIDING A CA CERTIFICATE BUNDLE IS REQUIRED BY OPENSSL ON ANDROID UNLESS "-tls_verify 0" IS PROVIDED FOR FFMPEG 9+
+        MediaInformationSession mediaInformationSession = MediaInformationSession.create(
+                new String[]{
+                        "-v",
+                        "error",
+                        "-hide_banner",
+                        "-print_format",
+                        "json",
+                        "-show_format",
+                        "-show_streams",
+                        "-show_chapters",
+                        "-ca_file",
+                        caFile.getAbsolutePath(),
+                        "-i",
+                        testUrl
+                },
+                createNewCompleteCallback()
+        );
+        FFmpegKitConfig.asyncGetMediaInformationExecute(mediaInformationSession, AbstractSession.DEFAULT_TIMEOUT_FOR_ASYNCHRONOUS_MESSAGES_IN_TRANSMIT);
     }
 
     public void setActive() {

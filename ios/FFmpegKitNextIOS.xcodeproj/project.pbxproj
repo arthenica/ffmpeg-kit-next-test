@@ -19,6 +19,10 @@
 		343E67062107AD0100F95E5B /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 343E67042107AD0100F95E5B /* Util.m */; };
 		343E67092107C27600F95E5B /* TabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343E67072107C27600F95E5B /* TabBarController.h */; };
 		343E670A2107C27600F95E5B /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343E67082107C27600F95E5B /* TabBarController.m */; };
+		344A0C56303A54F000DA44E3 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 344A0C54303A54F000DA44E3 /* cacert_2026_08_13.pem */; };
+		344A0C57303A54F000DA44E3 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 344A0C55303A54F000DA44E3 /* mozilla_ca_bundle_license.txt */; };
+		344A0C58303A54F000DA44E3 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 344A0C54303A54F000DA44E3 /* cacert_2026_08_13.pem */; };
+		344A0C59303A54F000DA44E3 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 344A0C55303A54F000DA44E3 /* mozilla_ca_bundle_license.txt */; };
 		3457454B2113B8AD00059043 /* AudioViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345745492113B8AD00059043 /* AudioViewController.h */; };
 		3457454C2113B8AD00059043 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3457454A2113B8AD00059043 /* AudioViewController.m */; };
 		3457454F2113B8D300059043 /* SubtitleViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3457454D2113B8D300059043 /* SubtitleViewController.h */; };
@@ -181,6 +185,8 @@
 		343E67042107AD0100F95E5B /* Util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 		343E67072107C27600F95E5B /* TabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		343E67082107C27600F95E5B /* TabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
+		344A0C54303A54F000DA44E3 /* cacert_2026_08_13.pem */ = {isa = PBXFileReference; lastKnownFileType = text; path = cacert_2026_08_13.pem; sourceTree = "<group>"; };
+		344A0C55303A54F000DA44E3 /* mozilla_ca_bundle_license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = mozilla_ca_bundle_license.txt; sourceTree = "<group>"; };
 		345745492113B8AD00059043 /* AudioViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioViewController.h; sourceTree = "<group>"; };
 		3457454A2113B8AD00059043 /* AudioViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioViewController.m; sourceTree = "<group>"; };
 		3457454D2113B8D300059043 /* SubtitleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubtitleViewController.h; sourceTree = "<group>"; };
@@ -320,6 +326,8 @@
 				34DC789921215B5800C3486C /* doppioone_regular.ttf */,
 				34DC789A21215B5800C3486C /* sil_open_font_license.txt */,
 				34DC789821215B5800C3486C /* subtitle.srt */,
+				344A0C54303A54F000DA44E3 /* cacert_2026_08_13.pem */,
+				344A0C55303A54F000DA44E3 /* mozilla_ca_bundle_license.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -563,6 +571,8 @@
 				34B3E2FD3017FE5100B974CA /* notosansarabic_regular.ttf in Resources */,
 				34B3E2FE3017FE5100B974CA /* lake.jpg in Resources */,
 				34B3E2FF3017FE5100B974CA /* notosanssc_regular.ttf in Resources */,
+				344A0C58303A54F000DA44E3 /* cacert_2026_08_13.pem in Resources */,
+				344A0C59303A54F000DA44E3 /* mozilla_ca_bundle_license.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,6 +591,8 @@
 				34B3E3023017FE5100B974CA /* notosansarabic_regular.ttf in Resources */,
 				34B3E3033017FE5100B974CA /* lake.jpg in Resources */,
 				34B3E3043017FE5100B974CA /* notosanssc_regular.ttf in Resources */,
+				344A0C56303A54F000DA44E3 /* cacert_2026_08_13.pem in Resources */,
+				344A0C57303A54F000DA44E3 /* mozilla_ca_bundle_license.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

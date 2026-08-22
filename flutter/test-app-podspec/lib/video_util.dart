@@ -39,6 +39,7 @@ class VideoUtil {
   static const String FONT_ASSET_1 = "doppioone_regular.ttf";
   static const String FONT_ASSET_2 = "notosansarabic_regular.ttf";
   static const String FONT_ASSET_3 = "notosanssc_regular.ttf";
+  static const String CA_CERTIFICATE_BUNDLE_ASSET = "cacert_2026_08_13.pem";
 
   static void registerApplicationFonts() {
     var fontNameMapping = Map<String, String>();
@@ -63,6 +64,7 @@ class VideoUtil {
     await VideoUtil.assetToFile(FONT_ASSET_1);
     await VideoUtil.assetToFile(FONT_ASSET_2);
     await VideoUtil.assetToFile(FONT_ASSET_3);
+    await VideoUtil.assetToFile(CA_CERTIFICATE_BUNDLE_ASSET);
   }
 
   static Future<File> assetToFile(String assetName) async {

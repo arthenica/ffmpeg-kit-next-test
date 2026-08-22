@@ -383,6 +383,10 @@ std::string ffmpegkittest::Application::getApplicationInstallDirectory() {
     return Util::toCommandPath(Application::getConfiguredInstallDirectory());
 }
 
+std::string ffmpegkittest::Application::getCACertificateBundlePath() {
+    return Application::getApplicationInstallDirectory() + "/share/cacert/cacert_2026_08_13.pem";
+}
+
 void ffmpegkittest::Application::registerApplicationFonts() {
     auto fontDirectory = Application::getApplicationInstallDirectory() + "/share/fonts";
     auto reportFile = Application::getApplicationCacheDirectory() + "/ffreport.txt";

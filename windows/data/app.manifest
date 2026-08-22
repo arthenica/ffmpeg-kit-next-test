@@ -3,7 +3,7 @@
   <assemblyIdentity
       type="win32"
       name="com.arthenica.ffmpegkitnext.test"
-      version="8.1.1.0"
+      version="9.0.0.0"
       processorArchitecture="*"/>
 
   <!-- Version 6 of the common controls. Without this the tab control, buttons and

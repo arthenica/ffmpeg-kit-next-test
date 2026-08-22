@@ -44,5 +44,6 @@ target a newer version before a release tag is created.
 ### License
 
 `FFmpegKitNext Test` repository is licensed under the [MIT License](https://opensource.org/licenses/MIT), fonts used by
-the applications are licensed under the [SIL Open Font License](https://opensource.org/licenses/OFL-1.1), other 
-digital assets are published in the public domain.
+the applications are licensed under the [SIL Open Font License](https://opensource.org/licenses/OFL-1.1), Mozilla CA
+certificate bundles included with the applications are licensed under the [Mozilla Public License 2.0](https://www.mozilla.org/MPL/2.0/)
+and other digital assets are published in the public domain.

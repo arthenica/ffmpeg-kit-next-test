@@ -32,6 +32,10 @@ export default class VideoUtil {
         return "notosanssc_regular.ttf";
     }
 
+    static get CA_CERTIFICATE_BUNDLE_ASSET() {
+        return "cacert_2026_08_13.pem";
+    }
+
     static async prepareAssets() {
         await VideoUtil.assetToFile(VideoUtil.ASSET_1);
         await VideoUtil.assetToFile(VideoUtil.ASSET_2);
@@ -40,6 +44,7 @@ export default class VideoUtil {
         await VideoUtil.assetToFile(VideoUtil.FONT_ASSET_1);
         await VideoUtil.assetToFile(VideoUtil.FONT_ASSET_2);
         await VideoUtil.assetToFile(VideoUtil.FONT_ASSET_3);
+        await VideoUtil.assetToFile(VideoUtil.CA_CERTIFICATE_BUNDLE_ASSET);
     }
 
     static async assetToFile(assetName) {

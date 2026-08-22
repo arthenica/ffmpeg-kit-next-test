@@ -43,4 +43,10 @@ enum Sessions {
         }
         NSLog("Listed FFmpeg sessions.\n")
     }
+
+    static func getCACertificateBundlePath() -> String {
+        let resourceFolder = Bundle.main.resourcePath ?? ""
+        return resourceFolder.appendingPathComponent("cacert_2026_08_13.pem")
+    }
+
 }
