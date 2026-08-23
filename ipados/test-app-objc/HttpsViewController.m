@@ -21,8 +21,10 @@
  */
 
 #include <stdlib.h>
+#include <ffmpegkit/AbstractSession.h>
 #include <ffmpegkit/FFmpegKitConfig.h>
 #include <ffmpegkit/FFprobeKit.h>
+#include "AppDelegate.h"
 #include "HttpsViewController.h"
 
 @interface HttpsViewController ()
@@ -105,7 +107,7 @@
         }
     }
 
-    NSLog(@"Testing HTTPS with for button %d using url %@.", buttonNumber, testUrl);
+    NSLog(@"Testing HTTPS with custom ca bundle for button %d using url %@.", buttonNumber, testUrl);
 
     if (buttonNumber == 4) {
 
@@ -113,7 +115,29 @@
         [self clearOutput];
     }
 
-    [FFprobeKit getMediaInformationAsync:testUrl withCompleteCallback:[self createNewCompleteCallback]];
+    NSString *caCertificateBundlePath = [AppDelegate getCACertificateBundlePath];
+
+        // GET MEDIA INFORMATION USING A CUSTOM COMMAND WITH A CA CERTIFICATE BUNDLE
+        // PROVIDING A CA CERTIFICATE BUNDLE IS REQUIRED ON IPADOS UNLESS "-tls_verify 0" IS PROVIDED FOR FFMPEG 9+
+        MediaInformationSession *mediaInformationSession = [MediaInformationSession create:
+                                                            [[NSArray alloc]
+                                                             initWithObjects:
+                                                                 @"-v",
+                                                                 @"error",
+                                                                 @"-hide_banner",
+                                                                 @"-print_format",
+                                                                 @"json",
+                                                                 @"-show_format",
+                                                                 @"-show_streams",
+                                                                 @"-show_chapters",
+                                                                 @"-ca_file",
+                                                                 caCertificateBundlePath,
+                                                                 @"-i",
+                                                                 testUrl,
+                                                                 nil]
+                                                              withCompleteCallback:[self createNewCompleteCallback]];
+
+        [FFmpegKitConfig asyncGetMediaInformationExecute:mediaInformationSession withTimeout:AbstractSessionDefaultTimeoutForAsynchronousMessagesInTransmit];
 }
 
 - (void)setActive {

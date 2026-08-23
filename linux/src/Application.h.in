@@ -43,6 +43,7 @@ namespace ffmpegkittest {
             static void listFFmpegSessions();
             static void listFFprobeSessions();
             static std::string getApplicationCacheDirectory();
+            static std::string getCACertificateBundlePath();
             static std::string getApplicationInstallDirectory() {
                 return "@CMAKE_INSTALL_PREFIX@";
             }

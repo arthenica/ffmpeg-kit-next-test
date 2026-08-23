@@ -30,6 +30,10 @@
 		34B244F925E6F4300066DE76 /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F225E6F4300066DE76 /* lake.jpg */; };
 		34B244FA25E6F4300066DE76 /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F325E6F4300066DE76 /* tree.jpg */; };
 		34B244FB25E6F4300066DE76 /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34B244F425E6F4300066DE76 /* sil_open_font_license.txt */; };
+		34CFA211303AEF4500D73941 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA20F303AEF4500D73941 /* cacert_2026_08_13.pem */; };
+		34CFA212303AEF4500D73941 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA210303AEF4500D73941 /* mozilla_ca_bundle_license.txt */; };
+		34CFA213303AEF4500D73941 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA20F303AEF4500D73941 /* cacert_2026_08_13.pem */; };
+		34CFA214303AEF4500D73941 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA210303AEF4500D73941 /* mozilla_ca_bundle_license.txt */; };
 		34D678BB25E2D9BA004564B7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D678BA25E2D9BA004564B7 /* AppDelegate.m */; };
 		34D678BE25E2D9BA004564B7 /* CommandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D678BD25E2D9BA004564B7 /* CommandViewController.m */; };
 		34D678C025E2D9BA004564B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34D678BF25E2D9BA004564B7 /* Assets.xcassets */; };
@@ -181,6 +185,8 @@
 		34B244F225E6F4300066DE76 /* lake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lake.jpg; sourceTree = "<group>"; };
 		34B244F325E6F4300066DE76 /* tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tree.jpg; sourceTree = "<group>"; };
 		34B244F425E6F4300066DE76 /* sil_open_font_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sil_open_font_license.txt; sourceTree = "<group>"; };
+		34CFA20F303AEF4500D73941 /* cacert_2026_08_13.pem */ = {isa = PBXFileReference; lastKnownFileType = text; path = cacert_2026_08_13.pem; sourceTree = "<group>"; };
+		34CFA210303AEF4500D73941 /* mozilla_ca_bundle_license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = mozilla_ca_bundle_license.txt; sourceTree = "<group>"; };
 		34D678B625E2D9BA004564B7 /* test-app-objc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "test-app-objc.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D678B925E2D9BA004564B7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		34D678BA25E2D9BA004564B7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -336,6 +342,8 @@
 				34B244F425E6F4300066DE76 /* sil_open_font_license.txt */,
 				34B244EE25E6F4300066DE76 /* sunset.jpg */,
 				34B244F125E6F4300066DE76 /* subtitle.srt */,
+				34CFA20F303AEF4500D73941 /* cacert_2026_08_13.pem */,
+				34CFA210303AEF4500D73941 /* mozilla_ca_bundle_license.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -557,6 +565,8 @@
 				34B244F925E6F4300066DE76 /* lake.jpg in Resources */,
 				34B244FB25E6F4300066DE76 /* sil_open_font_license.txt in Resources */,
 				34D678C325E2D9BA004564B7 /* Main.storyboard in Resources */,
+				34CFA213303AEF4500D73941 /* cacert_2026_08_13.pem in Resources */,
+				34CFA214303AEF4500D73941 /* mozilla_ca_bundle_license.txt in Resources */,
 				34B244F625E6F4300066DE76 /* doppioone_regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -574,6 +584,8 @@
 				BF000000000000000000004B /* sunset.jpg in Resources */,
 				BF000000000000000000004C /* lake.jpg in Resources */,
 				BF000000000000000000004D /* sil_open_font_license.txt in Resources */,
+				34CFA211303AEF4500D73941 /* cacert_2026_08_13.pem in Resources */,
+				34CFA212303AEF4500D73941 /* mozilla_ca_bundle_license.txt in Resources */,
 				BF000000000000000000004E /* doppioone_regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

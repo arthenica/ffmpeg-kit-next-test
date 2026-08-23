@@ -26,6 +26,7 @@
 
 + (void)listFFmpegSessions;
 + (void)listFFprobeSessions;
++ (NSString*)getCACertificateBundlePath;
 
 @end
 

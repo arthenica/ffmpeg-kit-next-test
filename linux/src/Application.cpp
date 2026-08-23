@@ -172,6 +172,10 @@ std::string ffmpegkittest::Application::getApplicationCacheDirectory() {
     return Glib::get_user_cache_dir() + "/ffmpegkittest";
 }
 
+std::string ffmpegkittest::Application::getCACertificateBundlePath() {
+    return Application::getApplicationInstallDirectory() + "/share/cacert/cacert_2026_08_13.pem";
+}
+
 void ffmpegkittest::Application::registerApplicationFonts() {
     auto fontDirectory = Application::getApplicationInstallDirectory() + "/share/fonts";
     auto reportFile = Application::getApplicationCacheDirectory() + "/ffreport.txt";

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(ffmpeg-kit-next-windows-test VERSION 8.1.1)
+project(ffmpeg-kit-next-windows-test VERSION 9.0.0)
 
 # MSVC ABI build of the Windows test application.
 #
@@ -30,7 +30,7 @@ set(FFMPEG_KIT_BINARY_PATH "${FFMPEG_KIT_BUNDLE_PATH}/bin")
 # find_package searches <prefix>/lib/cmake/<name> among other places, so the
 # bundle root is the right prefix to hand it.
 list(APPEND CMAKE_PREFIX_PATH "${FFMPEG_KIT_BUNDLE_PATH}")
-find_package(ffmpeg-kit-next 8.1.1 REQUIRED CONFIG)
+find_package(ffmpeg-kit-next 9.0.0 REQUIRED CONFIG)
 
 set(FFMPEG_KIT_TARGET ffmpeg-kit-next::ffmpegkit)
 

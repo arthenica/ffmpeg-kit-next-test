@@ -60,6 +60,10 @@ void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"Listed FFmpeg sessions.\n");
 }
 
++ (NSString*)getCACertificateBundlePath {
+    return [[NSBundle mainBundle] pathForResource:@"cacert_2026_08_13" ofType:@"pem"];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 

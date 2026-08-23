@@ -67,11 +67,32 @@ import ffmpegkit
             testUrl = HTTPS_TEST_FAIL_URL
             url = testUrl
         }
-        NSLog("Testing HTTPS with for button %d using url %@.", buttonNumber, testUrl)
+        NSLog("Testing HTTPS with custom ca bundle for button %d using url %@.", buttonNumber, testUrl)
         if buttonNumber == 4 {
             clearOutput()
         }
-        FFprobeKit.getMediaInformationAsync(testUrl, withCompleteCallback: createNewCompleteCallback())
+
+        let caCertificateBundlePath = Sessions.getCACertificateBundlePath()
+
+        // GET MEDIA INFORMATION USING A CUSTOM COMMAND WITH A CA CERTIFICATE BUNDLE
+        // PROVIDING A CA CERTIFICATE BUNDLE IS REQUIRED ON VISIONOS UNLESS "-tls_verify 0" IS PROVIDED FOR FFMPEG 9+
+        let mediaInformationSession = MediaInformationSession.create([
+            "-v",
+            "error",
+            "-hide_banner",
+            "-print_format",
+            "json",
+            "-show_format",
+            "-show_streams",
+            "-show_chapters",
+            "-ca_file",
+            caCertificateBundlePath,
+            "-i",
+            testUrl
+        ],
+        withCompleteCallback: self.createNewCompleteCallback())
+
+        FFmpegKitConfig.asyncGetMediaInformationExecute(mediaInformationSession, withTimeout: AbstractSessionDefaultTimeoutForAsynchronousMessagesInTransmit)
     }
 
     func createNewCompleteCallback() -> MediaInformationSessionCompleteCallback {

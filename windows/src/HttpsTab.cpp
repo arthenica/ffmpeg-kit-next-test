@@ -20,11 +20,13 @@
  * SOFTWARE.
  */
 
+#include "Application.h"
 #include "HttpsTab.h"
 #include "Constants.h"
 #include "Popup.h"
 #include "Win32Ui.h"
 
+#include <AbstractSession.h>
 #include <FFprobeKit.h>
 #include <FFmpegKitConfig.h>
 #include <json/Value.h>
@@ -177,7 +179,7 @@ void ffmpegkittest::HttpsTab::runGetMediaInformation(const int buttonNumber) {
         }
     }
 
-    std::cout << "Testing HTTPS with for button " << buttonNumber << " using url " << testUrl << "." << std::endl;
+    std::cout << "Testing HTTPS with custom ca bundle for button " << buttonNumber << " using url " << testUrl << "." << std::endl;
 
     if (buttonNumber == 4) {
 
@@ -185,9 +187,18 @@ void ffmpegkittest::HttpsTab::runGetMediaInformation(const int buttonNumber) {
         clearOutput();
     }
 
-    // EXECUTE
-    FFprobeKit::getMediaInformationAsync(testUrl, createNewCompleteCallback());
+    std::string caCertificateBundlePath = Application::getCACertificateBundlePath();
 
+    // GET MEDIA INFORMATION USING A CUSTOM COMMAND WITH A CA CERTIFICATE BUNDLE
+    // PROVIDING A CA CERTIFICATE BUNDLE IS REQUIRED BY OPENSSL ON WINDOWS UNLESS "-tls_verify 0" IS PROVIDED FOR FFMPEG 9+
+    std::shared_ptr<ffmpegkit::MediaInformationSession> mediaInformationSession = MediaInformationSession::create(
+        std::list<std::string>{"-v", "error", "-hide_banner", "-print_format", "json", "-show_format",
+               "-show_streams", "-show_chapters", "-ca_file", caCertificateBundlePath, "-i", testUrl
+        },
+        createNewCompleteCallback()
+    );
+
+    FFmpegKitConfig::asyncGetMediaInformationExecute(mediaInformationSession, AbstractSession::DefaultTimeoutForAsynchronousMessagesInTransmit);
 }
 
 std::string ffmpegkittest::HttpsTab::getRandomTestUrl() {

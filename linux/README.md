@@ -26,7 +26,7 @@ Then consume the package from CMake:
 
 ```cmake
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=8.1.1)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.0)
 target_link_libraries(<your-target> PRIVATE PkgConfig::FFMPEG_KIT)
 ```
 

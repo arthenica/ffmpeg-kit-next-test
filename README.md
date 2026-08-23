@@ -34,6 +34,7 @@ target a newer version before a release tag is created.
 
 |  Platform | FFmpegKit Version |                                        Tag                                        |
 | :----: |:-----------------:|:---------------------------------------------------------------------------------:|
+|   Android<br>Flutter<br>iOS<br>iPadOS<br>Linux<br>macOS<br>React Native<br>tvOS<br>visionOS<br>Web<br>Windows    |       9.0.1       |  [9.0.0](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v9.0.0)   |
 |   Windows    |       8.1.1       |  [8.1.1](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v8.1.1.windows)   |
 |   Android<br>Flutter<br>iOS<br>iPadOS<br>Linux<br>macOS<br>React Native<br>tvOS<br>visionOS<br>Web    |       8.1.1       |  [8.1.1](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v8.1.1)   |
 |   Android<br>Flutter<br>iOS<br>Linux<br>macOS<br>React Native<br>tvOS    |       8.1.0       |  [8.1.0](https://github.com/arthenica/ffmpeg-kit-next-test/tree/v8.1.0)   |
@@ -44,5 +45,6 @@ target a newer version before a release tag is created.
 ### License
 
 `FFmpegKitNext Test` repository is licensed under the [MIT License](https://opensource.org/licenses/MIT), fonts used by
-the applications are licensed under the [SIL Open Font License](https://opensource.org/licenses/OFL-1.1), other 
-digital assets are published in the public domain.
+the applications are licensed under the [SIL Open Font License](https://opensource.org/licenses/OFL-1.1), Mozilla CA
+certificate bundles included with the applications are licensed under the [Mozilla Public License 2.0](https://www.mozilla.org/MPL/2.0/)
+and other digital assets are published in the public domain.

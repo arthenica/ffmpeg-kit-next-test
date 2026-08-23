@@ -10,6 +10,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2F3D3012B67A4679604D30A8 /* libPods-FFmpegKitNextReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA607D05B1CEE1318B6BC30 /* libPods-FFmpegKitNextReactNative.a */; };
+		341F87AA303BB1A3009DD8F3 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 341F87A9303BB1A3009DD8F3 /* mozilla_ca_bundle_license.txt */; };
+		341F87AB303BB1A3009DD8F3 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 341F87A8303BB1A3009DD8F3 /* cacert_2026_08_13.pem */; };
 		344545D726FCD650006891B5 /* doppioone_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 344545D026FCD64F006891B5 /* doppioone_regular.ttf */; };
 		344545D826FCD650006891B5 /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 344545D126FCD64F006891B5 /* sil_open_font_license.txt */; };
 		344545D926FCD650006891B5 /* tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 344545D226FCD64F006891B5 /* tree.jpg */; };
@@ -27,6 +29,8 @@
 		13B07FB01A68108700A75B9A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = FFmpegKitNextReactNative/AppDelegate.swift; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FFmpegKitNextReactNative/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FFmpegKitNextReactNative/Info.plist; sourceTree = "<group>"; };
+		341F87A8303BB1A3009DD8F3 /* cacert_2026_08_13.pem */ = {isa = PBXFileReference; lastKnownFileType = text; path = cacert_2026_08_13.pem; sourceTree = "<group>"; };
+		341F87A9303BB1A3009DD8F3 /* mozilla_ca_bundle_license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = mozilla_ca_bundle_license.txt; sourceTree = "<group>"; };
 		344545D026FCD64F006891B5 /* doppioone_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = doppioone_regular.ttf; sourceTree = "<group>"; };
 		344545D126FCD64F006891B5 /* sil_open_font_license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sil_open_font_license.txt; sourceTree = "<group>"; };
 		344545D226FCD64F006891B5 /* tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tree.jpg; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 		3445456426FCD3EB006891B5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				341F87A8303BB1A3009DD8F3 /* cacert_2026_08_13.pem */,
+				341F87A9303BB1A3009DD8F3 /* mozilla_ca_bundle_license.txt */,
 				34FA27883018076E0037C9D6 /* notosansarabic_regular.ttf */,
 				34FA27893018076E0037C9D6 /* notosanssc_regular.ttf */,
 				344545D026FCD64F006891B5 /* doppioone_regular.ttf */,
@@ -202,6 +208,8 @@
 				34FA278A3018076E0037C9D6 /* notosansarabic_regular.ttf in Resources */,
 				34FA278B3018076E0037C9D6 /* notosanssc_regular.ttf in Resources */,
 				AA2D7E0C2B0000000000FF01 /* PrivacyInfo.xcprivacy in Resources */,
+				341F87AA303BB1A3009DD8F3 /* mozilla_ca_bundle_license.txt in Resources */,
+				341F87AB303BB1A3009DD8F3 /* cacert_2026_08_13.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,9 +260,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FFmpegKitNextReactNative/Pods-FFmpegKitNextReactNative-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FFmpegKitNextReactNative/Pods-FFmpegKitNextReactNative-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -269,9 +281,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FFmpegKitNextReactNative/Pods-FFmpegKitNextReactNative-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FFmpegKitNextReactNative/Pods-FFmpegKitNextReactNative-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

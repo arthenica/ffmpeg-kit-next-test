@@ -55,6 +55,10 @@
 		34C06C0B22ADAA4E0039DF48 /* sil_open_font_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789A21215B5800C3486C /* sil_open_font_license.txt */; };
 		34C06C0C22ADAA4E0039DF48 /* subtitle.srt in Resources */ = {isa = PBXBuildFile; fileRef = 34DC789821215B5800C3486C /* subtitle.srt */; };
 		34C97E8823CB7655004F75D3 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C97E8723CB7655004F75D3 /* libiconv.tbd */; };
+		34CFA20B303AEF1C00D73941 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA209303AEF1C00D73941 /* cacert_2026_08_13.pem */; };
+		34CFA20C303AEF1C00D73941 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA20A303AEF1C00D73941 /* mozilla_ca_bundle_license.txt */; };
+		34CFA20D303AEF1C00D73941 /* cacert_2026_08_13.pem in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA209303AEF1C00D73941 /* cacert_2026_08_13.pem */; };
+		34CFA20E303AEF1C00D73941 /* mozilla_ca_bundle_license.txt in Resources */ = {isa = PBXBuildFile; fileRef = 34CFA20A303AEF1C00D73941 /* mozilla_ca_bundle_license.txt */; };
 		34E281A624A5686C0048B3EC /* ConcurrentExecutionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E281A524A5686C0048B3EC /* ConcurrentExecutionViewController.m */; };
 		34FA277E301801EE0037C9D6 /* notosansarabic_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA277C301801EE0037C9D6 /* notosansarabic_regular.ttf */; };
 		34FA277F301801EE0037C9D6 /* notosanssc_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34FA277D301801EE0037C9D6 /* notosanssc_regular.ttf */; };
@@ -208,6 +212,8 @@
 		34C06C0522ADA0B10039DF48 /* TvButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TvButton.h; sourceTree = "<group>"; };
 		34C06C0622ADA0B10039DF48 /* TvButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TvButton.m; sourceTree = "<group>"; };
 		34C97E8723CB7655004F75D3 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		34CFA209303AEF1C00D73941 /* cacert_2026_08_13.pem */ = {isa = PBXFileReference; lastKnownFileType = text; path = cacert_2026_08_13.pem; sourceTree = "<group>"; };
+		34CFA20A303AEF1C00D73941 /* mozilla_ca_bundle_license.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = mozilla_ca_bundle_license.txt; sourceTree = "<group>"; };
 		34D678CE25E2DA25004564B7 /* FFmpegKitNextTVOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = FFmpegKitNextTVOS.entitlements; sourceTree = "<group>"; };
 		34DC789821215B5800C3486C /* subtitle.srt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = subtitle.srt; sourceTree = "<group>"; };
 		34DC789921215B5800C3486C /* doppioone_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = doppioone_regular.ttf; sourceTree = "<group>"; };
@@ -351,6 +357,8 @@
 				34DC789921215B5800C3486C /* doppioone_regular.ttf */,
 				34DC789A21215B5800C3486C /* sil_open_font_license.txt */,
 				34DC789821215B5800C3486C /* subtitle.srt */,
+				34CFA209303AEF1C00D73941 /* cacert_2026_08_13.pem */,
+				34CFA20A303AEF1C00D73941 /* mozilla_ca_bundle_license.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -520,6 +528,8 @@
 				34C06C0C22ADAA4E0039DF48 /* subtitle.srt in Resources */,
 				3494908725E16A030017F7CC /* lake.jpg in Resources */,
 				34695E9222AD292300889D20 /* Assets.xcassets in Resources */,
+				34CFA20D303AEF1C00D73941 /* cacert_2026_08_13.pem in Resources */,
+				34CFA20E303AEF1C00D73941 /* mozilla_ca_bundle_license.txt in Resources */,
 				34695E9022AD292100889D20 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -537,6 +547,8 @@
 				F2000000000000000000003D /* subtitle.srt in Resources */,
 				F2000000000000000000003F /* lake.jpg in Resources */,
 				F20000000000000000000037 /* Assets.xcassets in Resources */,
+				34CFA20B303AEF1C00D73941 /* cacert_2026_08_13.pem in Resources */,
+				34CFA20C303AEF1C00D73941 /* mozilla_ca_bundle_license.txt in Resources */,
 				F20000000000000000000038 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

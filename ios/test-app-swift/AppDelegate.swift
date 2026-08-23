@@ -52,6 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSLog("Listed FFmpeg sessions.\n")
     }
 
+    static func getCACertificateBundlePath() -> String {
+        let resourceFolder = Bundle.main.resourcePath ?? ""
+        return resourceFolder.appendingPathComponent("cacert_2026_08_13.pem")
+    }
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NSSetUncaughtExceptionHandler(uncaughtExceptionHandler)
 

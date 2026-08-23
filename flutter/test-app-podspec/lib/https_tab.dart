@@ -22,6 +22,7 @@
 
 import 'dart:math';
 
+import 'package:ffmpeg_kit_next_flutter/abstract_session.dart';
 import 'package:ffmpeg_kit_next_flutter/chapter.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_next_flutter/ffprobe_kit.dart';
@@ -33,6 +34,7 @@ import 'abstract.dart';
 import 'popup.dart';
 import 'tooltip.dart';
 import 'util.dart';
+import 'video_util.dart';
 
 class HttpsTab {
   static const String HTTPS_TEST_DEFAULT_URL =
@@ -91,188 +93,205 @@ class HttpsTab {
   }
 
   void runGetMediaInformation(int buttonNumber) {
-    // SELECT TEST URL
-    String testUrl = "";
-    switch (buttonNumber) {
-      case 1:
-        {
-          testUrl = _urlText.text;
-          if (testUrl.trim().length <= 0) {
-            testUrl = HTTPS_TEST_DEFAULT_URL;
+    VideoUtil.assetPath(VideoUtil.CA_CERTIFICATE_BUNDLE_ASSET)
+        .then((caCertificateBundlePath) {
+      // SELECT TEST URL
+      String testUrl = "";
+      switch (buttonNumber) {
+        case 1:
+          {
+            testUrl = _urlText.text;
+            if (testUrl.trim().length <= 0) {
+              testUrl = HTTPS_TEST_DEFAULT_URL;
+              _urlText.text = testUrl;
+            }
+            break;
+          }
+        case 2:
+        case 3:
+          {
+            testUrl = this.getRandomTestUrl();
+            break;
+          }
+        case 4:
+        default:
+          {
+            testUrl = HTTPS_TEST_FAIL_URL;
             _urlText.text = testUrl;
           }
-          break;
-        }
-      case 2:
-      case 3:
-        {
-          testUrl = this.getRandomTestUrl();
-          break;
-        }
-      case 4:
-      default:
-        {
-          testUrl = HTTPS_TEST_FAIL_URL;
-          _urlText.text = testUrl;
-        }
-    }
-
-    ffprint(
-        "Testing HTTPS with for button ${buttonNumber} using url ${testUrl}.");
-
-    if (buttonNumber == 4) {
-      // ONLY THIS BUTTON CLEARS THE TEXT VIEW
-      this.clearOutput();
-    }
-
-    // EXECUTE
-    FFprobeKit.getMediaInformation(testUrl)
-        .then((MediaInformationSession session) async {
-      var information = await session.getMediaInformation();
-
-      if (information == null) {
-        final state =
-            FFmpegKitConfig.sessionStateToString(await session.getState());
-        final returnCode = await session.getReturnCode();
-        final failStackTrace = await session.getFailStackTrace();
-        final duration = await session.getDuration();
-        final output = await session.getOutput();
-
-        this.appendOutput("Get media information failed\n");
-        this.appendOutput("State: ${state}\n");
-        this.appendOutput("Duration: ${duration}\n");
-        this.appendOutput("Return Code: ${returnCode}\n");
-        this.appendOutput(
-            "Fail stack trace: ${notNull(failStackTrace, "\\n")}\n");
-        this.appendOutput("Output: ${output}\n");
-      } else {
-        this.appendOutput(
-            "Media information for ${information.getFilename()}\n");
-
-        if (information.getFormat() != null) {
-          this.appendOutput("Format: ${information.getFormat()}\n");
-        }
-        if (information.getBitrate() != null) {
-          this.appendOutput("Bitrate: ${information.getBitrate()}\n");
-        }
-        if (information.getDuration() != null) {
-          this.appendOutput("Duration: ${information.getDuration()}\n");
-        }
-        if (information.getStartTime() != null) {
-          this.appendOutput("Start time: ${information.getStartTime()}\n");
-        }
-        if (information.getTags() != null) {
-          final tags = information.getTags();
-          if (tags != null) {
-            tags.forEach((key, value) {
-              this.appendOutput("Tag: ${key}:${tags[key]}\n");
-            });
-          }
-        }
-
-        List<StreamInformation> streams = information.getStreams();
-        for (var i = 0; i < streams.length; ++i) {
-          StreamInformation stream = streams[i];
-          if (stream.getIndex() != null) {
-            this.appendOutput("Stream index: ${stream.getIndex()}\n");
-          }
-          if (stream.getType() != null) {
-            this.appendOutput("Stream type: ${stream.getType()}\n");
-          }
-          if (stream.getCodec() != null) {
-            this.appendOutput("Stream codec: ${stream.getCodec()}\n");
-          }
-          if (stream.getCodecLong() != null) {
-            this.appendOutput("Stream codec long: ${stream.getCodecLong()}\n");
-          }
-          if (stream.getFormat() != null) {
-            this.appendOutput("Stream format: ${stream.getFormat()}\n");
-          }
-          if (stream.getWidth() != null) {
-            this.appendOutput("Stream width: ${stream.getWidth()}\n");
-          }
-          if (stream.getHeight() != null) {
-            this.appendOutput("Stream height: ${stream.getHeight()}\n");
-          }
-          if (stream.getBitrate() != null) {
-            this.appendOutput("Stream bitrate: ${stream.getBitrate()}\n");
-          }
-          if (stream.getSampleRate() != null) {
-            this.appendOutput(
-                "Stream sample rate: ${stream.getSampleRate()}\n");
-          }
-          if (stream.getSampleFormat() != null) {
-            this.appendOutput(
-                "Stream sample format: ${stream.getSampleFormat()}\n");
-          }
-          if (stream.getChannelLayout() != null) {
-            this.appendOutput(
-                "Stream channel layout: ${stream.getChannelLayout()}\n");
-          }
-          if (stream.getSampleAspectRatio() != null) {
-            this.appendOutput(
-                "Stream sample aspect ratio: ${stream.getSampleAspectRatio()}\n");
-          }
-          if (stream.getDisplayAspectRatio() != null) {
-            this.appendOutput(
-                "Stream display ascpect ratio: ${stream.getDisplayAspectRatio()}\n");
-          }
-          if (stream.getAverageFrameRate() != null) {
-            this.appendOutput(
-                "Stream average frame rate: ${stream.getAverageFrameRate()}\n");
-          }
-          if (stream.getRealFrameRate() != null) {
-            this.appendOutput(
-                "Stream real frame rate: ${stream.getRealFrameRate()}\n");
-          }
-          if (stream.getTimeBase() != null) {
-            this.appendOutput("Stream time base: ${stream.getTimeBase()}\n");
-          }
-          if (stream.getCodecTimeBase() != null) {
-            this.appendOutput(
-                "Stream codec time base: ${stream.getCodecTimeBase()}\n");
-          }
-          if (stream.getTags() != null) {
-            final tags = stream.getTags();
-            if (tags != null) {
-              tags.forEach((key, value) {
-                this.appendOutput("Stream tag: ${key}:${tags[key]}\n");
-              });
-            }
-          }
-        }
-
-        List<Chapter> chapters = information.getChapters();
-        for (var i = 0; i < chapters.length; ++i) {
-          Chapter chapter = chapters[i];
-          if (chapter.getId() != null) {
-            appendOutput("Chapter id: ${chapter.getId()}\n");
-          }
-          if (chapter.getTimeBase() != null) {
-            appendOutput("Chapter time base: ${chapter.getTimeBase()}\n");
-          }
-          if (chapter.getStart() != null) {
-            appendOutput("Chapter start: ${chapter.getStart()}\n");
-          }
-          if (chapter.getStartTime() != null) {
-            appendOutput("Chapter start time: ${chapter.getStartTime()}\n");
-          }
-          if (chapter.getEnd() != null) {
-            appendOutput("Chapter end: ${chapter.getEnd()}\n");
-          }
-          if (chapter.getEndTime() != null) {
-            appendOutput("Chapter end time: ${chapter.getEndTime()}\n");
-          }
-          if (chapter.getTags() != null) {
-            final tags = chapter.getTags();
-            if (tags != null) {
-              tags.forEach((key, value) {
-                this.appendOutput("Chapter tag: ${key}:${tags[key]}\n");
-              });
-            }
-          }
-        }
       }
+
+      ffprint(
+          "Testing HTTPS with custom ca bundle for button ${buttonNumber} using url ${testUrl}.");
+
+      if (buttonNumber == 4) {
+        // ONLY THIS BUTTON CLEARS THE TEXT VIEW
+        this.clearOutput();
+      }
+
+      // GET MEDIA INFORMATION USING A CUSTOM COMMAND WITH A CA CERTIFICATE BUNDLE
+      // PROVIDING A CA CERTIFICATE BUNDLE IS REQUIRED BY OPENSSL ON ANDROID/IOS/MACOS/LINUX UNLESS "-tls_verify 0" IS PROVIDED FOR FFMPEG 9+
+      FFprobeKit.getMediaInformationFromCommandArgumentsAsync([
+        "-v",
+        "error",
+        "-hide_banner",
+        "-print_format",
+        "json",
+        "-show_format",
+        "-show_streams",
+        "-show_chapters",
+        "-ca_file",
+        caCertificateBundlePath,
+        "-i",
+        testUrl
+      ], (session) async {
+        var information = await session.getMediaInformation();
+
+        if (information == null) {
+          final state =
+              FFmpegKitConfig.sessionStateToString(await session.getState());
+          final returnCode = await session.getReturnCode();
+          final failStackTrace = await session.getFailStackTrace();
+          final duration = await session.getDuration();
+          final output = await session.getOutput();
+
+          this.appendOutput("Get media information failed\n");
+          this.appendOutput("State: ${state}\n");
+          this.appendOutput("Duration: ${duration}\n");
+          this.appendOutput("Return Code: ${returnCode}\n");
+          this.appendOutput(
+              "Fail stack trace: ${notNull(failStackTrace, "\\n")}\n");
+          this.appendOutput("Output: ${output}\n");
+        } else {
+          this.appendOutput(
+              "Media information for ${information.getFilename()}\n");
+
+          if (information.getFormat() != null) {
+            this.appendOutput("Format: ${information.getFormat()}\n");
+          }
+          if (information.getBitrate() != null) {
+            this.appendOutput("Bitrate: ${information.getBitrate()}\n");
+          }
+          if (information.getDuration() != null) {
+            this.appendOutput("Duration: ${information.getDuration()}\n");
+          }
+          if (information.getStartTime() != null) {
+            this.appendOutput("Start time: ${information.getStartTime()}\n");
+          }
+          if (information.getTags() != null) {
+            final tags = information.getTags();
+            if (tags != null) {
+              tags.forEach((key, value) {
+                this.appendOutput("Tag: ${key}:${tags[key]}\n");
+              });
+            }
+          }
+
+          List<StreamInformation> streams = information.getStreams();
+          for (var i = 0; i < streams.length; ++i) {
+            StreamInformation stream = streams[i];
+            if (stream.getIndex() != null) {
+              this.appendOutput("Stream index: ${stream.getIndex()}\n");
+            }
+            if (stream.getType() != null) {
+              this.appendOutput("Stream type: ${stream.getType()}\n");
+            }
+            if (stream.getCodec() != null) {
+              this.appendOutput("Stream codec: ${stream.getCodec()}\n");
+            }
+            if (stream.getCodecLong() != null) {
+              this.appendOutput(
+                  "Stream codec long: ${stream.getCodecLong()}\n");
+            }
+            if (stream.getFormat() != null) {
+              this.appendOutput("Stream format: ${stream.getFormat()}\n");
+            }
+            if (stream.getWidth() != null) {
+              this.appendOutput("Stream width: ${stream.getWidth()}\n");
+            }
+            if (stream.getHeight() != null) {
+              this.appendOutput("Stream height: ${stream.getHeight()}\n");
+            }
+            if (stream.getBitrate() != null) {
+              this.appendOutput("Stream bitrate: ${stream.getBitrate()}\n");
+            }
+            if (stream.getSampleRate() != null) {
+              this.appendOutput(
+                  "Stream sample rate: ${stream.getSampleRate()}\n");
+            }
+            if (stream.getSampleFormat() != null) {
+              this.appendOutput(
+                  "Stream sample format: ${stream.getSampleFormat()}\n");
+            }
+            if (stream.getChannelLayout() != null) {
+              this.appendOutput(
+                  "Stream channel layout: ${stream.getChannelLayout()}\n");
+            }
+            if (stream.getSampleAspectRatio() != null) {
+              this.appendOutput(
+                  "Stream sample aspect ratio: ${stream.getSampleAspectRatio()}\n");
+            }
+            if (stream.getDisplayAspectRatio() != null) {
+              this.appendOutput(
+                  "Stream display ascpect ratio: ${stream.getDisplayAspectRatio()}\n");
+            }
+            if (stream.getAverageFrameRate() != null) {
+              this.appendOutput(
+                  "Stream average frame rate: ${stream.getAverageFrameRate()}\n");
+            }
+            if (stream.getRealFrameRate() != null) {
+              this.appendOutput(
+                  "Stream real frame rate: ${stream.getRealFrameRate()}\n");
+            }
+            if (stream.getTimeBase() != null) {
+              this.appendOutput("Stream time base: ${stream.getTimeBase()}\n");
+            }
+            if (stream.getCodecTimeBase() != null) {
+              this.appendOutput(
+                  "Stream codec time base: ${stream.getCodecTimeBase()}\n");
+            }
+            if (stream.getTags() != null) {
+              final tags = stream.getTags();
+              if (tags != null) {
+                tags.forEach((key, value) {
+                  this.appendOutput("Stream tag: ${key}:${tags[key]}\n");
+                });
+              }
+            }
+          }
+
+          List<Chapter> chapters = information.getChapters();
+          for (var i = 0; i < chapters.length; ++i) {
+            Chapter chapter = chapters[i];
+            if (chapter.getId() != null) {
+              appendOutput("Chapter id: ${chapter.getId()}\n");
+            }
+            if (chapter.getTimeBase() != null) {
+              appendOutput("Chapter time base: ${chapter.getTimeBase()}\n");
+            }
+            if (chapter.getStart() != null) {
+              appendOutput("Chapter start: ${chapter.getStart()}\n");
+            }
+            if (chapter.getStartTime() != null) {
+              appendOutput("Chapter start time: ${chapter.getStartTime()}\n");
+            }
+            if (chapter.getEnd() != null) {
+              appendOutput("Chapter end: ${chapter.getEnd()}\n");
+            }
+            if (chapter.getEndTime() != null) {
+              appendOutput("Chapter end time: ${chapter.getEndTime()}\n");
+            }
+            if (chapter.getTags() != null) {
+              final tags = chapter.getTags();
+              if (tags != null) {
+                tags.forEach((key, value) {
+                  this.appendOutput("Chapter tag: ${key}:${tags[key]}\n");
+                });
+              }
+            }
+          }
+        }
+      }, null, AbstractSession.defaultTimeoutForAsynchronousMessagesInTransmit);
     });
   }
 
