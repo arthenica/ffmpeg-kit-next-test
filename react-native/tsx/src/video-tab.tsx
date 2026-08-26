@@ -1,0 +1,303 @@
+import React from 'react';
+import {Platform, Text, TouchableOpacity, View} from 'react-native';
+import RNFS from 'react-native-fs';
+import VideoUtil from './video-util';
+import {
+    FFmpegKit,
+    FFmpegKitConfig,
+    LogCallback,
+    ReturnCode,
+    Statistics,
+    StatisticsCallback
+} from 'ffmpeg-kit-next-react-native';
+import {Picker} from '@react-native-picker/picker';
+import {styles} from './style';
+import {ProgressModal} from "./progress_modal";
+import Video, {VideoRef} from 'react-native-video';
+import {deleteFile, ffprint, notNull} from './util';
+import type {TabProps} from './navigation';
+
+type VideoTabProps = TabProps<'VIDEO'>;
+
+interface VideoTabState {
+    selectedCodec: string;
+    statistics?: Statistics;
+    videoVersion: number;
+    paused?: boolean;
+}
+
+export default class VideoTab extends React.Component<VideoTabProps, VideoTabState> {
+
+    private readonly progressModalReference: React.RefObject<ProgressModal | null>;
+    private player: VideoRef | null = null;
+
+    constructor(props: VideoTabProps) {
+        super(props);
+
+        this.state = {
+            selectedCodec: 'mpeg4', statistics: undefined, videoVersion: 0
+        };
+
+        this.progressModalReference = React.createRef<ProgressModal>();
+    }
+
+    componentDidMount() {
+        this.props.navigation.addListener('focus', (_) => {
+            this.pause();
+            this.setActive();
+        });
+    }
+
+    setActive() {
+        ffprint("Video Tab Activated");
+        FFmpegKitConfig.enableLogCallback(undefined as unknown as LogCallback);
+        FFmpegKitConfig.enableStatisticsCallback(undefined as unknown as StatisticsCallback);
+    }
+
+    encodeVideo = () => {
+        let image1Path = VideoUtil.assetPath(VideoUtil.ASSET_1);
+        let image2Path = VideoUtil.assetPath(VideoUtil.ASSET_2);
+        let image3Path = VideoUtil.assetPath(VideoUtil.ASSET_3);
+        let videoFile = this.getVideoFile();
+
+        // IF VIDEO IS PLAYING STOP PLAYBACK
+        this.pause();
+
+        deleteFile(videoFile);
+
+        let videoCodec = this.getSelectedVideoCodec();
+
+        ffprint(`Testing VIDEO encoding with '${videoCodec}' codec`);
+
+        this.hideProgressDialog();
+        this.showProgressDialog();
+
+        let ffmpegCommand = VideoUtil.generateEncodeVideoScriptWithCustomPixelFormat(image1Path, image2Path, image3Path, videoFile, videoCodec, this.getPixelFormat(), this.getCustomOptions());
+
+        ffprint(`FFmpeg process started with arguments: \'${ffmpegCommand}\'.`);
+
+        FFmpegKit.executeAsync(ffmpegCommand, async (session) => {
+            const state = FFmpegKitConfig.sessionStateToString(await session.getState());
+            const returnCode = await session.getReturnCode();
+            const failStackTrace = await session.getFailStackTrace();
+            const duration = await session.getDuration();
+
+            this.hideProgressDialog();
+
+            if (ReturnCode.isSuccess(returnCode)) {
+                ffprint(`Encode completed successfully in ${duration} milliseconds; playing video.`);
+                this.playVideo();
+            } else {
+                ffprint("Encode failed. Please check log for the details.");
+                ffprint(`Encode failed with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}`);
+            }
+        }, log => {
+            ffprint(log.getMessage() as string);
+        }, statistics => {
+            this.setState({statistics: statistics});
+            this.updateProgressDialog();
+        }).then(session => ffprint(`Async FFmpeg process started with sessionId ${session.getSessionId()}.`));
+    }
+
+    playVideo() {
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            paused: false, videoVersion: previousState.videoVersion + 1
+        }));
+    }
+
+    pause() {
+        this.setState({paused: true});
+    }
+
+    getPixelFormat(): string {
+        let videoCodec = this.state.selectedCodec;
+
+        let pixelFormat;
+        if (videoCodec === "x265") {
+            pixelFormat = "yuv420p10le";
+        } else {
+            pixelFormat = "yuv420p";
+        }
+
+        return pixelFormat;
+    }
+
+    getSelectedVideoCodec(): string {
+        let videoCodec = this.state.selectedCodec;
+
+        // VIDEO CODEC MENU HAS BASIC NAMES, FFMPEG NEEDS LONGER LIBRARY NAMES.
+        // APPLYING NECESSARY TRANSFORMATION HERE
+        switch (videoCodec) {
+            case "x264":
+                videoCodec = "libx264";
+                break;
+            case "h264_mediacodec":
+                videoCodec = "h264_mediacodec";
+                break;
+            case "hevc_mediacodec":
+                videoCodec = "hevc_mediacodec";
+                break;
+            case "openh264":
+                videoCodec = "libopenh264";
+                break;
+            case "x265":
+                videoCodec = "libx265";
+                break;
+            case "xvid":
+                videoCodec = "libxvid";
+                break;
+            case "vp8":
+                videoCodec = "libvpx";
+                break;
+            case "vp9":
+                videoCodec = "libvpx-vp9";
+                break;
+            case "aom":
+                videoCodec = "libaom-av1";
+                break;
+            case "svt-av1":
+                videoCodec = "libsvtav1";
+                break;
+            case "kvazaar":
+                videoCodec = "libkvazaar";
+                break;
+            case "theora":
+                videoCodec = "libtheora";
+                break;
+        }
+
+        return videoCodec;
+    }
+
+    getVideoFile(): string {
+        let videoCodec = this.state.selectedCodec;
+
+        let extension;
+        switch (videoCodec) {
+            case "vp8":
+            case "vp9":
+                extension = "webm";
+                break;
+            case "theora":
+                extension = "ogv";
+                break;
+            case "hap":
+                extension = "mov";
+                break;
+            default:
+                // mpeg4, x264, h264_mediacodec, hevc_mediacodec, x265, xvid, kvazaar
+                extension = "mp4";
+                break;
+        }
+
+        return `${RNFS.CachesDirectoryPath}/video.${extension}`;
+    }
+
+    getCustomOptions(): string {
+        let videoCodec = this.state.selectedCodec;
+
+        switch (videoCodec) {
+            case "x265":
+                return "-crf 28 -preset fast ";
+            case "vp8":
+                return "-b:v 1M -crf 10 ";
+            case "vp9":
+                return "-b:v 2M ";
+            case "aom":
+                return "-crf 30 -strict experimental ";
+            case "svt-av1":
+                return "-preset 8 -crf 35 ";
+            case "theora":
+                return "-qscale:v 7 ";
+            case "hap":
+                return "-format hap_q ";
+            default:
+                // kvazaar, mpeg4, x264, h264_mediacodec, hevc_mediacodec, xvid
+                return "";
+        }
+    }
+
+    showProgressDialog() {
+        // CLEAN STATISTICS
+        this.setState({statistics: undefined});
+        this.progressModalReference.current?.show(`Encoding video`);
+    }
+
+    updateProgressDialog() {
+        let statistics = this.state.statistics;
+        if (statistics === undefined || statistics.getTime() < 0) {
+            return;
+        }
+
+        let timeInMilliseconds = statistics.getTime();
+
+        let totalVideoDuration = 9000;
+        let completePercentage = Math.round((timeInMilliseconds * 100) / totalVideoDuration);
+        this.progressModalReference.current?.update(`Encoding video % ${completePercentage}`);
+    }
+
+    hideProgressDialog() {
+        this.progressModalReference.current?.hide();
+    }
+
+    onPlayError = (err: unknown) => {
+        ffprint('Play error: ' + JSON.stringify(err));
+    }
+
+    render() {
+        return (<View style={styles.screenStyle}>
+            <View style={styles.headerViewStyle}>
+                <Text
+                    style={styles.headerTextStyle}>
+                    FFmpegKitNext ReactNative
+                </Text>
+            </View>
+            <View>
+                <Picker
+                    selectedValue={this.state.selectedCodec}
+                    onValueChange={(itemValue, _itemIndex) => this.setState({selectedCodec: itemValue})}>
+                    <Picker.Item label="mpeg4" value="mpeg4"/>
+                    <Picker.Item label="x264" value="x264"/>
+                    {Platform.OS === 'android' &&
+                        <Picker.Item label="h264_mediacodec" value="h264_mediacodec"/>}
+                    {Platform.OS === 'android' &&
+                        <Picker.Item label="hevc_mediacodec" value="hevc_mediacodec"/>}
+                    <Picker.Item label="openh264" value="openh264"/>
+                    <Picker.Item label="x265" value="x265"/>
+                    <Picker.Item label="xvid" value="xvid"/>
+                    <Picker.Item label="vp8" value="vp8"/>
+                    <Picker.Item label="vp9" value="vp9"/>
+                    <Picker.Item label="aom" value="aom"/>
+                    <Picker.Item label="svt-av1" value="svt-av1"/>
+                    <Picker.Item label="kvazaar" value="kvazaar"/>
+                    <Picker.Item label="theora" value="theora"/>
+                    <Picker.Item label="hap" value="hap"/>
+                </Picker>
+            </View>
+            <View style={styles.buttonViewStyle}>
+                <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={this.encodeVideo}>
+                    <Text style={styles.buttonTextStyle}>CREATE</Text>
+                </TouchableOpacity>
+            </View>
+            <ProgressModal
+                visible={false}
+                ref={this.progressModalReference}/>
+            <Video
+                key={`video-${this.state.videoVersion}`}
+                source={{uri: this.getVideoFile()}}
+                ref={(ref) => {
+                    this.player = ref
+                }}
+                hideShutterView={true}
+                paused={this.state.paused}
+                // onError={this.onPlayError}
+                resizeMode={"stretch"}
+                style={styles.videoPlayerViewStyle}/>
+        </View>);
+    }
+
+}
