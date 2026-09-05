@@ -204,6 +204,7 @@ class VideoTabFragment : Fragment(R.layout.fragment_video_tab), AdapterView.OnIt
         FFmpegKitConfig.enableLogCallback(null)
         FFmpegKitConfig.enableStatisticsCallback(null)
         Popup.show(requireContext(), getString(R.string.video_test_tooltip_text))
+        TranscoderBridge.getInstance()
     }
 
     fun showProgressDialog() {
@@ -233,6 +234,23 @@ class VideoTabFragment : Fragment(R.layout.fragment_video_tab), AdapterView.OnIt
 
         MainActivity.addUIAction {
             progressDialog = DialogUtil.createProgressDialog(requireContext(), "Encoding video")
+        }
+    }
+}
+
+class TranscoderBridge {
+    companion object {
+        @JvmStatic
+        fun getInstance(): TranscoderBridge {
+            FFmpegKitConfig.enableFFmpegSessionCompleteCallback(fun (session) {
+                Log.d(MainActivity.TAG,"I AM SESSION COMPLETE CALLBACK")
+            })
+
+            FFmpegKitConfig.enableStatisticsCallback(fun (stats) {
+                Log.d(MainActivity.TAG, "I AM STATISTICS CALLBACK")
+            })
+
+            return TranscoderBridge()
         }
     }
 }
