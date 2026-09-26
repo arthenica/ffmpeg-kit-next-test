@@ -47,7 +47,8 @@ At runtime, copy the bundle's `bin/*.dll` next to your executable or add the bun
 
 ### MinGW-w64
 
-Build from an MSYS2 MinGW shell matching the environment used to build the library (`CLANGARM64` on an `arm64` host).
+Build from the MSYS2 shell matching the environment used to build the library (`CLANG64` on an `x86-64` host,
+`CLANGARM64` on an `arm64` host).
 
 - `cmake` >= 3.10
 - C++ compiler with C++17 support
@@ -60,7 +61,7 @@ pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain ${MINGW_PACKAGE_PREFIX}-cmake ${MING
 
 Build from a plain Windows shell.
 
-- `cmake` > 3.20, the native Windows build
+- `cmake` >= 3.20, the native Windows build
 - Visual Studio 2022, or Visual Studio Build Tools 2022 with the **Desktop development with C++** workload
 
 ## Run This Test App
