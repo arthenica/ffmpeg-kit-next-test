@@ -344,7 +344,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="mpeg4" borderStyle="roundedRect" placeholder="mpeg4, h264 (x264), h264 (openh264), h264 (videotoolbox), x265, xvid, vp8, vp9, aom, kvazaar, theora, hap" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ATw-Py-5o6" userLabel="Video Codec Text">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="mpeg4" borderStyle="roundedRect" placeholder="mpeg4, h264 (x264), h264 (openh264), h264 (videotoolbox), x265, xvid, vp8, vp9, aom, svt-av1, kvazaar, theora, hap" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ATw-Py-5o6" userLabel="Video Codec Text">
                                 <rect key="frame" x="586" y="170" width="748" height="32"/>
                                 <color key="backgroundColor" red="0.90198421480000002" green="0.90588062999999996" blue="0.91761696339999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -586,7 +586,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                             </textView>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="aac" borderStyle="roundedRect" placeholder="aac, mp2, mp3, vorbis, opus, amr-nb, amr-wb, ilbc, soxr, speex, wavpack" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2HS-ir-3UC" userLabel="Audio Codec Text">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="aac" borderStyle="roundedRect" placeholder="aac, mp2, mp3, vorbis, opus, amr-nb, amr-wb, ilbc, soxr, speex, wavpack, lc3" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2HS-ir-3UC" userLabel="Audio Codec Text">
                                 <rect key="frame" x="860" y="227" width="200" height="32"/>
                                 <color key="backgroundColor" red="0.90198421480000002" green="0.90588062999999996" blue="0.91761696339999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -1004,7 +1004,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                             </textView>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="chromaprint" borderStyle="roundedRect" placeholder="chromaprint, dav1d, webp, zscale" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bpo-HJ-voT" userLabel="Other Test Text">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="chromaprint" borderStyle="roundedRect" placeholder="chromaprint, dav1d, webp, libjxl, zscale, vvenc" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bpo-HJ-voT" userLabel="Other Test Text">
                                 <rect key="frame" x="860" y="130" width="200" height="32"/>
                                 <color key="backgroundColor" red="0.90198421480000002" green="0.90588062999999996" blue="0.91761696339999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>

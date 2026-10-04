@@ -26,11 +26,11 @@ import SwiftUI
 import ffmpegkit
 
 @MainActor final class VideoModel: ObservableObject {
-    @Published var codec = "h264 (x264)"
+    @Published var codec = "mpeg4"
     @Published var progress: String? = nil
     @Published var alertTitle: String = "Error"
     @Published var alertMessage: String? = nil
-    let codecs = ["h264 (x264)", "h264 (openh264)", "h264 (videotoolbox)", "x265", "xvid", "vp8", "vp9", "aom", "svt-av1", "kvazaar", "theora", "hap"]
+    let codecs = ["mpeg4", "h264 (x264)", "h264 (openh264)", "h264 (videotoolbox)", "x265", "xvid", "vp8", "vp9", "aom", "svt-av1", "kvazaar", "theora", "hap"]
     let player = AVQueuePlayer()
 
     private var activeItem: AVPlayerItem?
