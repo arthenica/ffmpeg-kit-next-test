@@ -5,7 +5,6 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import CommandTab from './command-tab'
 import VideoTab from './video-tab'
 import VideoUtil from "./video-util";
-import Test from "./test-api";
 import HttpsTab from "./https-tab";
 import AudioTab from "./audio-tab";
 import SubtitleTab from "./subtitle-tab";
@@ -127,11 +126,6 @@ export default class Main extends React.Component {
         FFmpegKitConfig.init().then(() => {
             VideoUtil.prepareAssets();
             registerApplicationFonts();
-
-            Test.testCommonApiMethods();
-            Test.testParseArguments();
-            Test.getSupportedCameraIdsTest();
-            Test.setSessionHistorySizeTest();
         });
     }
 

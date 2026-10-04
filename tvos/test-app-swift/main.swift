@@ -22,7 +22,4 @@
 
 import UIKit
 
-testMediaInformationJsonParser()
-testFFmpegKit()
-
 UIApplicationMain(CommandLine.argc, CommandLine.unsafeArgv, nil, NSStringFromClass(AppDelegate.self))

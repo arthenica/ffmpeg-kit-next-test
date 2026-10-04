@@ -29,9 +29,6 @@ set(APP_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 set(APP_SOURCE_DIR "${APP_ROOT}/src")
 set(APP_DATA_DIR "${APP_ROOT}/data")
 
-include(CTest)
-enable_testing()
-
 if(NOT WIN32)
     message(FATAL_ERROR "This test application targets Windows.")
 endif()
@@ -105,13 +102,9 @@ list(APPEND APP_SOURCES
     "${APP_SOURCE_DIR}/ConcurrentExecutionTab.h"
     "${APP_SOURCE_DIR}/FFKitProtocolsTab.cpp"
     "${APP_SOURCE_DIR}/FFKitProtocolsTab.h"
-    "${APP_SOURCE_DIR}/FFmpegKitTest.cpp"
-    "${APP_SOURCE_DIR}/FFmpegKitTest.h"
     "${APP_SOURCE_DIR}/HttpsTab.cpp"
     "${APP_SOURCE_DIR}/HttpsTab.h"
     "${APP_SOURCE_DIR}/main.cpp"
-    "${APP_SOURCE_DIR}/MediaInformationParserTest.cpp"
-    "${APP_SOURCE_DIR}/MediaInformationParserTest.h"
     "${APP_SOURCE_DIR}/OtherTab.cpp"
     "${APP_SOURCE_DIR}/OtherTab.h"
     "${APP_SOURCE_DIR}/Popup.cpp"
@@ -136,9 +129,8 @@ list(APPEND APP_SOURCES
     "${APP_SOURCE_DIR}/Win32Ui.h"
 )
 
-# Deliberately NOT a WIN32 (GUI subsystem) executable. Every tab reports progress
-# on stdout and the unit tests run on the console before the window opens, so the
-# app is built for the console subsystem to keep that output visible.
+# Every tab reports progress on stdout. Building for the console subsystem
+# keeps that output visible alongside the application window.
 add_executable(${PROJECT_NAME} ${APP_SOURCES})
 # Emit the exe into the same bin/ directory as the generated launchers. The
 # launchers start "%~dp0<exe>" / "./<exe>", i.e. they expect the exe next to

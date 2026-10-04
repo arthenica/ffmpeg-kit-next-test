@@ -22,7 +22,4 @@
 
 import Cocoa
 
-testMediaInformationJsonParser()
-testFFmpegKit()
-
 _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)

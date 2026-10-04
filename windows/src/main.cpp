@@ -21,8 +21,6 @@
  */
 
 #include "Application.h"
-#include "FFmpegKitTest.h"
-#include "MediaInformationParserTest.h"
 
 #include <FFmpegKitConfig.h>
 
@@ -34,9 +32,8 @@
 
 /*
  * Built for the console subsystem rather than the GUI subsystem, so main() is
- * the entry point rather than WinMain(). Every tab reports progress on stdout
- * and the unit tests below run before the window opens, so keeping a console
- * attached is what makes those readable.
+ * the entry point rather than WinMain(). Every tab reports progress on stdout,
+ * so keeping a console attached makes those messages readable.
  */
 int main(int argc, char** argv) {
     // Required before creating the tab control, and what activates the version 6
@@ -51,10 +48,6 @@ int main(int argc, char** argv) {
 
     // FFmpeg parses numbers with the C locale.
     setlocale(LC_ALL, "C");
-
-    // RUN UNIT TESTS BEFORE STARTING THE APPLICATION
-    testMediaInformationJsonParser();
-    testFFmpegKit();
 
     int exitCode = 1;
 

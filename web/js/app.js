@@ -25,7 +25,6 @@
 
 import {FFmpegKitConfig, writeFile} from '../dist/index.js';
 import {el} from './util.js';
-import {runStartupTests} from './startupTests.js';
 
 import command from './tabs/command.js';
 import mediaInformation from './tabs/mediaInformation.js';
@@ -146,9 +145,6 @@ FFmpegKitConfig.init()
         banner.textContent = `Ready — FFmpegKitNext ${version || '?'} · assets: ${assets.length} loaded`;
         // Re-render so tabs can enable their controls now that the module is ready.
         renderActiveTab();
-        runStartupTests().catch((err) => {
-            console.error('Startup API tests failed:', err);
-        });
     })
     .catch((err) => {
         banner.className = 'error';

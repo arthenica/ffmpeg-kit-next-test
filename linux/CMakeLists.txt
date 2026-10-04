@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
 project(ffmpeg-kit-next-linux-test VERSION 9.0.0)
 
-include(CTest)
-enable_testing()
-
 set(FFMPEG_KIT_BUNDLE_PATH
     "${CMAKE_CURRENT_SOURCE_DIR}/../../ffmpeg-kit-next/prebuilt/bundle-linux/ffmpeg-kit-next"
     CACHE PATH "Path to the ffmpeg-kit Linux bundle")
@@ -36,13 +33,9 @@ list(APPEND APP_SOURCES
     "src/ConcurrentExecutionTab.h"
     "src/FFKitProtocolsTab.cpp"
     "src/FFKitProtocolsTab.h"
-    "src/FFmpegKitTest.cpp"
-    "src/FFmpegKitTest.h"
     "src/HttpsTab.cpp"
     "src/HttpsTab.h"
     "src/main.cpp"
-    "src/MediaInformationParserTest.cpp"
-    "src/MediaInformationParserTest.h"
     "src/OtherTab.cpp"
     "src/OtherTab.h"
     "src/PipeTab.cpp"

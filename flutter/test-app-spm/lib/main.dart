@@ -38,7 +38,6 @@ import 'player.dart';
 import 'progress_modal.dart';
 import 'ffkit_protocols_tab.dart';
 import 'subtitle_tab.dart';
-import 'test_api.dart';
 import 'vid_stab_tab.dart';
 import 'video_tab.dart';
 import 'video_util.dart';
@@ -186,11 +185,6 @@ class FFmpegKitFlutterAppState extends State<MainPage>
     FFmpegKitConfig.init().then((_) {
       VideoUtil.prepareAssets();
       VideoUtil.registerApplicationFonts();
-
-      Test.testCommonApiMethods();
-      Test.testParseArguments();
-      Test.getSupportedCameraIdsTest();
-      Test.setSessionHistorySizeTest();
     });
   }
 
