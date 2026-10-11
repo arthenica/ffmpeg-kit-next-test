@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project("native-test")
+project("native-test" LANGUAGES C)
 
 # Provided by the ffmpeg-kit-next AAR through its prefab payload.
 # Requires the AAR to publish a prefab package named "ffmpeg-kit-next"
@@ -10,6 +10,13 @@ project("native-test")
 find_package(ffmpeg-kit-next REQUIRED CONFIG)
 
 add_library(native-test SHARED native-test.c)
+
+# Align both load segments and the RELRO boundary on 64-bit Android devices.
+if(ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "x86_64")
+    target_link_options(native-test PRIVATE
+            "-Wl,-z,max-page-size=16384"
+            "-Wl,-z,common-page-size=16384")
+endif()
 
 find_library(log-lib log)
 
