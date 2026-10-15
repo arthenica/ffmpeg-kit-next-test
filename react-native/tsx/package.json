@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg-kit-next-react-native-test",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "private": true,
   "scripts": {
     "android": "yarn typecheck && react-native run-android --interactive",
