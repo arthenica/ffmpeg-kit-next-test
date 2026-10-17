@@ -65,6 +65,12 @@ class PipeTab implements PlayerTab {
   }
 
   void createVideo() {
+    if (Platform.isWindows) {
+      showPopup('Named pipes are not supported on Windows. '
+          'Use the FFKIT PROTOCOLS tab to test memory input/output instead.');
+      return;
+    }
+
     getVideoFile().then((videoFile) {
       FFmpegKitConfig.registerNewFFmpegPipe().then((pipe1) {
         FFmpegKitConfig.registerNewFFmpegPipe().then((pipe2) {

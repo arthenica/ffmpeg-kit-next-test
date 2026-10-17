@@ -56,9 +56,9 @@ class _EmbeddedPlayerState extends State<EmbeddedPlayer> {
   void initState() {
     super.initState();
 
-    // video_player has no Linux implementation, so skip creating a controller
+    // video_player has no Linux or Windows implementation, so skip a controller
     // there. The owning tab keeps a null controller and skips playback.
-    if (!Platform.isLinux) {
+    if (!Platform.isLinux && !Platform.isWindows) {
       _videoPlayerController = VideoPlayerController.file(_file);
       _playerTab.setController(_videoPlayerController!);
     }

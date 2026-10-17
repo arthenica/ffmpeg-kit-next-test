@@ -35,6 +35,7 @@ import 'https_tab.dart';
 import 'other_tab.dart';
 import 'pipe_tab.dart';
 import 'player.dart';
+import 'popup.dart';
 import 'progress_modal.dart';
 import 'ffkit_protocols_tab.dart';
 import 'subtitle_tab.dart';
@@ -50,6 +51,7 @@ class FFmpegKitFlutterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: popupMessengerKey,
       theme: appThemeData,
       home: MainPage(),
     );
@@ -182,8 +184,8 @@ class FFmpegKitFlutterAppState extends State<MainPage>
       }
     });
 
-    FFmpegKitConfig.init().then((_) {
-      VideoUtil.prepareAssets();
+    FFmpegKitConfig.init().then((_) async {
+      await VideoUtil.prepareAssets();
       VideoUtil.registerApplicationFonts();
     });
   }
