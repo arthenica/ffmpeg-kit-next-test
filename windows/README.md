@@ -19,11 +19,15 @@ This assumes the Windows headers, import libraries, DLLs and package files alrea
 
 ### MinGW-w64
 
-Point `pkg-config` at the bundle, then consume the package from CMake:
+From the MSYS2 shell, point `pkg-config` at the bundle using a native Windows path. Native Windows `pkgconf` uses
+`;` to separate search paths:
 
 ```sh
-export PKG_CONFIG_PATH="<path-to-bundle>/lib/pkgconfig:${PKG_CONFIG_PATH}"
+ffmpeg_kit_pkgconfig="$(cygpath -m "<path-to-bundle>/lib/pkgconfig")"
+export PKG_CONFIG_PATH="${ffmpeg_kit_pkgconfig}${PKG_CONFIG_PATH:+;${PKG_CONFIG_PATH}}"
 ```
+
+Then consume the package from CMake:
 
 ```cmake
 find_package(PkgConfig REQUIRED)

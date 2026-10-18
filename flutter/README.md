@@ -7,6 +7,9 @@ Projects can still use `FFmpegKitNext` without Swift Package Manager, so this re
 test app. Both applications consume the same local `ffmpeg_kit_next_flutter` plugin; they only differ in the Apple
 dependency integration path.
 
+For desktop development, follow Flutter's [Linux setup](https://docs.flutter.dev/platform-integration/linux/setup)
+or [Windows setup](https://docs.flutter.dev/platform-integration/windows/setup).
+
 ## Test Apps
 
 - [CocoaPods test application](test-app-podspec)

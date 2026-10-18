@@ -33,13 +33,23 @@ allprojects {
     repositories {
         def ffmpegKitProject = rootProject.findProject(":ffmpeg-kit-next-react-native")
         if (ffmpegKitProject != null) {
-            maven {
-                url "${ffmpegKitProject.projectDir}/libs-maven"
+            exclusiveContent {
+                forRepository {
+                    maven {
+                        url "${ffmpegKitProject.projectDir}/libs-maven"
+                    }
+                }
+                filter {
+                    includeModule('com.arthenica', 'ffmpeg-kit-next')
+                }
             }
         }
     }
 }
 ```
+
+The `exclusiveContent` rule reserves `com.arthenica:ffmpeg-kit-next` for the local repository. Other dependencies
+continue to resolve from their normal repositories.
 
 React Native autolinking adds the package to Android and iOS. iOS and iPadOS use the vendored `xcframeworks` declared
 by the package podspec, so no extra CocoaPods source or explicit `pod` line is needed.

@@ -64,8 +64,8 @@ until an output file has been produced.
     make install
     ```
 
-3. Execute `ffmpeg-kit-linux-test-app.sh` from the `bin` directory.
+3. Execute `ffmpeg-kit-next-linux-test-app.sh` from the `bin` directory.
 
     ```shell
-    ./ffmpeg-kit-linux-test-app.sh
+    ./ffmpeg-kit-next-linux-test-app.sh
     ```
