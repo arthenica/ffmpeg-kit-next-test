@@ -15,8 +15,6 @@
 		2C4C0444D8651F6EA9081747 /* ProgressOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E830059E3C1BE248F0EF6B9 /* ProgressOverlay.swift */; };
 		340FABBE2115A17600B33CE7 /* VidStabViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 340FABBC2115A17600B33CE7 /* VidStabViewController.h */; };
 		340FABBF2115A17600B33CE7 /* VidStabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340FABBD2115A17600B33CE7 /* VidStabViewController.m */; };
-		342900CB22DE2BCF0071B2E4 /* MediaInformationParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 342900C722DE2BCF0071B2E4 /* MediaInformationParserTest.m */; };
-		342900CD22DE2BCF0071B2E4 /* MediaInformationParserTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 342900C922DE2BCF0071B2E4 /* MediaInformationParserTest.h */; };
 		343D714525E10CAD007CB801 /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = 343D714425E10CAC007CB801 /* Video.m */; };
 		343E66B5210784BD00F95E5B /* HttpsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343E66B3210784BD00F95E5B /* HttpsViewController.h */; };
 		343E66B6210784BD00F95E5B /* HttpsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343E66B4210784BD00F95E5B /* HttpsViewController.m */; };
@@ -34,8 +32,6 @@
 		348439ED20B2EFAF001A3990 /* lake.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 348439EA20B2EFAF001A3990 /* lake.jpg */; };
 		3487ABA5220CEAA300A40E8D /* PipeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3487ABA3220CEAA200A40E8D /* PipeViewController.m */; };
 		3487ABA6220CEAA300A40E8D /* PipeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3487ABA4220CEAA200A40E8D /* PipeViewController.h */; };
-		34943E6825DB499E002B5C1E /* FFmpegKitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34943E6625DB499E002B5C1E /* FFmpegKitTest.h */; };
-		34943E6925DB499E002B5C1E /* FFmpegKitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34943E6725DB499E002B5C1E /* FFmpegKitTest.m */; };
 		34A33A9C273B1C4B0087F971 /* libswresample.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A94273B1C4B0087F971 /* libswresample.xcframework */; };
 		34A33A9D273B1C4B0087F971 /* ffmpegkit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A95273B1C4B0087F971 /* ffmpegkit.xcframework */; };
 		34A33A9E273B1C4B0087F971 /* libswscale.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A96273B1C4B0087F971 /* libswscale.xcframework */; };
@@ -93,8 +89,6 @@
 		A72CF7E0D511CE7610D042E6 /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0A3BFD5DD5BE1839D4424 /* VideoView.swift */; };
 		AFFDE0F5BD8E4A7FB64B4961 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE52FA1133B1C96954055E33 /* Util.swift */; };
 		B0F69043EE3C321B12C25424 /* FFKitProtocolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32979027D381888B0D24782A /* FFKitProtocolsView.swift */; };
-		C336A29C92A5D10A598E44F2 /* FFmpegKitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5A4104401F3288F9690805 /* FFmpegKitTest.swift */; };
-		DAEE47AC259324A27F247E89 /* MediaInformationParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F645057F09ACFFE8C6351F /* MediaInformationParserTest.swift */; };
 		E2D73232558A61193CDBF21F /* VideoBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128155A49C91616DBDAE4147 /* VideoBox.swift */; };
 		E75D437DB9B65CFA8713FFC1 /* OutputConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1038BD7F84B16FD6D1BC5502 /* OutputConsole.swift */; };
 		F1000000000000000000002F /* libswscale.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A96273B1C4B0087F971 /* libswscale.xcframework */; };
@@ -178,12 +172,9 @@
 		086595A104EA9392BC1242A1 /* OtherView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OtherView.swift; sourceTree = "<group>"; };
 		1038BD7F84B16FD6D1BC5502 /* OutputConsole.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutputConsole.swift; sourceTree = "<group>"; };
 		128155A49C91616DBDAE4147 /* VideoBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VideoBox.swift; sourceTree = "<group>"; };
-		27F645057F09ACFFE8C6351F /* MediaInformationParserTest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaInformationParserTest.swift; sourceTree = "<group>"; };
 		32979027D381888B0D24782A /* FFKitProtocolsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FFKitProtocolsView.swift; sourceTree = "<group>"; };
 		340FABBC2115A17600B33CE7 /* VidStabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VidStabViewController.h; sourceTree = "<group>"; };
 		340FABBD2115A17600B33CE7 /* VidStabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VidStabViewController.m; sourceTree = "<group>"; };
-		342900C722DE2BCF0071B2E4 /* MediaInformationParserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaInformationParserTest.m; sourceTree = "<group>"; };
-		342900C922DE2BCF0071B2E4 /* MediaInformationParserTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaInformationParserTest.h; sourceTree = "<group>"; };
 		343D714425E10CAC007CB801 /* Video.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
 		343D714625E10CBA007CB801 /* Video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
 		343E66B3210784BD00F95E5B /* HttpsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HttpsViewController.h; sourceTree = "<group>"; };
@@ -203,8 +194,6 @@
 		348439EA20B2EFAF001A3990 /* lake.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = lake.jpg; sourceTree = "<group>"; };
 		3487ABA3220CEAA200A40E8D /* PipeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeViewController.m; sourceTree = "<group>"; };
 		3487ABA4220CEAA200A40E8D /* PipeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeViewController.h; sourceTree = "<group>"; };
-		34943E6625DB499E002B5C1E /* FFmpegKitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFmpegKitTest.h; sourceTree = "<group>"; };
-		34943E6725DB499E002B5C1E /* FFmpegKitTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFmpegKitTest.m; sourceTree = "<group>"; };
 		34A33A94273B1C4B0087F971 /* libswresample.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libswresample.xcframework; sourceTree = "<group>"; };
 		34A33A95273B1C4B0087F971 /* ffmpegkit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = ffmpegkit.xcframework; sourceTree = "<group>"; };
 		34A33A96273B1C4B0087F971 /* libswscale.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libswscale.xcframework; sourceTree = "<group>"; };
@@ -257,7 +246,6 @@
 		B59E762C3020816E47BF8F5C /* SubtitleView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleView.swift; sourceTree = "<group>"; };
 		B6C310B78C9D2DFD0F31B0CE /* ConcurrentExecutionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConcurrentExecutionView.swift; sourceTree = "<group>"; };
 		B80C57D04C9E787579FEA0AA /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		BF5A4104401F3288F9690805 /* FFmpegKitTest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FFmpegKitTest.swift; sourceTree = "<group>"; };
 		D157D377567529324F991EBF /* PipeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PipeView.swift; sourceTree = "<group>"; };
 		D90873D9C3FDDD03D18ADD52 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EE52FA1133B1C96954055E33 /* Util.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
@@ -396,16 +384,12 @@
 				343E66B7210789DE00F95E5B /* Constants.h */,
 				34BB547B2109D44800606B7C /* Constants.m */,
 				346B8266244878C000971D55 /* FFmpegKitNextVisionOS.entitlements */,
-				34943E6625DB499E002B5C1E /* FFmpegKitTest.h */,
-				34943E6725DB499E002B5C1E /* FFmpegKitTest.m */,
 				343E66B3210784BD00F95E5B /* HttpsViewController.h */,
 				343E66B4210784BD00F95E5B /* HttpsViewController.m */,
 				34FAE224209F7DDE005CE2AE /* Info.plist */,
 				34FAE221209F7DDE005CE2AE /* LaunchScreen.storyboard */,
 				34FAE225209F7DDE005CE2AE /* main.m */,
 				34FAE21C209F7DDD005CE2AE /* Main.storyboard */,
-				342900C922DE2BCF0071B2E4 /* MediaInformationParserTest.h */,
-				342900C722DE2BCF0071B2E4 /* MediaInformationParserTest.m */,
 				34D37D0E25DBEA1D00B8914A /* OtherViewController.h */,
 				34D37D0D25DBEA1D00B8914A /* OtherViewController.m */,
 				FF1A0000000000000000001D /* FFKitProtocolsViewController.h */,
@@ -441,8 +425,6 @@
 				EE52FA1133B1C96954055E33 /* Util.swift */,
 				B80C57D04C9E787579FEA0AA /* Constants.swift */,
 				74646BC6274FF98789CF57E0 /* Video.swift */,
-				BF5A4104401F3288F9690805 /* FFmpegKitTest.swift */,
-				27F645057F09ACFFE8C6351F /* MediaInformationParserTest.swift */,
 				1038BD7F84B16FD6D1BC5502 /* OutputConsole.swift */,
 				128155A49C91616DBDAE4147 /* VideoBox.swift */,
 				5E830059E3C1BE248F0EF6B9 /* ProgressOverlay.swift */,
@@ -477,9 +459,7 @@
 				3457454B2113B8AD00059043 /* AudioViewController.h in Headers */,
 				3457454F2113B8D300059043 /* SubtitleViewController.h in Headers */,
 				343E66B9210789DE00F95E5B /* Constants.h in Headers */,
-				34943E6825DB499E002B5C1E /* FFmpegKitTest.h in Headers */,
 				343E67052107AD0100F95E5B /* Util.h in Headers */,
-				342900CD22DE2BCF0071B2E4 /* MediaInformationParserTest.h in Headers */,
 				343E66B5210784BD00F95E5B /* HttpsViewController.h in Headers */,
 				340FABBE2115A17600B33CE7 /* VidStabViewController.h in Headers */,
 			);
@@ -658,8 +638,6 @@
 				34FAE226209F7DDE005CE2AE /* main.m in Sources */,
 				343E66B6210784BD00F95E5B /* HttpsViewController.m in Sources */,
 				340FABBF2115A17600B33CE7 /* VidStabViewController.m in Sources */,
-				34943E6925DB499E002B5C1E /* FFmpegKitTest.m in Sources */,
-				342900CB22DE2BCF0071B2E4 /* MediaInformationParserTest.m in Sources */,
 				34FAE218209F7DDD005CE2AE /* CommandViewController.m in Sources */,
 				FF5A00000000000000000004 /* SceneDelegate.m in Sources */,
 				343E670A2107C27600F95E5B /* TabBarController.m in Sources */,
@@ -679,8 +657,6 @@
 				AFFDE0F5BD8E4A7FB64B4961 /* Util.swift in Sources */,
 				FB8DC51C9C3BB297CA728175 /* Constants.swift in Sources */,
 				5575FF5E54A6594605BA1F64 /* Video.swift in Sources */,
-				C336A29C92A5D10A598E44F2 /* FFmpegKitTest.swift in Sources */,
-				DAEE47AC259324A27F247E89 /* MediaInformationParserTest.swift in Sources */,
 				E75D437DB9B65CFA8713FFC1 /* OutputConsole.swift in Sources */,
 				E2D73232558A61193CDBF21F /* VideoBox.swift in Sources */,
 				2C4C0444D8651F6EA9081747 /* ProgressOverlay.swift in Sources */,

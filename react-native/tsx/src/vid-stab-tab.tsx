@@ -1,0 +1,239 @@
+import React from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import RNFS from 'react-native-fs';
+import VideoUtil from './video-util';
+import {FFmpegKit, FFmpegKitConfig, Log, ReturnCode, StatisticsCallback} from 'ffmpeg-kit-next-react-native';
+import {styles} from './style';
+import {ProgressModal} from "./progress_modal";
+import Video, {VideoRef} from 'react-native-video';
+import {deleteFile, ffprint, notNull} from './util';
+import type {TabProps} from './navigation';
+
+type VidStabTabProps = TabProps<'VID.STAB'>;
+
+interface VidStabTabState {
+    videoVersion: number;
+    stabilizedVideoVersion: number;
+    videoPaused?: boolean;
+    stabilizedVideoPaused?: boolean;
+}
+
+export default class VidStabTab extends React.Component<VidStabTabProps, VidStabTabState> {
+
+    private readonly progressModalReference: React.RefObject<ProgressModal | null>;
+    private videoPlayer: VideoRef | null = null;
+    private stabilizedVideoPlayer: VideoRef | null = null;
+
+    constructor(props: VidStabTabProps) {
+        super(props);
+
+        this.state = {
+            videoVersion: 0,
+            stabilizedVideoVersion: 0
+        };
+
+        this.progressModalReference = React.createRef<ProgressModal>();
+    }
+
+    componentDidMount() {
+        this.props.navigation.addListener('focus', (_) => {
+            this.pauseVideo();
+            this.pauseStabilizedVideo();
+            this.setActive();
+        });
+    }
+
+    setActive() {
+        ffprint("VidStab Tab Activated");
+        FFmpegKitConfig.enableLogCallback(this.logCallback);
+        FFmpegKitConfig.enableStatisticsCallback(undefined as unknown as StatisticsCallback);
+    }
+
+    logCallback = (log: Log) => {
+        ffprint(log.getMessage() as string);
+    }
+
+    stabilizeVideo = async () => {
+        let image1Path = VideoUtil.assetPath(VideoUtil.ASSET_1);
+        let image2Path = VideoUtil.assetPath(VideoUtil.ASSET_2);
+        let image3Path = VideoUtil.assetPath(VideoUtil.ASSET_3);
+        let shakeResultsFile = this.getShakeResultsFile();
+        let videoFile = this.getVideoFile();
+        let stabilizedVideoFile = this.getStabilizedVideoFile();
+
+        // IF VIDEO IS PLAYING STOP PLAYBACK
+        this.pauseVideo();
+        this.pauseStabilizedVideo();
+
+        deleteFile(shakeResultsFile);
+        deleteFile(videoFile);
+        deleteFile(stabilizedVideoFile);
+
+        ffprint("Testing VID.STAB");
+
+        this.hideProgressDialog();
+        this.showCreateProgressDialog();
+
+        const videoCodec = await VideoUtil.packageVideoCodec();
+        let ffmpegCommand = VideoUtil.generateShakingVideoScript(image1Path, image2Path, image3Path, videoFile, videoCodec);
+
+        ffprint(`FFmpeg process started with arguments: \'${ffmpegCommand}\'.`);
+
+        FFmpegKit.executeAsync(ffmpegCommand, async (session) => {
+                const state = FFmpegKitConfig.sessionStateToString(await session.getState());
+                const returnCode = await session.getReturnCode();
+                const failStackTrace = await session.getFailStackTrace();
+
+                ffprint(`FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}`);
+
+                this.hideProgressDialog();
+
+                if (ReturnCode.isSuccess(returnCode)) {
+
+                    ffprint("Create completed successfully; stabilizing video.");
+
+                    let analyzeVideoCommand = `-y -i ${videoFile} -vf vidstabdetect=shakiness=10:accuracy=15:result=${shakeResultsFile} -f null -`;
+
+                    this.showStabilizeProgressDialog();
+
+                    ffprint(`FFmpeg process started with arguments: \'${analyzeVideoCommand}\'.`);
+
+                    FFmpegKit.executeAsync(analyzeVideoCommand, async (secondSession) => {
+                        const secondState = FFmpegKitConfig.sessionStateToString(await secondSession.getState());
+                        const secondReturnCode = await secondSession.getReturnCode();
+                        const secondFailStackTrace = await secondSession.getFailStackTrace();
+
+                        ffprint(`FFmpeg process exited with state ${secondState} and rc ${secondReturnCode}.${notNull(secondFailStackTrace, "\\n")}`);
+
+                        if (ReturnCode.isSuccess(secondReturnCode)) {
+
+                            let stabilizeVideoCommand = `-y -i ${videoFile} -vf vidstabtransform=smoothing=30:input=${shakeResultsFile} -c:v ${videoCodec} ${stabilizedVideoFile}`;
+
+                            ffprint(`FFmpeg process started with arguments: \'${stabilizeVideoCommand}\'.`);
+
+                            FFmpegKit.executeAsync(stabilizeVideoCommand, async (thirdSession) => {
+                                const thirdState = FFmpegKitConfig.sessionStateToString(await thirdSession.getState());
+                                const thirdReturnCode = await thirdSession.getReturnCode();
+                                const thirdFailStackTrace = await thirdSession.getFailStackTrace();
+
+                                ffprint(`FFmpeg process exited with state ${thirdState} and rc ${thirdReturnCode}.${notNull(thirdFailStackTrace, "\\n")}`);
+
+                                this.hideProgressDialog();
+
+                                if (ReturnCode.isSuccess(thirdReturnCode)) {
+                                    ffprint("Stabilize video completed successfully; playing videos.");
+                                    this.playVideo();
+                                    this.playStabilizedVideo();
+                                } else {
+                                    ffprint("Stabilize video failed. Please check log for the details.");
+                                }
+                            });
+                        } else {
+                            this.hideProgressDialog();
+                            ffprint("Stabilize video failed. Please check log for the details.");
+                        }
+                    });
+                } else {
+                    ffprint("Create video failed. Please check log for the details.");
+                }
+            }
+        );
+    }
+
+    playVideo() {
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            videoPaused: false, videoVersion: previousState.videoVersion + 1
+        }));
+    }
+
+    pauseVideo() {
+        this.setState({videoPaused: true});
+    }
+
+    playStabilizedVideo() {
+        // REMOUNT THE PLAYER SO IT (RE)LOADS THE SOURCE. THE FILE PATH IS FIXED, SO WITHOUT A NEW
+        // KEY react-native-video WOULD NOT RELOAD A SOURCE THAT FAILED TO LOAD AT FIRST RENDER.
+        this.setState(previousState => ({
+            stabilizedVideoPaused: false, stabilizedVideoVersion: previousState.stabilizedVideoVersion + 1
+        }));
+    }
+
+    pauseStabilizedVideo() {
+        this.setState({stabilizedVideoPaused: true});
+    }
+
+    getShakeResultsFile(): string {
+        return `${RNFS.CachesDirectoryPath}/transforms.trf`;
+    }
+
+    getVideoFile(): string {
+        return `${RNFS.CachesDirectoryPath}/video-shaking.mp4`;
+    }
+
+    getStabilizedVideoFile(): string {
+        return `${RNFS.CachesDirectoryPath}/video-stabilized.mp4`;
+    }
+
+    showCreateProgressDialog() {
+        this.progressModalReference.current?.show(`Creating video`);
+    }
+
+    showStabilizeProgressDialog() {
+        this.progressModalReference.current?.update(`Stabilizing video`);
+    }
+
+    hideProgressDialog() {
+        this.progressModalReference.current?.hide();
+    }
+
+    onPlayError = (err: unknown) => {
+        ffprint('Play error: ' + JSON.stringify(err));
+    }
+
+    render() {
+        return (
+            <View style={styles.screenStyle}>
+                <View style={styles.headerViewStyle}>
+                    <Text
+                        style={styles.headerTextStyle}>
+                        FFmpegKitNext ReactNative
+                    </Text>
+                </View>
+                <Video key={`video-${this.state.videoVersion}`}
+                       source={{uri: this.getVideoFile()}}
+                       ref={(ref) => {
+                           this.videoPlayer = ref
+                       }}
+                       hideShutterView={true}
+                       paused={this.state.videoPaused}
+                    // onError={this.onPlayError}
+                       resizeMode={"stretch"}
+                       style={styles.halfSizeVideoPlayerViewStyle}/>
+
+                <View style={[styles.buttonViewStyle, {paddingTop: 0, paddingBottom: 0}]}>
+                    <TouchableOpacity
+                        style={[styles.buttonStyle, {width: 160}]}
+                        onPress={this.stabilizeVideo}>
+                        <Text style={styles.buttonTextStyle}>STABILIZE VIDEO</Text>
+                    </TouchableOpacity>
+                </View>
+                <ProgressModal
+                    visible={false}
+                    ref={this.progressModalReference}/>
+                <Video key={`stabilized-${this.state.stabilizedVideoVersion}`}
+                       source={{uri: this.getStabilizedVideoFile()}}
+                       ref={(ref) => {
+                           this.stabilizedVideoPlayer = ref
+                       }}
+                       hideShutterView={true}
+                       paused={this.state.stabilizedVideoPaused}
+                    // onError={this.onPlayError}
+                       resizeMode={"stretch"}
+                       style={styles.halfSizeVideoPlayerViewStyle}/>
+            </View>
+        );
+    }
+
+}

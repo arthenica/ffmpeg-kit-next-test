@@ -26,7 +26,7 @@ Then consume the package from CMake:
 
 ```cmake
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.0)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.1)
 target_link_libraries(<your-target> PRIVATE PkgConfig::FFMPEG_KIT)
 ```
 
@@ -64,8 +64,8 @@ until an output file has been produced.
     make install
     ```
 
-3. Execute `ffmpeg-kit-linux-test-app.sh` from the `bin` directory.
+3. Execute `ffmpeg-kit-next-linux-test-app.sh` from the `bin` directory.
 
     ```shell
-    ./ffmpeg-kit-linux-test-app.sh
+    ./ffmpeg-kit-next-linux-test-app.sh
     ```

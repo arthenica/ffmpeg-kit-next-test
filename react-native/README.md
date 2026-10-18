@@ -1,45 +1,11 @@
-# FFmpegKitNext React Native Test Application
+# FFmpegKitNext React Native Test Applications
 
-The `react-native` folder contains a React Native test application that consumes the local
-`ffmpeg-kit-next-react-native` package.
+The `react-native` folder contains two React Native test applications for integrating `FFmpegKitNext`.
 
-## Demo
+Both applications consume the same local `ffmpeg-kit-next-react-native` package and expose the same tabs, screens and
+UI. They only differ in the language their sources are written in: one is plain JavaScript, the other is TypeScript.
 
-<br/>
+## Test Apps
 
-[![Test Application]](https://github.com/user-attachments/assets/6715f84d-3a93-43d1-9f74-5fd4097a23c6)
-
-## Add FFmpegKitNext to a React Native App
-
-`ffmpeg-kit-next-react-native` is consumed from a local package path, not from the npm registry.
-
-```sh
-yarn add file:../ffmpeg-kit-next/react-native
-```
-
-Or with npm:
-
-```sh
-npm install ../ffmpeg-kit-next/react-native
-```
-
-Adjust the path to match the location of `ffmpeg-kit-next` relative to your application.
-
-For Android, the plugin contains a local Maven repository under `android/libs-maven`. Gradle does not inherit
-repositories from dependencies, so declare that repository in the app's `android/build.gradle`:
-
-```groovy
-allprojects {
-    repositories {
-        def ffmpegKitProject = rootProject.findProject(":ffmpeg-kit-next-react-native")
-        if (ffmpegKitProject != null) {
-            maven {
-                url "${ffmpegKitProject.projectDir}/libs-maven"
-            }
-        }
-    }
-}
-```
-
-React Native autolinking adds the package to Android and iOS. iOS and iPadOS use the vendored `xcframeworks` declared
-by the package podspec, so no extra CocoaPods source or explicit `pod` line is needed.
+- [JavaScript test application](js)
+- [TypeScript test application](tsx)

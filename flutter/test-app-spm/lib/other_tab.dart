@@ -110,7 +110,7 @@ class OtherTab {
         deleteFile(outputFile);
 
         final ffmpegCommand =
-            "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${audioSampleFile.path}";
+            "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${commandPath(audioSampleFile.path)}";
 
         ffprint("Creating audio sample with '${ffmpegCommand}'.");
 
@@ -129,7 +129,7 @@ class OtherTab {
             ffprint("AUDIO sample created");
 
             final chromaprintCommand =
-                "-hide_banner -y -i ${audioSampleFile.path} -f chromaprint -fp_format 2 ${outputFile.path}";
+                "-hide_banner -y -i ${commandPath(audioSampleFile.path)} -f chromaprint -fp_format 2 ${commandPath(outputFile.path)}";
 
             ffprint("Creating audio sample with '${chromaprintCommand}'.");
 
@@ -168,7 +168,7 @@ class OtherTab {
 
     this.getDav1dOutputFile().then((outputFile) {
       final ffmpegCommand =
-          "-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} -c:v mpeg4 ${outputFile.path}";
+          "-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} -c:v mpeg4 ${commandPath(outputFile.path)}";
 
       ffprint("FFmpeg process started with arguments:'${ffmpegCommand}'.");
 
@@ -192,7 +192,7 @@ class OtherTab {
         ffprint("Testing 'webp' codec");
 
         final ffmpegCommand =
-            "-hide_banner -y -i ${imagePath} ${outputPath.path}";
+            "-hide_banner -y -i ${commandPath(imagePath)} ${commandPath(outputPath.path)}";
 
         ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
 
@@ -265,7 +265,7 @@ class OtherTab {
     ffprint("Testing 'libjxl' codec");
 
     final ffmpegCommand =
-        "-hide_banner -y -i $imagePath -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 ${jxlOutputFile.path}";
+        "-hide_banner -y -i ${commandPath(imagePath)} -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 ${commandPath(jxlOutputFile.path)}";
 
     ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
 
@@ -282,7 +282,7 @@ class OtherTab {
 
       if (ReturnCode.isSuccess(returnCode)) {
         final decodeCommand =
-            "-hide_banner -y -i ${jxlOutputFile.path} -frames:v 1 -c:v png -update 1 ${decodedOutputFile.path}";
+            "-hide_banner -y -i ${commandPath(jxlOutputFile.path)} -frames:v 1 -c:v png -update 1 ${commandPath(decodedOutputFile.path)}";
 
         ffprint("FFmpeg process started with arguments '${decodeCommand}'.");
 

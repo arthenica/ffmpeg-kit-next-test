@@ -19,15 +19,19 @@ This assumes the Windows headers, import libraries, DLLs and package files alrea
 
 ### MinGW-w64
 
-Point `pkg-config` at the bundle, then consume the package from CMake:
+From the MSYS2 shell, point `pkg-config` at the bundle using a native Windows path. Native Windows `pkgconf` uses
+`;` to separate search paths:
 
 ```sh
-export PKG_CONFIG_PATH="<path-to-bundle>/lib/pkgconfig:${PKG_CONFIG_PATH}"
+ffmpeg_kit_pkgconfig="$(cygpath -m "<path-to-bundle>/lib/pkgconfig")"
+export PKG_CONFIG_PATH="${ffmpeg_kit_pkgconfig}${PKG_CONFIG_PATH:+;${PKG_CONFIG_PATH}}"
 ```
+
+Then consume the package from CMake:
 
 ```cmake
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.0)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.1)
 target_link_libraries(<your-target> PRIVATE PkgConfig::FFMPEG_KIT)
 ```
 
@@ -37,7 +41,7 @@ Point CMake at the bundle root and use the package config it ships:
 
 ```cmake
 list(APPEND CMAKE_PREFIX_PATH "<path-to-bundle>")
-find_package(ffmpeg-kit-next 9.0.0 REQUIRED CONFIG)
+find_package(ffmpeg-kit-next 9.0.1 REQUIRED CONFIG)
 target_link_libraries(<your-target> PRIVATE ffmpeg-kit-next::ffmpegkit)
 ```
 
@@ -47,7 +51,8 @@ At runtime, copy the bundle's `bin/*.dll` next to your executable or add the bun
 
 ### MinGW-w64
 
-Build from an MSYS2 MinGW shell matching the environment used to build the library (`CLANGARM64` on an `arm64` host).
+Build from the MSYS2 shell matching the environment used to build the library (`CLANG64` on an `x86-64` host,
+`CLANGARM64` on an `arm64` host).
 
 - `cmake` >= 3.10
 - C++ compiler with C++17 support
@@ -60,7 +65,7 @@ pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain ${MINGW_PACKAGE_PREFIX}-cmake ${MING
 
 Build from a plain Windows shell.
 
-- `cmake` > 3.20, the native Windows build
+- `cmake` >= 3.20, the native Windows build
 - Visual Studio 2022, or Visual Studio Build Tools 2022 with the **Desktop development with C++** workload
 
 ## Run This Test App

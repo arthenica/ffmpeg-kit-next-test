@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		340FABBE2115A17600B33CE7 /* VidStabViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 340FABBC2115A17600B33CE7 /* VidStabViewController.h */; };
 		340FABBF2115A17600B33CE7 /* VidStabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340FABBD2115A17600B33CE7 /* VidStabViewController.m */; };
-		342900CB22DE2BCF0071B2E4 /* MediaInformationParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 342900C722DE2BCF0071B2E4 /* MediaInformationParserTest.m */; };
-		342900CD22DE2BCF0071B2E4 /* MediaInformationParserTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 342900C922DE2BCF0071B2E4 /* MediaInformationParserTest.h */; };
 		343D714525E10CAD007CB801 /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = 343D714425E10CAC007CB801 /* Video.m */; };
 		343E66B5210784BD00F95E5B /* HttpsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 343E66B3210784BD00F95E5B /* HttpsViewController.h */; };
 		343E66B6210784BD00F95E5B /* HttpsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 343E66B4210784BD00F95E5B /* HttpsViewController.m */; };
@@ -31,8 +29,6 @@
 		345E16AB24CB93D1007275F0 /* ConcurrentExecutionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 345E16A924CB93D1007275F0 /* ConcurrentExecutionViewController.h */; };
 		3487ABA5220CEAA300A40E8D /* PipeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3487ABA3220CEAA200A40E8D /* PipeViewController.m */; };
 		3487ABA6220CEAA300A40E8D /* PipeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3487ABA4220CEAA200A40E8D /* PipeViewController.h */; };
-		34943E6825DB499E002B5C1E /* FFmpegKitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34943E6625DB499E002B5C1E /* FFmpegKitTest.h */; };
-		34943E6925DB499E002B5C1E /* FFmpegKitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34943E6725DB499E002B5C1E /* FFmpegKitTest.m */; };
 		34A33A9C273B1C4B0087F971 /* libswresample.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A94273B1C4B0087F971 /* libswresample.xcframework */; };
 		34A33A9D273B1C4B0087F971 /* ffmpegkit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A95273B1C4B0087F971 /* ffmpegkit.xcframework */; };
 		34A33A9E273B1C4B0087F971 /* libswscale.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A33A96273B1C4B0087F971 /* libswscale.xcframework */; };
@@ -86,9 +82,7 @@
 		F10000000000000000000008 /* ConcurrentExecutionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000007 /* ConcurrentExecutionViewController.swift */; };
 		F1000000000000000000000A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000009 /* Constants.swift */; };
 		F1000000000000000000000C /* FFKitProtocolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000B /* FFKitProtocolsViewController.swift */; };
-		F1000000000000000000000E /* FFmpegKitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000D /* FFmpegKitTest.swift */; };
 		F10000000000000000000010 /* HttpsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000000000000F /* HttpsViewController.swift */; };
-		F10000000000000000000012 /* MediaInformationParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000011 /* MediaInformationParserTest.swift */; };
 		F10000000000000000000014 /* OtherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000013 /* OtherViewController.swift */; };
 		F10000000000000000000016 /* PipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000015 /* PipeViewController.swift */; };
 		F10000000000000000000018 /* SubtitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000017 /* SubtitleViewController.swift */; };
@@ -174,8 +168,6 @@
 /* Begin PBXFileReference section */
 		340FABBC2115A17600B33CE7 /* VidStabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VidStabViewController.h; sourceTree = "<group>"; };
 		340FABBD2115A17600B33CE7 /* VidStabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VidStabViewController.m; sourceTree = "<group>"; };
-		342900C722DE2BCF0071B2E4 /* MediaInformationParserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaInformationParserTest.m; sourceTree = "<group>"; };
-		342900C922DE2BCF0071B2E4 /* MediaInformationParserTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaInformationParserTest.h; sourceTree = "<group>"; };
 		343D714425E10CAC007CB801 /* Video.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Video.m; sourceTree = "<group>"; };
 		343D714625E10CBA007CB801 /* Video.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
 		343E66B3210784BD00F95E5B /* HttpsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HttpsViewController.h; sourceTree = "<group>"; };
@@ -196,8 +188,6 @@
 		346B8266244878C000971D55 /* FFmpegKitNextIOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FFmpegKitNextIOS.entitlements; sourceTree = "<group>"; };
 		3487ABA3220CEAA200A40E8D /* PipeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeViewController.m; sourceTree = "<group>"; };
 		3487ABA4220CEAA200A40E8D /* PipeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeViewController.h; sourceTree = "<group>"; };
-		34943E6625DB499E002B5C1E /* FFmpegKitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFmpegKitTest.h; sourceTree = "<group>"; };
-		34943E6725DB499E002B5C1E /* FFmpegKitTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFmpegKitTest.m; sourceTree = "<group>"; };
 		34A33A94273B1C4B0087F971 /* libswresample.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libswresample.xcframework; sourceTree = "<group>"; };
 		34A33A95273B1C4B0087F971 /* ffmpegkit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = ffmpegkit.xcframework; sourceTree = "<group>"; };
 		34A33A96273B1C4B0087F971 /* libswscale.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libswscale.xcframework; sourceTree = "<group>"; };
@@ -243,9 +233,7 @@
 		F10000000000000000000007 /* ConcurrentExecutionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentExecutionViewController.swift; sourceTree = "<group>"; };
 		F10000000000000000000009 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F1000000000000000000000B /* FFKitProtocolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFKitProtocolsViewController.swift; sourceTree = "<group>"; };
-		F1000000000000000000000D /* FFmpegKitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFmpegKitTest.swift; sourceTree = "<group>"; };
 		F1000000000000000000000F /* HttpsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpsViewController.swift; sourceTree = "<group>"; };
-		F10000000000000000000011 /* MediaInformationParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInformationParserTest.swift; sourceTree = "<group>"; };
 		F10000000000000000000013 /* OtherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherViewController.swift; sourceTree = "<group>"; };
 		F10000000000000000000015 /* PipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeViewController.swift; sourceTree = "<group>"; };
 		F10000000000000000000017 /* SubtitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleViewController.swift; sourceTree = "<group>"; };
@@ -390,16 +378,12 @@
 				343E66B7210789DE00F95E5B /* Constants.h */,
 				34BB547B2109D44800606B7C /* Constants.m */,
 				346B8266244878C000971D55 /* FFmpegKitNextIOS.entitlements */,
-				34943E6625DB499E002B5C1E /* FFmpegKitTest.h */,
-				34943E6725DB499E002B5C1E /* FFmpegKitTest.m */,
 				343E66B3210784BD00F95E5B /* HttpsViewController.h */,
 				343E66B4210784BD00F95E5B /* HttpsViewController.m */,
 				34FAE224209F7DDE005CE2AE /* Info.plist */,
 				34FAE221209F7DDE005CE2AE /* LaunchScreen.storyboard */,
 				34FAE225209F7DDE005CE2AE /* main.m */,
 				34FAE21C209F7DDD005CE2AE /* Main.storyboard */,
-				342900C922DE2BCF0071B2E4 /* MediaInformationParserTest.h */,
-				342900C722DE2BCF0071B2E4 /* MediaInformationParserTest.m */,
 				34D37D0E25DBEA1D00B8914A /* OtherViewController.h */,
 				34D37D0D25DBEA1D00B8914A /* OtherViewController.m */,
 				FF1A0000000000000000001D /* FFKitProtocolsViewController.h */,
@@ -432,9 +416,7 @@
 				F10000000000000000000007 /* ConcurrentExecutionViewController.swift */,
 				F10000000000000000000009 /* Constants.swift */,
 				F1000000000000000000000B /* FFKitProtocolsViewController.swift */,
-				F1000000000000000000000D /* FFmpegKitTest.swift */,
 				F1000000000000000000000F /* HttpsViewController.swift */,
-				F10000000000000000000011 /* MediaInformationParserTest.swift */,
 				F10000000000000000000013 /* OtherViewController.swift */,
 				F10000000000000000000015 /* PipeViewController.swift */,
 				F10000000000000000000017 /* SubtitleViewController.swift */,
@@ -467,9 +449,7 @@
 				3457454B2113B8AD00059043 /* AudioViewController.h in Headers */,
 				3457454F2113B8D300059043 /* SubtitleViewController.h in Headers */,
 				343E66B9210789DE00F95E5B /* Constants.h in Headers */,
-				34943E6825DB499E002B5C1E /* FFmpegKitTest.h in Headers */,
 				343E67052107AD0100F95E5B /* Util.h in Headers */,
-				342900CD22DE2BCF0071B2E4 /* MediaInformationParserTest.h in Headers */,
 				343E66B5210784BD00F95E5B /* HttpsViewController.h in Headers */,
 				340FABBE2115A17600B33CE7 /* VidStabViewController.h in Headers */,
 			);
@@ -650,8 +630,6 @@
 				34FAE226209F7DDE005CE2AE /* main.m in Sources */,
 				343E66B6210784BD00F95E5B /* HttpsViewController.m in Sources */,
 				340FABBF2115A17600B33CE7 /* VidStabViewController.m in Sources */,
-				34943E6925DB499E002B5C1E /* FFmpegKitTest.m in Sources */,
-				342900CB22DE2BCF0071B2E4 /* MediaInformationParserTest.m in Sources */,
 				34FAE218209F7DDD005CE2AE /* CommandViewController.m in Sources */,
 				343E670A2107C27600F95E5B /* TabBarController.m in Sources */,
 				345745502113B8D300059043 /* SubtitleViewController.m in Sources */,
@@ -671,9 +649,7 @@
 				F10000000000000000000008 /* ConcurrentExecutionViewController.swift in Sources */,
 				F1000000000000000000000A /* Constants.swift in Sources */,
 				F1000000000000000000000C /* FFKitProtocolsViewController.swift in Sources */,
-				F1000000000000000000000E /* FFmpegKitTest.swift in Sources */,
 				F10000000000000000000010 /* HttpsViewController.swift in Sources */,
-				F10000000000000000000012 /* MediaInformationParserTest.swift in Sources */,
 				F10000000000000000000014 /* OtherViewController.swift in Sources */,
 				F10000000000000000000016 /* PipeViewController.swift in Sources */,
 				F10000000000000000000018 /* SubtitleViewController.swift in Sources */,

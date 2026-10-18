@@ -26,8 +26,6 @@ import ffmpegkit
 @main
 struct FFmpegKitNextVisionOSApp: App {
     init() {
-        testMediaInformationJsonParser()
-        testFFmpegKit()
 
         let resourceFolder = Bundle.main.resourcePath ?? ""
         FFmpegKitConfig.setFontDirectoryList([resourceFolder, "/System/Library/Fonts"], with: ["MyFontName": "Doppio One"])

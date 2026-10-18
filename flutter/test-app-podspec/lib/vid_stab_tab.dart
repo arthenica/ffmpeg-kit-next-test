@@ -116,7 +116,7 @@ class VidStabTab {
                         "Create completed successfully; stabilizing video.");
 
                     final analyzeVideoCommand =
-                        "-y -i ${videoFile.path} -vf vidstabdetect=shakiness=10:accuracy=15:result=${shakeResultsFile.path} -f null -";
+                        '-y -i ${commandPath(videoFile.path)} -vf "vidstabdetect=shakiness=10:accuracy=15:result=${filterPath(shakeResultsFile.path)}" -f null -';
 
                     this.showStabilizeProgressDialog();
 
@@ -137,7 +137,7 @@ class VidStabTab {
 
                       if (ReturnCode.isSuccess(secondReturnCode)) {
                         final stabilizeVideoCommand =
-                            "-y -i ${videoFile.path} -vf vidstabtransform=smoothing=30:input=${shakeResultsFile.path} -c:v $videoCodec ${stabilizedVideoFile.path}";
+                            '-y -i ${commandPath(videoFile.path)} -vf "vidstabtransform=smoothing=30:input=${filterPath(shakeResultsFile.path)}" -c:v $videoCodec ${commandPath(stabilizedVideoFile.path)}';
 
                         ffprint(
                             "FFmpeg process started with arguments: \'${stabilizeVideoCommand}\'.");

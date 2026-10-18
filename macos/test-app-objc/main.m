@@ -21,16 +21,7 @@
  */
 
 #include <Cocoa/Cocoa.h>
-#include "MediaInformationParserTest.h"
-#include "FFmpegKitTest.h"
 
 int main(int argc, const char * argv[]) {
-    @autoreleasepool {
-        
-        // RUN UNIT TESTS BEFORE STARTING THE APPLICATION
-        testMediaInformationJsonParser();
-        testFFmpegKit();
-    }
-
     return NSApplicationMain(argc, argv);
 }

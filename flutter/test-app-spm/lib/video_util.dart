@@ -45,18 +45,23 @@ class VideoUtil {
     var fontNameMapping = Map<String, String>();
     fontNameMapping["MyFontName"] = "Doppio One";
     VideoUtil.tempDirectory.then((tempDirectory) {
-      FFmpegKitConfig.setFontDirectoryList(
-          [tempDirectory.path, "/system/fonts", "/System/Library/Fonts"],
-          fontNameMapping);
+      FFmpegKitConfig.setFontDirectoryList([
+        tempDirectory.path,
+        if (Platform.isWindows)
+          join(Platform.environment['WINDIR'] ?? r'C:\Windows', 'Fonts')
+        else ...['/system/fonts', '/System/Library/Fonts'],
+      ], fontNameMapping);
       FFmpegKitConfig.setEnvironmentVariable(
           "FFREPORT",
           "file=" +
-              new File(tempDirectory.path + "/" + today() + "-ffreport.txt")
-                  .path);
+              join(tempDirectory.path, today() + '-ffreport.txt')
+                  .replaceAll('\\', '/')
+                  .replaceAll("'", r"\'")
+                  .replaceAll(':', r'\:'));
     });
   }
 
-  static void prepareAssets() async {
+  static Future<void> prepareAssets() async {
     await VideoUtil.assetToFile(ASSET_1);
     await VideoUtil.assetToFile(ASSET_2);
     await VideoUtil.assetToFile(ASSET_3);
@@ -128,15 +133,9 @@ class VideoUtil {
       String videoCodec,
       String pixelFormat,
       String customOptions) {
-    return "-hide_banner -y -loop 1 -i '" +
-        image1Path +
-        "' " +
-        "-loop   1 -i \"" +
-        image2Path +
-        "\" " +
-        "-loop 1   -i \"" +
-        image3Path +
-        "\" " +
+    return "-hide_banner -y -loop 1 -i ${commandPath(image1Path)} " +
+        "-loop 1 -i ${commandPath(image2Path)} " +
+        "-loop 1 -i ${commandPath(image3Path)} " +
         "-filter_complex " +
         "\"[0:v]setpts=PTS-STARTPTS,scale=w='if(gte(iw/ih,640/427),min(iw,640),-1)':h='if(gte(iw/ih,640/427),-1,min(ih,427))',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream1out1][stream1out2];" +
         "[1:v]setpts=PTS-STARTPTS,scale=w='if(gte(iw/ih,640/427),min(iw,640),-1)':h='if(gte(iw/ih,640/427),-1,min(ih,427))',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream2out1][stream2out2];" +
@@ -157,7 +156,7 @@ class VideoUtil {
         "-c:v " +
         videoCodec +
         " -r 30 " +
-        videoFilePath;
+        commandPath(videoFilePath);
   }
 
   static String generateShakingVideoScript(
@@ -166,15 +165,9 @@ class VideoUtil {
       final String image3Path,
       final String videoFilePath,
       [final String videoCodec = "mpeg4"]) {
-    return "-hide_banner -y -loop 1 -i \"" +
-        image1Path +
-        "\" " +
-        "-loop 1 -i '" +
-        image2Path +
-        "' " +
-        "-loop 1 -i " +
-        image3Path +
-        " " +
+    return "-hide_banner -y -loop 1 -i ${commandPath(image1Path)} " +
+        "-loop 1 -i ${commandPath(image2Path)} " +
+        "-loop 1 -i ${commandPath(image3Path)} " +
         "-f lavfi -i color=black:s=640x427 " +
         "-filter_complex \"" +
         "[0:v]setpts=PTS-STARTPTS,scale=w=\'if(gte(iw/ih,640/427),min(iw,640),-1)\':h=\'if(gte(iw/ih,640/427),-1,min(ih,427))\',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1[stream1out];" +
@@ -190,7 +183,7 @@ class VideoUtil {
         " -map [video] -fps_mode cfr -c:v " +
         videoCodec +
         " -r 30 " +
-        videoFilePath;
+        commandPath(videoFilePath);
   }
 
   static String generateCreateVideoWithPipesScript(
@@ -199,15 +192,9 @@ class VideoUtil {
       final String image3Pipe,
       final String videoFilePath,
       [final String videoCodec = "mpeg4"]) {
-    return "-hide_banner -y -i \"" +
-        image1Pipe +
-        "\" " +
-        "-i '" +
-        image2Pipe +
-        "' " +
-        "-i " +
-        image3Pipe +
-        " " +
+    return "-hide_banner -y -i ${commandPath(image1Pipe)} " +
+        "-i ${commandPath(image2Pipe)} " +
+        "-i ${commandPath(image3Pipe)} " +
         "-filter_complex \"" +
         "[0:v]loop=loop=-1:size=1:start=0,setpts=PTS-STARTPTS,scale=w=\'if(gte(iw/ih,640/427),min(iw,640),-1)\':h=\'if(gte(iw/ih,640/427),-1,min(ih,427))\',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream1out1][stream1out2];" +
         "[1:v]loop=loop=-1:size=1:start=0,setpts=PTS-STARTPTS,scale=w=\'if(gte(iw/ih,640/427),min(iw,640),-1)\':h=\'if(gte(iw/ih,640/427),-1,min(ih,427))\',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream2out1][stream2out2];" +
@@ -224,7 +211,7 @@ class VideoUtil {
         " -map [video] -fps_mode cfr -c:v " +
         videoCodec +
         " -r 30 " +
-        videoFilePath;
+        commandPath(videoFilePath);
   }
 
   static Future<String> packageVideoCodec() async {
@@ -234,8 +221,8 @@ class VideoUtil {
 
   static generateZscaleVideoScript(inputVideoFilePath, outputVideoFilePath) {
     return "-y -i " +
-        inputVideoFilePath +
+        commandPath(inputVideoFilePath) +
         " -vf zscale=tin=smpte2084:min=bt2020nc:pin=bt2020:rin=tv:t=smpte2084:m=bt2020nc:p=bt2020:r=tv,zscale=t=linear,tonemap=tonemap=clip,zscale=t=bt709,format=yuv420p " +
-        outputVideoFilePath;
+        commandPath(outputVideoFilePath);
   }
 }

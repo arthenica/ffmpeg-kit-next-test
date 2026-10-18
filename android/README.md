@@ -31,15 +31,17 @@ Then add the Android package to the app module:
 
 ```groovy
 dependencies {
-    implementation "com.arthenica:ffmpeg-kit-next:9.0.0"
+    implementation "com.arthenica:ffmpeg-kit-next:9.0.1"
 }
 ```
 
-When the local Maven repository is used, the generated POM resolves `smart-exception-java` transitively. If you add
-`ffmpeg-kit-next.aar` manually instead of using the Maven repository, also add:
+When the local Maven repository is used, the generated POM resolves `smart-exception-java` and `kotlin-stdlib`
+transitively. If you add `ffmpeg-kit-next.aar` manually instead of using the Maven repository, declare both dependencies
+using the versions from the matching generated POM:
 
 ```groovy
 implementation "com.arthenica:smart-exception-java:0.2.1"
+implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.21"
 ```
 
 For a native Android application, enable `prefab true` in the app module so CMake can consume the native headers and

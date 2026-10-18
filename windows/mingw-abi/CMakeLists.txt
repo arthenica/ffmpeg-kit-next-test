@@ -1,7 +1,7 @@
 # 3.10 rather than 3.7: common.cmake pins CMAKE_CXX_STANDARD to 17, which CMake
 # only understands from 3.8 onwards.
 cmake_minimum_required(VERSION 3.10)
-project(ffmpeg-kit-next-windows-test VERSION 9.0.0)
+project(ffmpeg-kit-next-windows-test VERSION 9.0.1)
 
 # MinGW-w64 build of the Windows test application.
 #
@@ -50,7 +50,7 @@ else()
 endif()
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.0)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.1)
 
 set(FFMPEG_KIT_TARGET PkgConfig::FFMPEG_KIT)
 

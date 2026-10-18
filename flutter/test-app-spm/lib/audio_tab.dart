@@ -122,7 +122,7 @@ class AudioTab {
       deleteFile(audioSampleFile);
 
       String ffmpegCommand =
-          "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${audioSampleFile.path}";
+          "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${commandPath(audioSampleFile.path)}";
 
       ffprint("Creating audio sample with '$ffmpegCommand'.");
 
@@ -209,8 +209,8 @@ class AudioTab {
 
   Future<String> generateAudioEncodeScript() async {
     String audioCodec = _selectedCodec;
-    String audioSampleFile = (await getAudioSampleFile()).path;
-    String audioOutputFile = (await getAudioOutputFile()).path;
+    String audioSampleFile = commandPath((await getAudioSampleFile()).path);
+    String audioOutputFile = commandPath((await getAudioOutputFile()).path);
 
     switch (audioCodec) {
       case "mp2 (twolame)":

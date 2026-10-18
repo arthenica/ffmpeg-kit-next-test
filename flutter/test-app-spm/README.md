@@ -31,13 +31,23 @@ allprojects {
         mavenCentral()
         def ffmpegKitProject = rootProject.findProject(":ffmpeg_kit_next_flutter")
         if (ffmpegKitProject != null) {
-            maven {
-                url "${ffmpegKitProject.projectDir}/libs-maven"
+            exclusiveContent {
+                forRepository {
+                    maven {
+                        url "${ffmpegKitProject.projectDir}/libs-maven"
+                    }
+                }
+                filter {
+                    includeModule('com.arthenica', 'ffmpeg-kit-next')
+                }
             }
         }
     }
 }
 ```
+
+The `exclusiveContent` rule reserves `com.arthenica:ffmpeg-kit-next` for the local repository. Other dependencies
+continue to resolve from their normal repositories.
 
 Keep this in `android/build.gradle`, not in `settings.gradle` dependency resolution. For iOS, iPadOS and macOS, the
 plugin's `Package.swift` references the copied `xcframeworks` as binary targets when Swift Package Manager is enabled;

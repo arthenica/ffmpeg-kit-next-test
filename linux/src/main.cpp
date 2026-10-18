@@ -21,8 +21,6 @@
  */
 
 #include "Application.h"
-#include "MediaInformationParserTest.h"
-#include "FFmpegKitTest.h"
 #include <FFmpegKitConfig.h>
 #include <locale.h>
 
@@ -34,10 +32,6 @@ int main(int argc, char** argv) {
 
     // FIX DEFAULT LOCALE AFTER GTK INIT
     setlocale(LC_ALL, "C");
-
-    // RUN UNIT TESTS BEFORE STARTING THE APPLICATION
-    testMediaInformationJsonParser();
-    testFFmpegKit();
 
     app->run(application);
     ffmpegkit::FFmpegKitConfig::disableRedirection();

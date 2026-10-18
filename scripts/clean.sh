@@ -31,5 +31,8 @@ cd "$CURRENT_WORKING_DIRECTORY"
 cd ../flutter/test-app-spm && ./clean.sh
 cd "$CURRENT_WORKING_DIRECTORY"
 
-cd ../react-native && ./clean.sh
+cd ../react-native/js && ./clean.sh
+cd "$CURRENT_WORKING_DIRECTORY"
+
+cd ../react-native/tsx && ./clean.sh
 cd "$CURRENT_WORKING_DIRECTORY"

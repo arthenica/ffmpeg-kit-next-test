@@ -25,6 +25,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+final popupMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 void showPopup(String text) {
   if (Platform.isAndroid || Platform.isIOS) {
     Fluttertoast.showToast(
@@ -35,5 +37,21 @@ void showPopup(String text) {
         backgroundColor: Colors.white70,
         textColor: Colors.black87,
         fontSize: 16.0);
+  } else {
+    // The initial tab requests a popup from initState, before its Scaffold has
+    // registered with the messenger. Present after the widget tree is built.
+    final binding = WidgetsBinding.instance;
+    binding.addPostFrameCallback((_) {
+      final messenger = popupMessengerKey.currentState;
+      if (messenger == null || !messenger.mounted) {
+        return;
+      }
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(text)));
+    });
+    // Calls between frames (for example an FFmpeg completion callback) also
+    // need a frame so the post-frame callback gets a chance to run.
+    binding.ensureVisualUpdate();
   }
 }

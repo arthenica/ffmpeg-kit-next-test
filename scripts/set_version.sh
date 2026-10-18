@@ -634,8 +634,10 @@ if should_update_platform "flutter"; then
 fi
 
 if should_update_platform "react-native"; then
-    update_react_native_package_file "react-native/package.json" "$VERSION"
-    update_react_native_gradle_file "react-native/android/app/build.gradle" "$REACT_NATIVE_VERSION_CODE" "$VERSION"
+    update_react_native_package_file "react-native/js/package.json" "$VERSION"
+    update_react_native_gradle_file "react-native/js/android/app/build.gradle" "$REACT_NATIVE_VERSION_CODE" "$VERSION"
+    update_react_native_package_file "react-native/tsx/package.json" "$VERSION"
+    update_react_native_gradle_file "react-native/tsx/android/app/build.gradle" "$REACT_NATIVE_VERSION_CODE" "$VERSION"
 fi
 
 if should_update_platform "windows"; then

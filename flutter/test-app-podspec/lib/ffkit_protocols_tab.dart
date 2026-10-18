@@ -52,11 +52,10 @@ String escapeDrawtextText(String text) {
       .replaceAll("'", "'\\''");
 }
 
-/// Builds the ffkitmem drawtext command. Ported verbatim from the Android
-/// FFmpegCommands.buildFFKitMemProtocolCommand.
+/// Builds the ffkitmem drawtext command.
 String buildFFKitMemProtocolCommand(
     String inputUrl, String outputUrl, String fontPath, String text) {
-  final String drawtext = "drawtext=fontfile=$fontPath"
+  final String drawtext = "drawtext=fontfile=${filterPath(fontPath)}"
       ":text='${escapeDrawtextText(text)}'"
       ":x=(w-text_w)/2:y=h-th-40:fontsize=h/15"
       ":fontcolor=white:box=1:boxcolor=black@0.5";

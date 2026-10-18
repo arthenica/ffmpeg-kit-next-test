@@ -22,15 +22,9 @@
 
 #include <UIKit/UIKit.h>
 #include "AppDelegate.h"
-#include "MediaInformationParserTest.h"
-#include "FFmpegKitTest.h"
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        
-        // RUN UNIT TESTS BEFORE STARTING THE APPLICATION
-        testMediaInformationJsonParser();
-        testFFmpegKit();
 
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

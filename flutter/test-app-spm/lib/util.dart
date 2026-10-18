@@ -29,6 +29,19 @@ import 'package:ffmpeg_kit_next_flutter/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/level.dart';
 import 'package:ffmpeg_kit_next_flutter/session.dart';
 
+/// Quotes a file path for FFmpegKit's command parser (no shell is involved).
+String commandPath(String path) {
+  final value = Platform.isWindows ? path.replaceAll('\\', '/') : path;
+  return '"$value"';
+}
+
+/// Escapes a path through both the filter option and filtergraph parsers.
+String filterPath(String path) {
+  final value = Platform.isWindows ? path.replaceAll('\\', '/') : path;
+  final option = value.replaceAllMapped(RegExp(r"[\\':]"), (m) => '\\${m[0]}');
+  return option.replaceAllMapped(RegExp(r"[\\'\[\],; ]"), (m) => '\\${m[0]}');
+}
+
 String today() {
   var now = new DateTime.now();
   return "${now.year}-${now.month}-${now.day}";
