@@ -31,7 +31,7 @@ Then add the Android package to the app module:
 
 ```groovy
 dependencies {
-    implementation "com.arthenica:ffmpeg-kit-next:9.0.1"
+    implementation "com.arthenica:ffmpeg-kit-next:9.0.2"
 }
 ```
 

@@ -1,5 +1,5 @@
 PODS:
-  - ffmpeg_kit_next_flutter (9.0.1):
+  - ffmpeg_kit_next_flutter (9.0.2):
     - Flutter
   - Flutter (1.0.0)
   - flutter_background_service_ios (0.0.3):
@@ -30,7 +30,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
 
 SPEC CHECKSUMS:
-  ffmpeg_kit_next_flutter: 2ba0c995013d5fb9e67380533b5d6ec03b4ce1b1
+  ffmpeg_kit_next_flutter: bb654f29c271f52173fb167cbd3080dfc59f9119
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   flutter_background_service_ios: 00d31bdff7b4bfe06d32375df358abe0329cf87e
   fluttertoast: fe6790210fdba20801685be946e3a2124b72eef5
