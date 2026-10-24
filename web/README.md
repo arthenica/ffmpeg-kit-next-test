@@ -37,7 +37,7 @@ Those headers are required because the threaded WebAssembly module uses `SharedA
 The test app copies the already-built web package into local `dist` and `lib` folders:
 
 ```sh
-./copy_local_binaries.sh [path-to-ffmpeg-kit-next]
+../scripts/update_web_dependency_wasm.sh [path-to-ffmpeg-kit-next]
 node server.mjs
 ```
 

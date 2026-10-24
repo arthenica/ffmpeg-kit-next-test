@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import { FFmpegKitConfig, readFile } from '../../dist/index.js';
-import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
+import { FFmpegKitConfig } from '../../dist/index.js';
+import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime, readVirtualFile } from '../util.js';
 
 const CODECS = {
   'mpeg4':           { codec: 'mpeg4',       ext: 'mp4',  pix: 'yuv420p',     opts: '' },
@@ -80,7 +80,7 @@ export default {
         const rc = session.getReturnCode();
         if (!(rc && rc.isValueSuccess())) return;
 
-        const bytes = await readFile(output);
+        const bytes = await readVirtualFile(output);
         if (bytes) {
           const dl = downloadBlob(output, bytes, guessMime(output));
           const preview = previewFor(output, dl.url);

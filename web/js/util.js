@@ -22,7 +22,34 @@
 
 // Tiny DOM helpers shared by the tab modules.
 
-import {FFmpegKit, FFmpegKitConfig, FFprobeKit, Level} from '../dist/index.js';
+import {FFmpegKit, FFmpegKitConfig, FFmpegKitVirtualFile, FFprobeKit, Level} from '../dist/index.js';
+
+/** Reads a file from FFmpegKit's virtual file storage, or null when it does not exist. */
+export async function readVirtualFile(path) {
+  const file = FFmpegKitVirtualFile.from(path);
+  return (await file.exists()) ? file.readAsBytes() : null;
+}
+
+/**
+ * A file name in the root folder for a fetched URL, keeping the extension of the URL's last
+ * path segment ("remote.mp4"), or "remote.bin" when it has none.
+ */
+export function remoteFileName(src) {
+  let base = '';
+  try {
+    base = new URL(src).pathname.split('/').pop();
+  } catch {
+    /* not a URL: no extension */
+  }
+  const dot = base.lastIndexOf('.');
+  const extension = dot > 0 ? base.slice(dot + 1) : '';
+  return 'remote.' + (/^[A-Za-z0-9]+$/.test(extension) ? extension : 'bin');
+}
+
+/** Writes bytes to FFmpegKit's virtual file storage. The parent folder must exist. */
+export function writeVirtualFile(path, bytes) {
+  return FFmpegKitVirtualFile.from(path).writeAsBytes(bytes);
+}
 
 export function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);

@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import { FFmpegKit, FFmpegKitConfig, readFile } from '../../dist/index.js';
-import { el, listAllLogs, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
+import { FFmpegKit, FFmpegKitConfig } from '../../dist/index.js';
+import { el, listAllLogs, logView, reportResult, downloadBlob, previewFor, guessMime, readVirtualFile } from '../util.js';
 
 const CODECS = {
   'mp2 (twolame)': { ext: 'mpg',  args: '-c:a mp2 -b:a 192k' },
@@ -114,7 +114,7 @@ export default {
         if (!(encodeReturnCode && encodeReturnCode.isValueSuccess())) return;
         await listAllLogs(session, log);
 
-        const bytes = await readFile(output);
+        const bytes = await readVirtualFile(output);
         if (bytes) {
           const dl = downloadBlob(output, bytes, guessMime(output));
           const preview = previewFor(output, dl.url);

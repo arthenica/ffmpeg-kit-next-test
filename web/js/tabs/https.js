@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import { FFmpegKit, FFmpegKitConfig, FFprobeKit, writeFile } from '../../dist/index.js';
-import { el, logView, reportResult, writeMediaInformation } from '../util.js';
+import { FFmpegKit, FFmpegKitConfig, FFprobeKit } from '../../dist/index.js';
+import { el, logView, reportResult, writeMediaInformation, writeVirtualFile, remoteFileName } from '../util.js';
 
 const NATIVE_HTTPS_TIMEOUT_MS = 5000;
 
@@ -115,7 +115,7 @@ export default {
       if (!ctx.ready) return;
       log.clear();
       const src = url.value.trim();
-      const name = 'remote.' + (src.split('.').pop().split(/[?#]/)[0] || 'bin');
+      const name = remoteFileName(src);
       log.line(`fetching ${src} with the page…`, 'muted');
       try {
         const res = await fetch(src);
@@ -124,7 +124,7 @@ export default {
           return;
         }
         const bytes = new Uint8Array(await res.arrayBuffer());
-        await writeFile(name, bytes);
+        await writeVirtualFile(name, bytes);
         log.line(`wrote ${bytes.length} bytes to ${name}; probing locally…`, 'ok');
         const session = await FFprobeKit.getMediaInformation(name);
         const media = session.getMediaInformation();

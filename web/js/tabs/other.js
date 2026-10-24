@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import { FFmpegKitConfig, writeFile, readFile } from '../../dist/index.js';
-import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
+import { FFmpegKitConfig } from '../../dist/index.js';
+import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime, readVirtualFile, writeVirtualFile } from '../util.js';
 
 const DAV1D_URL =
   'http://download.opencontent.netflix.com.s3.amazonaws.com/AV1/Sparks/Sparks-5994fps-AV1-10bit-960x540-film-grain-synthesis-854kbps.obu';
@@ -55,7 +55,7 @@ const TESTS = {
         log.line('fetch failed: HTTP ' + res.status, 'err');
         return null;
       }
-      await writeFile('av1.obu', new Uint8Array(await res.arrayBuffer()));
+      await writeVirtualFile('av1.obu', new Uint8Array(await res.arrayBuffer()));
     } catch (e) {
       log.line('fetch blocked (expected — the sample is http + cross-origin): ' + e.message, 'err');
       log.line('Provide a local AV1 file (e.g. via WORKERFS) to exercise dav1d decoding.', 'muted');
@@ -92,7 +92,7 @@ const TESTS = {
   },
 
   zscale: async (log) => {
-    const source = await readFile('video.mp4');
+    const source = await readVirtualFile('video.mp4');
     if (!source) {
       log.line("video.mp4 not found; native zscale expects the Video tab's output.", 'err');
       return null;
@@ -144,7 +144,7 @@ export default {
       try {
         const out = await TESTS[test](log);
         if (out && out.name) {
-          const bytes = await readFile(out.name);
+          const bytes = await readVirtualFile(out.name);
           if (bytes && bytes.length) {
             const dl = downloadBlob(out.name, bytes, guessMime(out.name));
             const preview = previewFor(out.name, dl.url);

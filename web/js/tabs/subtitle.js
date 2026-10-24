@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import { FFmpegKitConfig, Packages, readFile } from '../../dist/index.js';
-import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
+import { FFmpegKitConfig, Packages } from '../../dist/index.js';
+import { encodeScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime, readVirtualFile } from '../util.js';
 
 export default {
   id: 'subtitle',
@@ -69,7 +69,7 @@ export default {
         const burnReturnCode = session.getReturnCode();
         if (!(burnReturnCode && burnReturnCode.isValueSuccess())) return;
 
-        const bytes = await readFile(output);
+        const bytes = await readVirtualFile(output);
         if (bytes) {
           const dl = downloadBlob(output, bytes, guessMime(output));
           const preview = previewFor(output, dl.url);

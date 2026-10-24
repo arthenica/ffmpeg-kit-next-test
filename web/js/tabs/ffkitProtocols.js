@@ -25,9 +25,8 @@ import {
   FFprobeKit,
   FFmpegKitInputBuffer,
   FFmpegKitOutputBuffer,
-  readFile,
 } from '../../dist/index.js';
-import { el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor } from '../util.js';
+import { el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, readVirtualFile } from '../util.js';
 
 const PROTOCOL_FFKITMEM = 'ffkitmem';
 const PROTOCOLS = [PROTOCOL_FFKITMEM];
@@ -89,7 +88,7 @@ export default {
       let input = null;
       let output = null;
       try {
-        const bytes = await readFile('tree.jpg');
+        const bytes = await readVirtualFile('tree.jpg');
         if (!bytes) {
           log.line('sample tree.jpg not found in MEMFS', 'err');
           status.textContent = 'Processing failed.';
@@ -139,7 +138,7 @@ export default {
       status.textContent = 'Running...';
       let input = null;
       try {
-        const bytes = await readFile('tree.jpg');
+        const bytes = await readVirtualFile('tree.jpg');
         if (!bytes) {
           log.line('sample tree.jpg not found in MEMFS', 'err');
           status.textContent = 'Processing failed.';

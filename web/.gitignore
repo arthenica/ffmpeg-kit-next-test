@@ -1,7 +1,7 @@
-# Built FFmpegKitNext web artifacts, copied in by copy_local_binaries.sh
+# Built FFmpegKitNext web artifacts, copied in by ../scripts/update_web_dependency_wasm.sh
 /lib/
 
-# Shipped JS binding layer (sourced from the main repo), copied in by copy_local_binaries.sh
+# Shipped JS binding layer (sourced from the main repo), copied in by ../scripts/update_web_dependency_wasm.sh
 /dist/
 
 # OS / editor noise

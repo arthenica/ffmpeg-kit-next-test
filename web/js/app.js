@@ -23,8 +23,8 @@
 // Bootstraps the FFmpegKitNext web package, builds the tab bar, and renders the
 // active tab.
 
-import {FFmpegKitConfig, writeFile} from '../dist/index.js';
-import {el} from './util.js';
+import {FFmpegKitConfig, FFmpegKitVirtualDirectory} from '../dist/index.js';
+import {el, writeVirtualFile} from './util.js';
 
 import command from './tabs/command.js';
 import mediaInformation from './tabs/mediaInformation.js';
@@ -97,7 +97,7 @@ renderActiveTab();
 
 // Sample media the tabs reference by name. Preloading into the module's virtual
 // filesystem is the *app's* job — the shipped library worker no longer bundles
-// test assets — so we fetch them and write them in via the public writeFile API.
+// test assets — so we fetch them and write them in through FFmpegKitVirtualFile.
 const SAMPLE_ASSETS = [
     {source: 'tree.jpg', target: 'tree.jpg'},
     {source: 'lake.jpg', target: 'lake.jpg'},
@@ -110,11 +110,18 @@ const SAMPLE_ASSETS = [
 
 async function preloadAssets() {
     const loaded = [];
+    // Writes do not create parent folders; the font targets need theirs. Without it only the
+    // font assets fail, like any other missing asset.
+    try {
+        await FFmpegKitVirtualDirectory.from('/usr/share/fonts').create({recursive: true});
+    } catch {
+        /* the font assets then fail to write and are skipped */
+    }
     for (const asset of SAMPLE_ASSETS) {
         try {
             const res = await fetch(new URL('../assets/' + asset.source, import.meta.url));
             if (!res.ok) continue;
-            await writeFile(asset.target, new Uint8Array(await res.arrayBuffer()));
+            await writeVirtualFile(asset.target, new Uint8Array(await res.arrayBuffer()));
             loaded.push(asset.target);
         } catch {
             /* asset is optional */

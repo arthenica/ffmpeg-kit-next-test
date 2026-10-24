@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import { FFmpegKitConfig, Packages, readFile } from '../../dist/index.js';
-import { shakingScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime } from '../util.js';
+import { FFmpegKitConfig, Packages } from '../../dist/index.js';
+import { shakingScript, el, executeFFmpegAsync, logView, reportResult, downloadBlob, previewFor, guessMime, readVirtualFile } from '../util.js';
 
 export default {
   id: 'vidstab',
@@ -67,7 +67,7 @@ export default {
         rc = session.getReturnCode();
         if (!(rc && rc.isValueSuccess())) return;
 
-        const bytes = await readFile('stabilized.mp4');
+        const bytes = await readVirtualFile('stabilized.mp4');
         if (bytes) {
           const dl = downloadBlob('stabilized.mp4', bytes, guessMime('stabilized.mp4'));
           const preview = previewFor('stabilized.mp4', dl.url);
