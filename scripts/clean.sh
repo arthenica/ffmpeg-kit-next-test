@@ -25,6 +25,9 @@ rm -rf ../visionos/*.xcframework
 
 rm -rf ../linux/build
 
+rm -rf ../web/dist
+rm -rf ../web/lib
+
 cd ../flutter/test-app-podspec && ./clean.sh
 cd "$CURRENT_WORKING_DIRECTORY"
 

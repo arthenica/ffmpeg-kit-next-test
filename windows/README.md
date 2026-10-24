@@ -31,7 +31,7 @@ Then consume the package from CMake:
 
 ```cmake
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.1)
+pkg_check_modules(FFMPEG_KIT REQUIRED IMPORTED_TARGET ffmpeg-kit-next=9.0.2)
 target_link_libraries(<your-target> PRIVATE PkgConfig::FFMPEG_KIT)
 ```
 
@@ -41,7 +41,7 @@ Point CMake at the bundle root and use the package config it ships:
 
 ```cmake
 list(APPEND CMAKE_PREFIX_PATH "<path-to-bundle>")
-find_package(ffmpeg-kit-next 9.0.1 REQUIRED CONFIG)
+find_package(ffmpeg-kit-next 9.0.2 REQUIRED CONFIG)
 target_link_libraries(<your-target> PRIVATE ffmpeg-kit-next::ffmpegkit)
 ```
 

@@ -103,7 +103,7 @@ packages:
       path: "../../../ffmpeg-kit-next/flutter/flutter"
       relative: true
     source: path
-    version: "9.0.1"
+    version: "9.0.2"
   ffmpeg_kit_next_flutter_platform_interface:
     dependency: transitive
     description:
