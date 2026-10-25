@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -30,6 +29,7 @@ import 'package:ffmpeg_kit_next_flutter/session.dart';
 import 'package:video_player/video_player.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'player.dart';
 import 'popup.dart';
 import 'tooltip.dart';
@@ -94,7 +94,7 @@ class VidStabTab {
                     image1Path,
                     image2Path,
                     image3Path,
-                    videoFile.path,
+                    videoFile,
                     videoCodec);
 
                 ffprint(
@@ -116,7 +116,7 @@ class VidStabTab {
                         "Create completed successfully; stabilizing video.");
 
                     final analyzeVideoCommand =
-                        '-y -i ${commandPath(videoFile.path)} -vf "vidstabdetect=shakiness=10:accuracy=15:result=${filterPath(shakeResultsFile.path)}" -f null -';
+                        '-y -i ${commandPath(videoFile)} -vf "vidstabdetect=shakiness=10:accuracy=15:result=${filterPath(shakeResultsFile)}" -f null -';
 
                     this.showStabilizeProgressDialog();
 
@@ -137,7 +137,7 @@ class VidStabTab {
 
                       if (ReturnCode.isSuccess(secondReturnCode)) {
                         final stabilizeVideoCommand =
-                            '-y -i ${commandPath(videoFile.path)} -vf "vidstabtransform=smoothing=30:input=${filterPath(shakeResultsFile.path)}" -c:v $videoCodec ${commandPath(stabilizedVideoFile.path)}';
+                            '-y -i ${commandPath(videoFile)} -vf "vidstabtransform=smoothing=30:input=${filterPath(shakeResultsFile)}" -c:v $videoCodec ${commandPath(stabilizedVideoFile)}';
 
                         ffprint(
                             "FFmpeg process started with arguments: \'${stabilizeVideoCommand}\'.");
@@ -187,17 +187,17 @@ class VidStabTab {
   }
 
   Future<void> playVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
+      await reloadPlayer(videoController);
       if (videoController._controller != null) {
-        await videoController._controller!.initialize();
-        await videoController._controller!.play();
+        await startPlayback(videoController._controller!);
       }
       _refreshablePlayerDialogFactory.refresh();
     }
   }
 
   Future<void> pauseVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
       if (videoController._controller != null) {
         await videoController._controller!.pause();
       }
@@ -206,17 +206,17 @@ class VidStabTab {
   }
 
   Future<void> playStabilizedVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
+      await reloadPlayer(stabilizedVideoController);
       if (stabilizedVideoController._controller != null) {
-        await stabilizedVideoController._controller!.initialize();
-        await stabilizedVideoController._controller!.play();
+        await startPlayback(stabilizedVideoController._controller!);
       }
       _refreshablePlayerDialogFactory.refresh();
     }
   }
 
   Future<void> pauseStabilizedVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
       if (stabilizedVideoController._controller != null) {
         await stabilizedVideoController._controller!.pause();
       }
@@ -224,22 +224,19 @@ class VidStabTab {
     }
   }
 
-  Future<File> getShakeResultsFile() async {
+  Future<String> getShakeResultsFile() async {
     final String subtitle = "transforms.trf";
-    Directory documentsDirectory = await VideoUtil.tempDirectory;
-    return new File("${documentsDirectory.path}/$subtitle");
+    return "${await AppFiles.workDir()}/$subtitle";
   }
 
-  Future<File> getVideoFile() async {
+  Future<String> getVideoFile() async {
     final String video = "video-shaking.mp4";
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
-  Future<File> getStabilizedVideoFile() async {
+  Future<String> getStabilizedVideoFile() async {
     final String video = "video-stabilized.mp4";
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
   void showCreateProgressDialog() {

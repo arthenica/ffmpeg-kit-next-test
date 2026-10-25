@@ -42,6 +42,7 @@ import 'package:ffmpeg_kit_next_flutter/return_code.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 
 import 'abstract.dart';
+import 'util.dart';
 
 // The name flutter_background_service reports results back to the UI isolate on.
 const String _backgroundResultMethod = "ffmpegKitBackgroundResult";
@@ -159,7 +160,7 @@ class BackgroundTab {
     // platform channels from a background isolate - doing so aborts the
     // process natively, which Dart cannot catch - so we report that here
     // instead of running.
-    if (!(Platform.isAndroid || Platform.isIOS)) {
+    if (!(isAndroid || isIOS)) {
       clearOutput();
       appendOutput(
           "Background-isolate plugin channels are only supported on Android "

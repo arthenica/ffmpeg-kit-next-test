@@ -20,15 +20,16 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'util.dart';
+
 final popupMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void showPopup(String text) {
-  if (Platform.isAndroid || Platform.isIOS) {
+  if (isAndroid || isIOS) {
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,

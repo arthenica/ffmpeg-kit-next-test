@@ -1,0 +1,8 @@
+# ffmpeg-kit-next runs FFmpeg in Web Workers with shared memory, which needs a cross-origin
+# isolated page. flutter run serves the app with these headers.
+server:
+  headers:
+    - name: Cross-Origin-Opener-Policy
+      value: same-origin
+    - name: Cross-Origin-Embedder-Policy
+      value: require-corp

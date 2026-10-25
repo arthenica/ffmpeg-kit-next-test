@@ -29,6 +29,13 @@ const String VIDEO_TEST_TOOLTIP_TEXT =
 const String HTTPS_TEST_TOOLTIP_TEXT =
     "Enter the https url of a media file and click the button";
 
+const String HTTPS_WEB_TEST_TOOLTIP_TEXT =
+    "FFmpeg's own https cannot open sockets in the browser. FETCH AND PROBE downloads the url with the browser "
+    "(subject to the server's CORS headers), writes it into the virtual file storage and probes it there";
+
+const String MEDIA_INFORMATION_TEST_TOOLTIP_TEXT =
+    "Enter a file in the virtual file storage (a bundled sample, or an output of another tab) and click the button";
+
 const String AUDIO_TEST_TOOLTIP_TEXT =
     "Select an audio codec and press the ENCODE button";
 

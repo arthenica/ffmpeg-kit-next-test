@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -32,6 +31,7 @@ import 'package:ffmpeg_kit_next_flutter/statistics.dart';
 import 'package:video_player/video_player.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'player.dart';
 import 'popup.dart';
 import 'tooltip.dart';
@@ -65,7 +65,7 @@ class PipeTab implements PlayerTab {
   }
 
   void createVideo() {
-    if (Platform.isWindows) {
+    if (isWindows) {
       showPopup('Named pipes are not supported on Windows. '
           'Use the FFKIT PROTOCOLS tab to test memory input/output instead.');
       return;
@@ -88,7 +88,7 @@ class PipeTab implements PlayerTab {
             this.showProgressDialog();
 
             final ffmpegCommand = VideoUtil.generateCreateVideoWithPipesScript(
-                pipe1!, pipe2!, pipe3!, videoFile.path, videoCodec);
+                pipe1!, pipe2!, pipe3!, videoFile, videoCodec);
 
             ffprint(
                 "FFmpeg process started with arguments: \'${ffmpegCommand}\'.");
@@ -132,17 +132,17 @@ class PipeTab implements PlayerTab {
   }
 
   Future<void> playVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
+      await reloadPlayer(this);
       if (_videoPlayerController != null) {
-        await _videoPlayerController!.initialize();
-        await _videoPlayerController!.play();
+        await startPlayback(_videoPlayerController!);
       }
       _refreshablePlayerDialogFactory.refresh();
     }
   }
 
   Future<void> pause() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
       if (_videoPlayerController != null) {
         await _videoPlayerController!.pause();
       }
@@ -150,10 +150,9 @@ class PipeTab implements PlayerTab {
     }
   }
 
-  Future<File> getVideoFile() async {
+  Future<String> getVideoFile() async {
     final String video = "video.mp4";
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
   void showProgressDialog() {

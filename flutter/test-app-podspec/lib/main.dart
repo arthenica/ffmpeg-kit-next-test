@@ -20,9 +20,8 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
-
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract.dart';
@@ -32,6 +31,7 @@ import 'command_tab.dart';
 import 'concurrent_execution_tab.dart';
 import 'decoration.dart';
 import 'https_tab.dart';
+import 'media_information_tab.dart';
 import 'other_tab.dart';
 import 'pipe_tab.dart';
 import 'player.dart';
@@ -86,17 +86,11 @@ class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
 class FFmpegKitFlutterAppState extends State<MainPage>
     with TickerProviderStateMixin
     implements RefreshablePlayerDialogFactory {
-  static const constantTabIndex = 0;
-  static const videoTabIndex = 1;
-  static const httpsTabIndex = 2;
-  static const audioTabIndex = 3;
-  static const subtitleTabIndex = 4;
-  static const vidStabTabIndex = 5;
-  static const pipeTabIndex = 6;
-  static const concurrentExecutionTabIndex = 7;
-  static const ffkitProtocolsTabIndex = 8;
-  static const otherIndex = 9;
-  static const backgroundTabIndex = 10;
+  // The web build has no pipes and no background isolates, so it hides those two tabs.
+  static final showPipeTab = !kIsWeb;
+  static final showBackgroundTab = !kIsWeb;
+  // Web only: FFprobe on a file in the virtual file storage.
+  static final showMediaInformationTab = kIsWeb;
 
   // COMMON COMPONENTS
   late TabController _controller;
@@ -110,6 +104,9 @@ class FFmpegKitFlutterAppState extends State<MainPage>
 
   // HTTPS TAB COMPONENTS
   HttpsTab httpsTab = new HttpsTab();
+
+  // MEDIA INFORMATION TAB COMPONENTS
+  MediaInformationTab mediaInformationTab = new MediaInformationTab();
 
   // AUDIO TAB COMPONENTS
   AudioTab audioTab = new AudioTab();
@@ -146,6 +143,7 @@ class FFmpegKitFlutterAppState extends State<MainPage>
     commandTab.init(this);
     videoTab.init(this);
     httpsTab.init(this);
+    mediaInformationTab.init(this);
     audioTab.init(this);
     subtitleTab.init(this);
     vidStabTab.init(this);
@@ -155,32 +153,25 @@ class FFmpegKitFlutterAppState extends State<MainPage>
     otherTab.init(this);
     backgroundTab.init(this);
 
-    _controller = TabController(length: 11, vsync: this);
+    // In tab order; the same order as the tab labels and columns in build().
+    final activators = <void Function()>[
+      commandTab.setActive,
+      videoTab.setActive,
+      httpsTab.setActive,
+      if (showMediaInformationTab) mediaInformationTab.setActive,
+      audioTab.setActive,
+      subtitleTab.setActive,
+      vidStabTab.setActive,
+      if (showPipeTab) pipeTab.setActive,
+      concurrentExecutionTab.setActive,
+      ffkitProtocolsTab.setActive,
+      otherTab.setActive,
+      if (showBackgroundTab) backgroundTab.setActive,
+    ];
+    _controller = TabController(length: activators.length, vsync: this);
     _controller.addListener(() {
       if (_controller.indexIsChanging) {
-        if (_controller.index == constantTabIndex) {
-          commandTab.setActive();
-        } else if (_controller.index == videoTabIndex) {
-          videoTab.setActive();
-        } else if (_controller.index == httpsTabIndex) {
-          httpsTab.setActive();
-        } else if (_controller.index == audioTabIndex) {
-          audioTab.setActive();
-        } else if (_controller.index == subtitleTabIndex) {
-          subtitleTab.setActive();
-        } else if (_controller.index == vidStabTabIndex) {
-          vidStabTab.setActive();
-        } else if (_controller.index == pipeTabIndex) {
-          pipeTab.setActive();
-        } else if (_controller.index == concurrentExecutionTabIndex) {
-          concurrentExecutionTab.setActive();
-        } else if (_controller.index == ffkitProtocolsTabIndex) {
-          ffkitProtocolsTab.setActive();
-        } else if (_controller.index == otherIndex) {
-          otherTab.setActive();
-        } else if (_controller.index == backgroundTabIndex) {
-          backgroundTab.setActive();
-        }
+        activators[_controller.index]();
       }
     });
 
@@ -196,14 +187,15 @@ class FFmpegKitFlutterAppState extends State<MainPage>
       Tab(text: "COMMAND"),
       Tab(text: "VIDEO"),
       Tab(text: "HTTPS"),
+      if (showMediaInformationTab) Tab(text: "MEDIA INFORMATION"),
       Tab(text: "AUDIO"),
       Tab(text: "SUBTITLE"),
       Tab(text: "VID.STAB"),
-      Tab(text: "PIPE"),
+      if (showPipeTab) Tab(text: "PIPE"),
       Tab(text: "CONCURRENT EXECUTION"),
       Tab(text: "FFKIT PROTOCOLS"),
       Tab(text: "OTHER"),
-      Tab(text: "BACKGROUND")
+      if (showBackgroundTab) Tab(text: "BACKGROUND")
     ];
 
     var commandColumn = Column(
@@ -306,11 +298,11 @@ class FFmpegKitFlutterAppState extends State<MainPage>
               future: videoTab.getVideoFile(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  File file = snapshot.data as File;
+                  String file = snapshot.data as String;
                   return Container(
                       alignment: Alignment(0.0, 0.0),
                       child:
-                          EmbeddedPlayer("${file.path.toString()}", videoTab));
+                          EmbeddedPlayer(file, videoTab));
                 } else {
                   return Container(
                     alignment: Alignment(0.0, 0.0),
@@ -334,68 +326,145 @@ class FFmpegKitFlutterAppState extends State<MainPage>
             style: textFieldStyle,
           ),
         ),
-        Container(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: new InkWell(
-            onTap: () => httpsTab.runGetMediaInformation(1),
-            child: new Container(
-              width: 180,
-              height: 38,
-              decoration: buttonDecoration,
-              child: new Center(
-                child: new Text(
-                  'GET INFO FROM URL',
-                  style: buttonTextStyle,
+        // FFmpeg's own https cannot open sockets in the browser; see HttpsTab.fetchAndProbe.
+        if (kIsWeb) ...[
+          Container(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: new InkWell(
+              onTap: () => httpsTab.fetchAndProbe(),
+              child: new Container(
+                width: 180,
+                height: 38,
+                decoration: buttonDecoration,
+                child: new Center(
+                  child: new Text(
+                    'FETCH AND PROBE',
+                    style: buttonTextStyle,
+                  ),
                 ),
               ),
             ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: new InkWell(
+              onTap: () => httpsTab.runGetMediaInformation(1),
+              child: new Container(
+                width: 220,
+                height: 38,
+                decoration: buttonDecoration,
+                child: new Center(
+                  child: new Text(
+                    'ATTEMPT NATIVE HTTPS',
+                    style: buttonTextStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ] else ...[
+          Container(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: new InkWell(
+              onTap: () => httpsTab.runGetMediaInformation(1),
+              child: new Container(
+                width: 180,
+                height: 38,
+                decoration: buttonDecoration,
+                child: new Center(
+                  child: new Text(
+                    'GET INFO FROM URL',
+                    style: buttonTextStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: new InkWell(
+              onTap: () => httpsTab.runGetMediaInformation(2),
+              child: new Container(
+                width: 180,
+                height: 38,
+                decoration: buttonDecoration,
+                child: new Center(
+                  child: new Text(
+                    'GET RANDOM INFO',
+                    style: buttonTextStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: new InkWell(
+              onTap: () => httpsTab.runGetMediaInformation(3),
+              child: new Container(
+                width: 180,
+                height: 38,
+                decoration: buttonDecoration,
+                child: new Center(
+                  child: new Text(
+                    'GET RANDOM INFO',
+                    style: buttonTextStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: new InkWell(
+              onTap: () => httpsTab.runGetMediaInformation(4),
+              child: new Container(
+                width: 160,
+                height: 38,
+                decoration: buttonDecoration,
+                child: new Center(
+                  child: new Text(
+                    'GET INFO AND FAIL',
+                    style: buttonTextStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+        Expanded(
+          child: Container(
+              alignment: Alignment(-1.0, -1.0),
+              margin: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(4.0),
+              decoration: outputDecoration,
+              child: SingleChildScrollView(
+                  reverse: true, child: Text(httpsTab.getOutputText()))),
+        )
+      ],
+    );
+    var mediaInformationColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 10),
+          child: TextField(
+            controller: mediaInformationTab.getPathText(),
+            decoration: inputDecoration('Enter a file in the virtual file storage'),
+            style: textFieldStyle,
           ),
         ),
         Container(
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: new InkWell(
-            onTap: () => httpsTab.runGetMediaInformation(2),
+            onTap: () => mediaInformationTab.getMediaInformation(),
             child: new Container(
-              width: 180,
+              width: 240,
               height: 38,
               decoration: buttonDecoration,
               child: new Center(
                 child: new Text(
-                  'GET RANDOM INFO',
-                  style: buttonTextStyle,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: new InkWell(
-            onTap: () => httpsTab.runGetMediaInformation(3),
-            child: new Container(
-              width: 180,
-              height: 38,
-              decoration: buttonDecoration,
-              child: new Center(
-                child: new Text(
-                  'GET RANDOM INFO',
-                  style: buttonTextStyle,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: new InkWell(
-            onTap: () => httpsTab.runGetMediaInformation(4),
-            child: new Container(
-              width: 160,
-              height: 38,
-              decoration: buttonDecoration,
-              child: new Center(
-                child: new Text(
-                  'GET INFO AND FAIL',
+                  'GET MEDIA INFORMATION',
                   style: buttonTextStyle,
                 ),
               ),
@@ -409,10 +478,12 @@ class FFmpegKitFlutterAppState extends State<MainPage>
               padding: EdgeInsets.all(4.0),
               decoration: outputDecoration,
               child: SingleChildScrollView(
-                  reverse: true, child: Text(httpsTab.getOutputText()))),
+                  reverse: true,
+                  child: Text(mediaInformationTab.getOutputText()))),
         )
       ],
     );
+
     var audioColumn = Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -488,10 +559,10 @@ class FFmpegKitFlutterAppState extends State<MainPage>
               future: subtitleTab.getVideoWithSubtitlesFile(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  File file = snapshot.data as File;
+                  String file = snapshot.data as String;
                   return Container(
                       alignment: Alignment(0.0, 0.0),
-                      child: EmbeddedPlayer("${file.path}", subtitleTab));
+                      child: EmbeddedPlayer(file, subtitleTab));
                 } else {
                   return Container(
                     alignment: Alignment(0.0, 0.0),
@@ -515,11 +586,11 @@ class FFmpegKitFlutterAppState extends State<MainPage>
               future: vidStabTab.getVideoFile(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  File file = snapshot.data as File;
+                  String file = snapshot.data as String;
                   return Container(
                       alignment: Alignment(0.0, 0.0),
                       child: EmbeddedPlayer(
-                          "${file.path}", vidStabTab.videoController));
+                          file, vidStabTab.videoController));
                 } else {
                   return Container(
                     alignment: Alignment(0.0, 0.0),
@@ -555,10 +626,10 @@ class FFmpegKitFlutterAppState extends State<MainPage>
               future: vidStabTab.getStabilizedVideoFile(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  File file = snapshot.data as File;
+                  String file = snapshot.data as String;
                   return Container(
                       alignment: Alignment(0.0, 0.0),
-                      child: EmbeddedPlayer("${file.path}",
+                      child: EmbeddedPlayer(file,
                           vidStabTab.stabilizedVideoController));
                 } else {
                   return Container(
@@ -600,10 +671,10 @@ class FFmpegKitFlutterAppState extends State<MainPage>
               future: pipeTab.getVideoFile(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  File file = snapshot.data as File;
+                  String file = snapshot.data as String;
                   return Container(
                       alignment: Alignment(0.0, 0.0),
-                      child: EmbeddedPlayer("${file.path}", pipeTab));
+                      child: EmbeddedPlayer(file, pipeTab));
                 } else {
                   return Container(
                     alignment: Alignment(0.0, 0.0),
@@ -928,14 +999,15 @@ class FFmpegKitFlutterAppState extends State<MainPage>
       commandColumn,
       videoColumn,
       httpsColumn,
+      if (showMediaInformationTab) mediaInformationColumn,
       audioColumn,
       subtitleColumn,
       vidStabColumn,
-      pipeColumn,
+      if (showPipeTab) pipeColumn,
       concurrentExecutionColumn,
       ffkitProtocolsColumn,
       otherColumn,
-      backgroundColumn
+      if (showBackgroundTab) backgroundColumn
     ];
 
     return Scaffold(
@@ -989,6 +1061,7 @@ class FFmpegKitFlutterAppState extends State<MainPage>
   @override
   void dispose() {
     commandTab.dispose();
+    mediaInformationTab.dispose();
     backgroundTab.dispose();
     super.dispose();
   }

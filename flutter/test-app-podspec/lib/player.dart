@@ -21,16 +21,40 @@
  */
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import 'app_files.dart';
 import 'decoration.dart';
+import 'popup.dart';
+import 'util.dart';
 
 class PlayerTab {
   void setController(VideoPlayerController controller) {}
+}
+
+// On web a player plays an object URL of the file's bytes, which can only be made once the file
+// has been written. Each web player registers how to reload itself for its tab.
+final _reloads = Expando<Future<void> Function()>();
+
+/// Reloads the tab's player from its file before playback. Does nothing on native platforms.
+Future<void> reloadPlayer(PlayerTab tab) async => await _reloads[tab]?.call();
+
+/// Initializes and starts [controller]. A video the player cannot decode is reported with a popup
+/// instead of an unhandled error: browsers, for example, do not play every codec FFmpeg writes.
+Future<void> startPlayback(VideoPlayerController controller) async {
+  try {
+    await controller.initialize();
+    await controller.play();
+  } catch (e) {
+    ffprint("Video playback failed: $e");
+    showPopup(kIsWeb
+        ? "This browser cannot play the video. Its codec is not supported here."
+        : "The video cannot be played. Its codec is not supported here.");
+  }
 }
 
 class EmbeddedPlayer extends StatefulWidget {
@@ -41,37 +65,70 @@ class EmbeddedPlayer extends StatefulWidget {
 
   @override
   _EmbeddedPlayerState createState() =>
-      _EmbeddedPlayerState(new File(_filePath), _playerTab);
+      _EmbeddedPlayerState(_filePath, _playerTab);
 }
 
 class _EmbeddedPlayerState extends State<EmbeddedPlayer> {
   final PlayerTab _playerTab;
-  final File _file;
+  final String _filePath;
   VideoPlayerController? _videoPlayerController;
+  String? _url;
   bool startedPlaying = false;
 
-  _EmbeddedPlayerState(this._file, this._playerTab);
+  _EmbeddedPlayerState(this._filePath, this._playerTab);
 
   @override
   void initState() {
     super.initState();
 
-    // video_player has no Linux or Windows implementation, so skip a controller
-    // there. The owning tab keeps a null controller and skips playback.
-    if (!Platform.isLinux && !Platform.isWindows) {
-      _videoPlayerController = VideoPlayerController.file(_file);
+    if (kIsWeb) {
+      _reloads[_playerTab] = _reload;
+    } else if (!isLinux && !isWindows) {
+      // video_player has no Linux or Windows implementation, so skip a controller
+      // there. The owning tab keeps a null controller and skips playback.
+      _videoPlayerController = AppFiles.videoController(_filePath);
       _playerTab.setController(_videoPlayerController!);
     }
   }
 
+  Future<void> _reload() async {
+    final url = await AppFiles.playableUrl(_filePath);
+    if (!mounted) {
+      AppFiles.releasePlayableUrl(url);
+      return;
+    }
+    _release();
+    _url = url;
+    _videoPlayerController = AppFiles.videoController(url);
+    _playerTab.setController(_videoPlayerController!);
+    setState(() {});
+  }
+
+  void _release() {
+    _videoPlayerController?.dispose();
+    if (_url != null) AppFiles.releasePlayableUrl(_url!);
+    _url = null;
+  }
+
   @override
   void dispose() {
-    _videoPlayerController?.dispose();
+    if (_reloads[_playerTab] == _reload) _reloads[_playerTab] = null;
+    _release();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_videoPlayerController == null && kIsWeb) {
+      return Material(
+          elevation: 0,
+          child: Center(
+            child: Container(
+              alignment: Alignment(0.0, 0.0),
+              decoration: videoPlayerFrameDecoration,
+            ),
+          ));
+    }
     if (_videoPlayerController == null) {
       return Material(
           elevation: 0,

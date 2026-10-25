@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
@@ -34,6 +33,7 @@ import 'package:ffmpeg_kit_next_flutter/statistics.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'popup.dart';
 import 'tooltip.dart';
 import 'util.dart';
@@ -109,7 +109,8 @@ class FFKitProtocolsTab {
   // region Dropdown
 
   List<DropdownMenuItem<String>> getProtocolList() {
-    return <String>[PROTOCOL_FFKITMEM, PROTOCOL_FFKITSAF]
+    // SAF is Android storage; other platforms do not offer it.
+    return <String>[PROTOCOL_FFKITMEM, if (isAndroid) PROTOCOL_FFKITSAF]
         .map((protocol) => DropdownMenuItem<String>(
             value: protocol, child: Center(child: Text(protocol))))
         .toList();
@@ -134,10 +135,6 @@ class FFKitProtocolsTab {
 
   void runFFmpeg() {
     if (_selectedProtocol == PROTOCOL_FFKITSAF) {
-      if (!Platform.isAndroid) {
-        showPopup("SAF is only available on Android.");
-        return;
-      }
       this._encodeVideoSaf();
     } else {
       this._runFFKitMemFFmpeg();
@@ -146,10 +143,6 @@ class FFKitProtocolsTab {
 
   void runFFprobe() {
     if (_selectedProtocol == PROTOCOL_FFKITSAF) {
-      if (!Platform.isAndroid) {
-        showPopup("SAF is only available on Android.");
-        return;
-      }
       this._runFFprobeSaf();
     } else {
       this._runFFKitMemFFprobe();
@@ -168,7 +161,7 @@ class FFKitProtocolsTab {
 
     final String imagePath = await VideoUtil.assetPath(VideoUtil.ASSET_1);
     final String fontPath = await VideoUtil.assetPath(VideoUtil.FONT_ASSET_1);
-    final Uint8List bytes = await File(imagePath).readAsBytes();
+    final Uint8List bytes = await AppFiles.readBytes(imagePath);
 
     final FFmpegKitInputBuffer input =
         await FFmpegKitInputBuffer.fromByteArray(bytes, "jpg");
@@ -208,7 +201,7 @@ class FFKitProtocolsTab {
     _refreshablePlayerDialogFactory.refresh();
 
     final String imagePath = await VideoUtil.assetPath(VideoUtil.ASSET_1);
-    final Uint8List bytes = await File(imagePath).readAsBytes();
+    final Uint8List bytes = await AppFiles.readBytes(imagePath);
     final FFmpegKitInputBuffer input =
         await FFmpegKitInputBuffer.fromByteArray(bytes, "jpg");
     final String inputUrl = input.getUrl();

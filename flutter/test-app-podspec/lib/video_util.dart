@@ -21,14 +21,13 @@
  */
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_next_flutter/packages.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
+import 'app_files.dart';
 import 'util.dart';
 
 class VideoUtil {
@@ -44,17 +43,16 @@ class VideoUtil {
   static void registerApplicationFonts() {
     var fontNameMapping = Map<String, String>();
     fontNameMapping["MyFontName"] = "Doppio One";
-    VideoUtil.tempDirectory.then((tempDirectory) {
+    AppFiles.assetPath(FONT_ASSET_1).then((fontPath) {
+      final assetDirectory = dirname(fontPath);
       FFmpegKitConfig.setFontDirectoryList([
-        tempDirectory.path,
-        if (Platform.isWindows)
-          join(Platform.environment['WINDIR'] ?? r'C:\Windows', 'Fonts')
-        else ...['/system/fonts', '/System/Library/Fonts'],
+        assetDirectory,
+        ...AppFiles.systemFontDirectories(),
       ], fontNameMapping);
       FFmpegKitConfig.setEnvironmentVariable(
           "FFREPORT",
           "file=" +
-              join(tempDirectory.path, today() + '-ffreport.txt')
+              join(assetDirectory, today() + '-ffreport.txt')
                   .replaceAll('\\', '/')
                   .replaceAll("'", r"\'")
                   .replaceAll(':', r'\:'));
@@ -72,41 +70,23 @@ class VideoUtil {
     await VideoUtil.assetToFile(CA_CERTIFICATE_BUNDLE_ASSET);
   }
 
-  static Future<File> assetToFile(String assetName) async {
+  static Future<String> assetToFile(String assetName) async {
     final ByteData assetByteData = await rootBundle.load('assets/$assetName');
 
-    final List<int> byteList = assetByteData.buffer
+    final Uint8List byteList = assetByteData.buffer
         .asUint8List(assetByteData.offsetInBytes, assetByteData.lengthInBytes);
 
-    final String fullTemporaryPath =
-        join((await tempDirectory).path, assetName);
+    final String fullTemporaryPath = await AppFiles.assetPath(assetName);
 
-    final File file = new File(fullTemporaryPath);
-
-    // On macOS getTemporaryDirectory() returns a Library/Caches/<bundle-id> path whose
-    // directory is not guaranteed to exist (unlike iOS's tmp), and writeAsBytes does not
-    // create intermediate directories. Create it first so the save succeeds.
-    await file.parent.create(recursive: true);
-
-    Future<File> fileFuture =
-        file.writeAsBytes(byteList, mode: FileMode.writeOnly, flush: true);
+    await AppFiles.writeBytes(fullTemporaryPath, byteList);
 
     ffprint('assets/$assetName saved to file at $fullTemporaryPath.');
 
-    return fileFuture;
+    return fullTemporaryPath;
   }
 
-  static Future<String> assetPath(String assetName) async {
-    return join((await tempDirectory).path, assetName);
-  }
-
-  static Future<Directory> get documentsDirectory async {
-    return await getApplicationDocumentsDirectory();
-  }
-
-  static Future<Directory> get tempDirectory async {
-    return await getTemporaryDirectory();
-  }
+  static Future<String> assetPath(String assetName) =>
+      AppFiles.assetPath(assetName);
 
   static String generateEncodeVideoScript(
       String image1Path,

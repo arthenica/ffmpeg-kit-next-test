@@ -21,7 +21,6 @@
  */
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -30,10 +29,10 @@ import 'package:ffmpeg_kit_next_flutter/return_code.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'popup.dart';
 import 'tooltip.dart';
 import 'util.dart';
-import 'video_util.dart';
 
 class AudioTab {
   late RefreshablePlayerDialogFactory _refreshablePlayerDialogFactory;
@@ -122,7 +121,7 @@ class AudioTab {
       deleteFile(audioSampleFile);
 
       String ffmpegCommand =
-          "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${commandPath(audioSampleFile.path)}";
+          "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${commandPath(audioSampleFile)}";
 
       ffprint("Creating audio sample with '$ffmpegCommand'.");
 
@@ -147,7 +146,7 @@ class AudioTab {
     });
   }
 
-  Future<File> getAudioOutputFile() async {
+  Future<String> getAudioOutputFile() async {
     String audioCodec = _selectedCodec;
 
     String extension;
@@ -190,13 +189,11 @@ class AudioTab {
     }
 
     final String audio = "audio." + extension;
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$audio");
+    return "${await AppFiles.workDir()}/$audio";
   }
 
-  Future<File> getAudioSampleFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/audio-sample.wav");
+  Future<String> getAudioSampleFile() async {
+    return "${await AppFiles.workDir()}/audio-sample.wav";
   }
 
   void showProgressDialog() {
@@ -209,8 +206,8 @@ class AudioTab {
 
   Future<String> generateAudioEncodeScript() async {
     String audioCodec = _selectedCodec;
-    String audioSampleFile = commandPath((await getAudioSampleFile()).path);
-    String audioOutputFile = commandPath((await getAudioOutputFile()).path);
+    String audioSampleFile = commandPath(await getAudioSampleFile());
+    String audioOutputFile = commandPath(await getAudioOutputFile());
 
     switch (audioCodec) {
       case "mp2 (twolame)":

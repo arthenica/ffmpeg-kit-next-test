@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -31,6 +30,7 @@ import 'package:ffmpeg_kit_next_flutter/statistics.dart';
 import 'package:video_player/video_player.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'player.dart';
 import 'popup.dart';
 import 'tooltip.dart';
@@ -92,7 +92,7 @@ class SubtitleTab implements PlayerTab {
                     image1Path,
                     image2Path,
                     image3Path,
-                    videoFile.path,
+                    videoFile,
                     videoCodec,
                     "");
 
@@ -114,7 +114,7 @@ class SubtitleTab implements PlayerTab {
                         "Create completed successfully; burning subtitles.");
 
                     String burnSubtitlesCommand =
-                        '-y -i ${commandPath(videoFile.path)} -vf "subtitles=filename=${filterPath(subtitlePath)}:force_style=\'Fontname=MyFontName\'" -c:v $videoCodec ${commandPath(videoWithSubtitlesFile.path)}';
+                        '-y -i ${commandPath(videoFile)} -vf "subtitles=filename=${filterPath(subtitlePath)}:force_style=\'Fontname=MyFontName\'" -c:v $videoCodec ${commandPath(videoWithSubtitlesFile)}';
 
                     this.showBurnProgressDialog();
 
@@ -163,17 +163,17 @@ class SubtitleTab implements PlayerTab {
   }
 
   Future<void> playVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
+      await reloadPlayer(this);
       if (_videoPlayerController != null) {
-        await _videoPlayerController!.initialize();
-        await _videoPlayerController!.play();
+        await startPlayback(_videoPlayerController!);
       }
       _refreshablePlayerDialogFactory.refresh();
     }
   }
 
   Future<void> pause() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
       if (_videoPlayerController != null) {
         await _videoPlayerController!.pause();
       }
@@ -181,16 +181,14 @@ class SubtitleTab implements PlayerTab {
     }
   }
 
-  Future<File> getVideoFile() async {
+  Future<String> getVideoFile() async {
     final String video = "video.mp4";
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
-  Future<File> getVideoWithSubtitlesFile() async {
+  Future<String> getVideoWithSubtitlesFile() async {
     final String video = "video-with-subtitles.mp4";
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
   void showCreateProgressDialog() {

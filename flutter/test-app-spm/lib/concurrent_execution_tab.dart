@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -28,6 +27,7 @@ import 'package:ffmpeg_kit_next_flutter/log.dart';
 import 'package:ffmpeg_kit_next_flutter/return_code.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'popup.dart';
 import 'tooltip.dart';
 import 'util.dart';
@@ -82,7 +82,7 @@ class ConcurrentExecutionTab {
                 image1Path,
                 image2Path,
                 image3Path,
-                videoFile.path,
+                videoFile,
                 "mpeg4",
                 "");
 
@@ -132,10 +132,9 @@ class ConcurrentExecutionTab {
     });
   }
 
-  Future<File> getVideoFile(int buttonNumber) async {
+  Future<String> getVideoFile(int buttonNumber) async {
     final String video = "video$buttonNumber.mp4";
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
   void runCancel(final int buttonNumber) {

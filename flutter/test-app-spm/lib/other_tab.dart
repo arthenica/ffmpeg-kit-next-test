@@ -21,7 +21,6 @@
  */
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -30,6 +29,7 @@ import 'package:ffmpeg_kit_next_flutter/return_code.dart';
 import 'package:flutter/material.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'popup.dart';
 import 'tooltip.dart';
 import 'util.dart';
@@ -110,7 +110,7 @@ class OtherTab {
         deleteFile(outputFile);
 
         final ffmpegCommand =
-            "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${commandPath(audioSampleFile.path)}";
+            "-hide_banner -y -f lavfi -i sine=frequency=1000:duration=5 -c:a pcm_s16le ${commandPath(audioSampleFile)}";
 
         ffprint("Creating audio sample with '${ffmpegCommand}'.");
 
@@ -129,7 +129,7 @@ class OtherTab {
             ffprint("AUDIO sample created");
 
             final chromaprintCommand =
-                "-hide_banner -y -i ${commandPath(audioSampleFile.path)} -f chromaprint -fp_format 2 ${commandPath(outputFile.path)}";
+                "-hide_banner -y -i ${commandPath(audioSampleFile)} -f chromaprint -fp_format 2 ${commandPath(outputFile)}";
 
             ffprint("Creating audio sample with '${chromaprintCommand}'.");
 
@@ -168,7 +168,7 @@ class OtherTab {
 
     this.getDav1dOutputFile().then((outputFile) {
       final ffmpegCommand =
-          "-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} -c:v mpeg4 ${commandPath(outputFile.path)}";
+          "-hide_banner -y -i ${DAV1D_TEST_DEFAULT_URL} -c:v mpeg4 ${commandPath(outputFile)}";
 
       ffprint("FFmpeg process started with arguments:'${ffmpegCommand}'.");
 
@@ -192,7 +192,7 @@ class OtherTab {
         ffprint("Testing 'webp' codec");
 
         final ffmpegCommand =
-            "-hide_banner -y -i ${commandPath(imagePath)} ${commandPath(outputPath.path)}";
+            "-hide_banner -y -i ${commandPath(imagePath)} ${commandPath(outputPath)}";
 
         ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
 
@@ -226,8 +226,8 @@ class OtherTab {
           );
 
           final ffmpegCommand = VideoUtil.generateZscaleVideoScript(
-            videoFile.path,
-            zscaledVideoFile.path,
+            videoFile,
+            zscaledVideoFile,
           );
 
           ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
@@ -265,7 +265,7 @@ class OtherTab {
     ffprint("Testing 'libjxl' codec");
 
     final ffmpegCommand =
-        "-hide_banner -y -i ${commandPath(imagePath)} -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 ${commandPath(jxlOutputFile.path)}";
+        "-hide_banner -y -i ${commandPath(imagePath)} -frames:v 1 -vf format=rgb24,setparams=range=pc:color_primaries=bt709:color_trc=iec61966-2-1:colorspace=gbr -c:v libjxl -distance 1.0 -xyb 1 -update 1 ${commandPath(jxlOutputFile)}";
 
     ffprint("FFmpeg process started with arguments '${ffmpegCommand}'.");
 
@@ -282,7 +282,7 @@ class OtherTab {
 
       if (ReturnCode.isSuccess(returnCode)) {
         final decodeCommand =
-            "-hide_banner -y -i ${commandPath(jxlOutputFile.path)} -frames:v 1 -c:v png -update 1 ${commandPath(decodedOutputFile.path)}";
+            "-hide_banner -y -i ${commandPath(jxlOutputFile)} -frames:v 1 -c:v png -update 1 ${commandPath(decodedOutputFile)}";
 
         ffprint("FFmpeg process started with arguments '${decodeCommand}'.");
 
@@ -316,7 +316,7 @@ class OtherTab {
           image1Path,
           image2Path,
           image3Path,
-          outputFile.path,
+          outputFile,
           "libvvenc",
           "yuv420p10le",
           "-preset faster -qp 32 ",
@@ -337,49 +337,40 @@ class OtherTab {
     }, (log) => this.appendOutput(log.getMessage()));
   }
 
-  Future<File> getChromaprintSampleFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/audio-sample.wav");
+  Future<String> getChromaprintSampleFile() async {
+    return "${await AppFiles.workDir()}/audio-sample.wav";
   }
 
-  Future<File> getDav1dOutputFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/video.mp4");
+  Future<String> getDav1dOutputFile() async {
+    return "${await AppFiles.workDir()}/video.mp4";
   }
 
-  Future<File> getChromaprintOutputFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/chromaprint.txt");
+  Future<String> getChromaprintOutputFile() async {
+    return "${await AppFiles.workDir()}/chromaprint.txt";
   }
 
-  Future<File> getWebpOutputFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/video.webp");
+  Future<String> getWebpOutputFile() async {
+    return "${await AppFiles.workDir()}/video.webp";
   }
 
-  Future<File> getVideoFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/video.mp4");
+  Future<String> getVideoFile() async {
+    return "${await AppFiles.workDir()}/video.mp4";
   }
 
-  Future<File> getZscaledVideoFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/video.zscaled.mp4");
+  Future<String> getZscaledVideoFile() async {
+    return "${await AppFiles.workDir()}/video.zscaled.mp4";
   }
 
-  Future<File> getLibjxlOutputFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/image.jxl");
+  Future<String> getLibjxlOutputFile() async {
+    return "${await AppFiles.workDir()}/image.jxl";
   }
 
-  Future<File> getLibjxlDecodedOutputFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/image.jxl.png");
+  Future<String> getLibjxlDecodedOutputFile() async {
+    return "${await AppFiles.workDir()}/image.jxl.png";
   }
 
-  Future<File> getVvencOutputFile() async {
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/video.266");
+  Future<String> getVvencOutputFile() async {
+    return "${await AppFiles.workDir()}/video.266";
   }
 
   List<DropdownMenuItem<String>> getTestList() {

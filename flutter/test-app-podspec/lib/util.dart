@@ -20,24 +20,34 @@
  * SOFTWARE.
  */
 
-import 'dart:io';
-
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_next_flutter/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/level.dart';
 import 'package:ffmpeg_kit_next_flutter/session.dart';
+import 'package:flutter/foundation.dart';
+
+import 'app_files.dart';
+
+// Platform checks that also work on web, where dart:io's Platform is unavailable.
+bool get isAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+bool get isIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+bool get isLinux => !kIsWeb && defaultTargetPlatform == TargetPlatform.linux;
+bool get isWindows => !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+
+/// The tabs play their results on Android, iOS and web.
+bool get canPlayVideo => kIsWeb || isAndroid || isIOS;
 
 /// Quotes a file path for FFmpegKit's command parser (no shell is involved).
 String commandPath(String path) {
-  final value = Platform.isWindows ? path.replaceAll('\\', '/') : path;
+  final value = isWindows ? path.replaceAll('\\', '/') : path;
   return '"$value"';
 }
 
 /// Escapes a path through both the filter option and filtergraph parsers.
 String filterPath(String path) {
-  final value = Platform.isWindows ? path.replaceAll('\\', '/') : path;
+  final value = isWindows ? path.replaceAll('\\', '/') : path;
   final option = value.replaceAllMapped(RegExp(r"[\\':]"), (m) => '\\${m[0]}');
   return option.replaceAllMapped(RegExp(r"[\\'\[\],; ]"), (m) => '\\${m[0]}');
 }
@@ -64,11 +74,11 @@ String notNull(String? string, [String valuePrefix = ""]) {
   return (string == null) ? "" : valuePrefix + string;
 }
 
-void deleteFile(File file) {
-  file.exists().then((exists) {
+void deleteFile(String path) {
+  AppFiles.exists(path).then((exists) {
     if (exists) {
       try {
-        file.delete();
+        AppFiles.delete(path);
       } on Exception catch (e, stack) {
         print("Exception thrown inside deleteFile block. $e");
         print(stack);

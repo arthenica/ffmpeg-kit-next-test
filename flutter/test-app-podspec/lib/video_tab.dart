@@ -21,7 +21,6 @@
  */
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_next_flutter/ffmpeg_kit_config.dart';
@@ -31,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import 'abstract.dart';
+import 'app_files.dart';
 import 'player.dart';
 import 'popup.dart';
 import 'tooltip.dart';
@@ -84,7 +84,7 @@ class VideoTab implements PlayerTab {
                   image1Path,
                   image2Path,
                   image3Path,
-                  videoFile.path,
+                  videoFile,
                   videoCodec,
                   this.getPixelFormat(),
                   this.getCustomOptions(),
@@ -135,17 +135,17 @@ class VideoTab implements PlayerTab {
   }
 
   Future<void> playVideo() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
+      await reloadPlayer(this);
       if (_videoPlayerController != null) {
-        await _videoPlayerController!.initialize();
-        await _videoPlayerController!.play();
+        await startPlayback(_videoPlayerController!);
       }
       _refreshablePlayerDialogFactory.refresh();
     }
   }
 
   Future<void> pause() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (canPlayVideo) {
       if (_videoPlayerController != null) {
         await _videoPlayerController!.pause();
       }
@@ -213,7 +213,7 @@ class VideoTab implements PlayerTab {
     return videoCodec;
   }
 
-  Future<File> getVideoFile() async {
+  Future<String> getVideoFile() async {
     String videoCodec = _selectedCodec;
 
     String extension;
@@ -235,8 +235,7 @@ class VideoTab implements PlayerTab {
     }
 
     final String video = "video." + extension;
-    Directory documentsDirectory = await VideoUtil.documentsDirectory;
-    return new File("${documentsDirectory.path}/$video");
+    return "${await AppFiles.workDir()}/$video";
   }
 
   String getCustomOptions() {
@@ -278,7 +277,7 @@ class VideoTab implements PlayerTab {
         child: SizedBox(width: 130, child: Center(child: new Text("x264"))),
       ),
     );
-    if (Platform.isAndroid) {
+    if (isAndroid) {
       list.add(
         new DropdownMenuItem(
           value: "h264_mediacodec",
